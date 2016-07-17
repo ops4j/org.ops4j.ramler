@@ -13,7 +13,12 @@
     <name>OPS4J Ramler Reactor</name>
 
     <description>
+        Code generator for RAML 1.0
     </description>
+
+    <properties>
+        <org.glassfish.jersey.version>2.23.1</org.glassfish.jersey.version>
+    </properties>
 
     <scm>
         <connection>scm:git:git@github.com:ops4j/org.ops4j.ramler.git</connection>
@@ -38,9 +43,19 @@
                 <version>2.6</version>
             </dependency>
             <dependency>
+                <groupId>javax.ws.rs</groupId>
+                <artifactId>javax.ws.rs-api</artifactId>
+                <version>2.0.1</version>
+            </dependency>
+            <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>4.12</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.media</groupId>
+                <artifactId>jersey-media-multipart</artifactId>
+                <version>${org.glassfish.jersey.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.hamcrest</groupId>
@@ -104,8 +119,9 @@
     <profiles>
 
         <!-- Profiles for "Sonar" -->
-        <!-- The sonar profile should be activated by setting property 'sonar'. That's important because we need to set an 
-            empty 'jacoco.argLine' otherwise. You can't define an empty default for that property in the global properties section because 
+        <!-- The sonar profile should be activated by setting property 'sonar'. That's important because we need to set an
+            empty 'jacoco.argLine' otherwise. You can't define an empty default for that property in the global properties
+            section because
             the empty value will override the value from Jacoco. -->
         <profile>
             <id>no-sonar</id>

@@ -9,10 +9,8 @@
 
     <groupId>org.ops4j.ramler</groupId>
     <artifactId>ramler-java</artifactId>
-
-    <properties>
-        <org.glassfish.jersey.version>2.23.1</org.glassfish.jersey.version>
-    </properties>
+    
+    <name>OPS4J Ramler Java Code Generator</name>
 
     <dependencies>
         <dependency>
@@ -21,15 +19,12 @@
         </dependency>
         <dependency>
             <groupId>javax.ws.rs</groupId>
-            <artifactId>javax.ws.rs-api</artifactId>
-            <version>2.0.1</version>
+            <artifactId>javax.ws.rs-api</artifactId>            
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-multipart</artifactId>
-            <version>${org.glassfish.jersey.version}</version>
-        </dependency>
-        
+        </dependency>        
         <dependency>
             <groupId>org.raml</groupId>
             <artifactId>raml-parser-2</artifactId>
