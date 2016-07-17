@@ -1,0 +1,105 @@
+#%RAML 1.0
+title: API with Types
+mediaType: application/json
+types:
+  Address:
+    properties:
+      city: string
+      street: string
+  Age:
+    type: integer
+    format: int16
+    minimum: 0
+    maximum: 120
+  Colour:
+    type: string
+    enum:
+    - RED
+    - YELLOW
+    - GREEN
+  FileResponse:
+    properties:
+      fileName : string
+      token: string
+  Name:
+    maxLength: 80
+  Person:
+    properties:
+      firstname:
+        type: string
+      lastname:
+          type: string
+      address:
+          type: Address
+      age:
+          type: Age
+  Employee:
+    type: Person
+    properties:
+      department: string
+  User:
+    properties:
+      firstname:
+        type: string
+      lastname:
+        type: string
+      age:
+        type: Age
+      address:
+        type: Address
+      favouriteColour:
+        type: Colour
+      registered:
+        type: boolean
+      dateOfBirth:
+        type: date-only
+      registrationDate:
+        type: datetime
+  UserGroup:
+    properties:
+      name: string
+      users : User[]
+/user:
+  get:
+    displayName: find all users
+    queryParameters:
+      q :
+        type: string
+        default: ""
+    responses:
+      200:
+        body:
+          type: User[]
+  post:
+    displayName: create user
+    body:
+      type : User
+    responses:
+      200:
+        body:
+          type: User
+  /{id}:
+    uriParameters:
+      id:
+        type : integer
+    get:
+      displayName: find user by id
+      responses:
+        200:
+          body:
+            type: User
+    delete:
+      displayName: delete user by id
+      responses:
+        204:
+/file:
+  post:
+    body:
+      multipart/form-data:
+        properties:
+          fileName: string
+          file: file
+    responses:
+      200:
+        body:
+          type: FileResponse

@@ -1,0 +1,45 @@
+#%RAML 1.0
+title: Generic Type
+version: 0.1
+mediaType: application/json
+baseUri: http://localhost:8080
+annotationTypes:
+  typeParam: string
+  typeArgs:  string[]
+  typeParams:  string[]
+types:
+  Status:
+    properties:
+      code: integer
+      httpStatus: integer
+      requestId : string
+      text : string
+      success : boolean
+  Response:
+    (typeParams): [T]
+    properties:
+      result:
+        (typeParam): T
+        type : object
+      status: Status
+      success: boolean
+  Animal:
+    properties:
+      species: string
+      numLegs: integer
+  Person:
+    properties:
+      firstName: string
+      lastName: string
+    example:
+       {
+          firstName: "Donald",
+          lastName: "Duck"
+       }
+  AnimalResponse:
+    type: Response
+    (typeArgs): [Animal]
+    properties:
+      result:
+        type: Animal
+       

@@ -1,0 +1,12 @@
+target
+bin
+.classpath
+.project
+.settings
+.checkstyle
+.factorypath
+test-output
+*.log
+*~
+.idea
+*.iml
