@@ -31,8 +31,37 @@ import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
 import org.raml.v2.api.model.v10.methods.Method;
 import org.raml.v2.api.model.v10.resources.Resource;
 
+/**
+ * Traverses a RAML 1.0 API model. Takes an {@link ApiVisitor}, visiting every relevant node.
+ * <p>
+ * The traverser ignores any nodes that are not relevant for code generation.
+ * <p>
+ * Since the RAML API does not directly support the visitor pattern, e.g. with an
+ * {@code accept(ApiVisitor)} method for all model classes, this class shall be used with a concrete
+ * visitor implementation.
+ * <p>
+ * Example:
+ * 
+ * <pre>
+ * MyVisitor visitor = new MyVisitor();
+ * ApiTraverser traverser = new ApiTraverser();
+ * traverser.traverse(api, visitor);
+ * Object result = visitor.getResult();
+ * </pre>
+ * 
+ * @author Harald Wellmann
+ *
+ */
 public class ApiTraverser {
 
+    /**
+     * Lets the given visitor traverse the API model tree.
+     * 
+     * @param api
+     *            RAML 1.0 API model
+     * @param visitor
+     *            concrete visitor
+     */
     public void traverse(Api api, ApiVisitor visitor) {
         visitor.visitApiStart(api);
         orderTypes(api).forEach((name, type) -> traverse(type, visitor));
@@ -40,6 +69,14 @@ public class ApiTraverser {
         visitor.visitApiEnd(api);
     }
 
+    /**
+     * Orders defined types so that base types precede derived types. This avoids forward references
+     * for the code generator.
+     * 
+     * @param api
+     *            API model
+     * @return ordered map of type names to type definitions
+     */
     private Map<String, TypeDeclaration> orderTypes(Api api) {
         Map<String, TypeDeclaration> orderedTypes = new LinkedHashMap<>();
         api.types().forEach(type -> storeHierarchy(orderedTypes, api, type));

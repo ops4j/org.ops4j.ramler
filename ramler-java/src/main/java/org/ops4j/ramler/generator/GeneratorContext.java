@@ -25,7 +25,6 @@ import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.raml.v2.api.model.v10.api.Api;
 import org.raml.v2.api.model.v10.datamodel.ArrayTypeDeclaration;
@@ -44,6 +43,12 @@ import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JPackage;
 import com.sun.codemodel.JType;
 
+/**
+ * Stores the configuration and other intermediate information for a code generator run.
+ * 
+ * @author Harald Wellmann
+ *
+ */
 public class GeneratorContext {
 
     private Configuration config;
@@ -58,18 +63,19 @@ public class GeneratorContext {
 
     private Map<String, JType> typeMap;
 
+    /**
+     * Creates a generator context for the given configuration.
+     * 
+     * @param config
+     *            code generator configuration
+     */
     public GeneratorContext(Configuration config) {
         this.config = config;
         this.codeModel = new JCodeModel();
         this.typeMap = new HashMap<>();
-    }
-
-    public void initialize() {
         JPackage basePackage = codeModel._package(config.getBasePackage());
-        String modelPackageName = Optional.ofNullable(config.getModelPackage()).orElse("model");
-        modelPackage = basePackage.subPackage(modelPackageName);
-        String apiPackageName = Optional.ofNullable(config.getApiPackage()).orElse("api");
-        apiPackage = basePackage.subPackage(apiPackageName);
+        modelPackage = basePackage.subPackage(config.getModelPackage());
+        apiPackage = basePackage.subPackage(config.getApiPackage());
     }
 
     public void addType(String typeName, JType type) {

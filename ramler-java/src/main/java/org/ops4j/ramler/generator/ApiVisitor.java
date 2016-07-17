@@ -28,6 +28,16 @@ import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
 import org.raml.v2.api.model.v10.methods.Method;
 import org.raml.v2.api.model.v10.resources.Resource;
 
+/**
+ * Visits nodes of a RAML 1.0 API model. Implementations of this interface can be used to
+ * create code or documentation generators.
+ * <p>
+ * All methods of this interface have an empty default implementation. Thus, implementation
+ * classes only need to implement the methods they actually need.
+ *
+ * @author Harald Wellmann
+ *
+ */
 public interface ApiVisitor {
 
     default void visitAnyType(AnyTypeDeclaration type) {
@@ -75,26 +85,26 @@ public interface ApiVisitor {
     }
 
     default void visitResourceStart(Resource resource) {
-
+        // empty
     }
 
     default void visitResourceEnd(Resource resource) {
-
+        // empty
     }
 
     default void visitMethodStart(Method method) {
-
+        // empty
     }
 
     default void visitMethodEnd(Method method) {
-
+        // empty
     }
 
     default void visitHeader(TypeDeclaration header) {
-
+        // empty
     }
 
     default void visitQueryParameter(TypeDeclaration param) {
-
+        // empty
     }
 }

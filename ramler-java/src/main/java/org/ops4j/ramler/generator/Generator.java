@@ -31,6 +31,14 @@ import org.slf4j.LoggerFactory;
 
 import com.sun.codemodel.writer.FileCodeWriter;
 
+/**
+ * Generates JAX-RS resource interfaces and POJO model classes for all types defined in a given RAML
+ * specification.
+ * <p>
+ * 
+ * @author Harald Wellmann
+ *
+ */
 public class Generator {
 
     private static Logger log = LoggerFactory.getLogger(Generator.class);
@@ -39,14 +47,21 @@ public class Generator {
 
     private GeneratorContext context;
 
+    /**
+     * Creates a JAX-RS code generator with the given configuration.
+     * 
+     * @param config
+     *            code generator configuration
+     */
     public Generator(Configuration config) {
         this.config = config;
         this.context = new GeneratorContext(config);
     }
 
+    /**
+     * Generates code for the given configuration.
+     */
     public void generate() {
-        context.initialize();
-
         Api api = buildApi();
         if (api == null) {
             return;
