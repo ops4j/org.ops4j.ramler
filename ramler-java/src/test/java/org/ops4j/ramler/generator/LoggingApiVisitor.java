@@ -32,17 +32,17 @@ public class LoggingApiVisitor implements ApiVisitor {
     
     @Override
     public void visitObjectTypeStart(ObjectTypeDeclaration type) {
-        log.info("object type: name = {}, type = {}", type.name(), type.type());
+        log.debug("object type: name = {}, type = {}", type.name(), type.type());
     }
     
     @Override
     public void visitObjectTypeProperty(ObjectTypeDeclaration type, TypeDeclaration property) {
         if (property instanceof ObjectTypeDeclaration) {
             ObjectTypeDeclaration obj = (ObjectTypeDeclaration) property;
-            log.info("prop={}, type={}", obj.name(), obj.type());
+            log.debug("prop={}, type={}", obj.name(), obj.type());
         }
         else {
-            log.info("prop={}", property.name());            
+            log.debug("prop={}", property.name());            
         }
     }
     
@@ -53,6 +53,6 @@ public class LoggingApiVisitor implements ApiVisitor {
             return;
         }
         TypeDeclaration body = response.body().get(0);
-        log.info("body = {}", body.type());
+        log.debug("body = {}", body.type());
     }
 }
