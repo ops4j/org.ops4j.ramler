@@ -17,23 +17,29 @@
  */
 package org.ops4j.ramler.generator;
 
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
 import java.lang.annotation.Annotation;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
 import javax.annotation.Generated;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.ops4j.ramler.exc.Exceptions;
+import org.raml.v2.api.model.v10.api.Api;
 import org.raml.v2.api.model.v10.datamodel.FileTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
@@ -41,6 +47,7 @@ import org.raml.v2.api.model.v10.methods.Method;
 import org.raml.v2.api.model.v10.resources.Resource;
 
 import com.sun.codemodel.JAnnotatable;
+import com.sun.codemodel.JAnnotationArrayMember;
 import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
@@ -64,6 +71,8 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
     private Resource outerResource;
 
     private Resource innerResource;
+    
+    private List<String> mediaTypes = Collections.emptyList();
 
     public ResourceGeneratingApiVisitor(GeneratorContext context) {
         this.context = context;
@@ -71,6 +80,11 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
         this.pkg = context.getApiPackage();
         httpMethodAnnotations = Constants.JAXRS_HTTP_METHODS.stream()
             .collect(toMap(Class::getSimpleName, Function.identity()));
+    }
+    
+    @Override
+    public void visitApiStart(Api api) {
+        mediaTypes = api.mediaType().stream().map(m -> m.value()).collect(toList());
     }
 
     @Override
@@ -83,6 +97,17 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
                 klass.annotate(Generated.class).param("value", getClass().getName()).param("date",
                     LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).toString());
                 klass.annotate(Path.class).param("value", resource.resourcePath());
+                
+                if (mediaTypes.size() > 1) {
+                    JAnnotationArrayMember producesArray = klass.annotate(Produces.class).paramArray("value");
+                    mediaTypes.forEach(m -> producesArray.param(m));
+                    JAnnotationArrayMember consumesArray = klass.annotate(Consumes.class).paramArray("value");
+                    mediaTypes.forEach(m -> consumesArray.param(m));
+                }
+                else if (!mediaTypes.isEmpty()) {
+                    klass.annotate(Produces.class).param("value", mediaTypes.get(0));
+                    klass.annotate(Consumes.class).param("value", mediaTypes.get(0));
+                }                
             }
             else {
                 innerResource = resource;
