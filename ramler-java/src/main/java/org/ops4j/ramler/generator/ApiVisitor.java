@@ -18,6 +18,7 @@
 package org.ops4j.ramler.generator;
 
 import org.raml.v2.api.model.v10.api.Api;
+import org.raml.v2.api.model.v10.api.Library;
 import org.raml.v2.api.model.v10.datamodel.AnyTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.ArrayTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.BooleanTypeDeclaration;
@@ -106,5 +107,19 @@ public interface ApiVisitor {
 
     default void visitQueryParameter(TypeDeclaration param) {
         // empty
+    }
+
+    /**
+     * @param library
+     */
+    default void visitLibraryStart(Library library) {
+        
+    }
+
+    /**
+     * @param library
+     */
+    default void visitLibraryEnd(Library library) {
+        
     }
 }

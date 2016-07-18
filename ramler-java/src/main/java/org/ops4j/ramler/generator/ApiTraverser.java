@@ -21,6 +21,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.raml.v2.api.model.v10.api.Api;
+import org.raml.v2.api.model.v10.api.Library;
 import org.raml.v2.api.model.v10.datamodel.AnyTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.ArrayTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.BooleanTypeDeclaration;
@@ -64,9 +65,21 @@ public class ApiTraverser {
      */
     public void traverse(Api api, ApiVisitor visitor) {
         visitor.visitApiStart(api);
+        api.uses().forEach(lib -> traverse(lib, visitor));
         orderTypes(api).forEach((name, type) -> traverse(type, visitor));
         api.resources().forEach(resource -> traverse(resource, visitor));
         visitor.visitApiEnd(api);
+    }
+
+    /**
+     * @param lib
+     * @param visitor
+     * @return
+     */
+    private void traverse(Library library, ApiVisitor visitor) {
+        visitor.visitLibraryStart(library);
+        library.types().forEach(type -> traverse(type, visitor));
+        visitor.visitLibraryEnd(library);
     }
 
     /**
