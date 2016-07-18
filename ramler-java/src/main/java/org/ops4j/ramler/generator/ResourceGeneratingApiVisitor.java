@@ -140,16 +140,20 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
             }
         }
 
-        org.raml.v2.api.model.v10.bodies.Response response = method.responses().get(0);
-        if (response.body().isEmpty()) {
+        if (method.responses().isEmpty()) {
             codeMethod.type(codeModel.VOID);
         }
         else {
-            TypeDeclaration body = response.body().get(0);
+            org.raml.v2.api.model.v10.bodies.Response response = method.responses().get(0);
+            if (response.body().isEmpty()) {
+                codeMethod.type(codeModel.VOID);
+            }
+            else {
+                TypeDeclaration body = response.body().get(0);
 
-            codeMethod.type(context.getJavaType(body));
+                codeMethod.type(context.getJavaType(body));
+            }
         }
-
         if (method.displayName() != null) {
             codeMethod.javadoc().add(method.displayName().value());
         }
