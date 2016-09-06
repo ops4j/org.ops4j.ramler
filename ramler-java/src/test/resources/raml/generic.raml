@@ -7,6 +7,7 @@ annotationTypes:
   typeParam: string
   typeArgs:  string[]
   typeParams:  string[]
+  notes:  string[]
 types:
   Status:
     properties:
@@ -15,12 +16,19 @@ types:
       requestId : string
       text : string
       success : boolean
-  Response:
+  Result:
     (typeParams): [T]
     properties:
       result:
         (typeParam): T
-        type : object
+        type: object
+  Response:
+    (typeParams): [T]
+    properties:
+      data:
+        type : Result
+        (typeArgs):
+        - T
       status: Status
       success: boolean
   Animal:
@@ -30,7 +38,12 @@ types:
   Person:
     properties:
       firstName: string
-      lastName: string
+      lastName: 
+        type: string
+        (notes):
+        - N1
+        - N2
+        - N3
     example:
        {
           firstName: "Donald",

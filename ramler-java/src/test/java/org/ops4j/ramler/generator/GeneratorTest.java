@@ -17,6 +17,8 @@
  */
 package org.ops4j.ramler.generator;
 
+import static java.util.stream.Collectors.toList;
+import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertFalse;
@@ -24,12 +26,17 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.util.Optional;
 
 import org.junit.Test;
 import org.raml.v2.api.RamlModelBuilder;
 import org.raml.v2.api.RamlModelResult;
 import org.raml.v2.api.model.v10.api.Api;
 import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;
+import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
+import org.raml.v2.api.model.v10.datamodel.TypeInstance;
+import org.raml.v2.api.model.v10.datamodel.TypeInstanceProperty;
+import org.raml.v2.api.model.v10.declarations.AnnotationRef;
 import org.raml.v2.api.model.v10.resources.Resource;
 
 public class GeneratorTest {
@@ -95,4 +102,28 @@ public class GeneratorTest {
         generator.generate();
     }
 
+    @Test
+    public void shouldParseAnnotations() {
+        File input = new File("src/test/resources/raml/generic.raml");
+        assertTrue(input.isFile());
+        RamlModelResult ramlModelResult = new RamlModelBuilder().buildApi(input);
+        assertFalse(ramlModelResult.hasErrors());
+        Api api = ramlModelResult.getApiV10();
+        assertThat(api, is(notNullValue()));
+
+        Optional<TypeDeclaration> optPerson = api.types().stream().filter(t -> t.name().equals("Person")).findFirst();
+        assertThat(optPerson.isPresent(), is(true));
+        ObjectTypeDeclaration person = (ObjectTypeDeclaration) optPerson.get();
+        TypeDeclaration lastName = person.properties().get(1);
+        assertThat(lastName.name(), is("lastName"));
+        assertThat(lastName.annotations().size(), is(1));
+        AnnotationRef notes = lastName.annotations().get(0);
+        assertThat(notes.annotation().name(), is("notes"));
+        TypeInstance sv = notes.structuredValue();
+        assertThat(sv.isScalar(), is(false));
+        TypeInstanceProperty tip = sv.properties().get(0);
+        assertThat(tip.isArray(), is(true));
+        assertThat(tip.values().size(), is(3));
+        assertThat(tip.values().stream().map(v -> v.value()).collect(toList()), hasItems("N1", "N2", "N3"));
+    }
 }
