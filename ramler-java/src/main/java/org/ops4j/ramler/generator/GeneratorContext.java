@@ -86,7 +86,7 @@ public class GeneratorContext {
         return typeMap.get(typeName);
     }
 
-    private JType getReferencedJavaType(TypeDeclaration decl) {
+    public JType getReferencedJavaType(TypeDeclaration decl) {
         JType jtype = null;
         if (decl instanceof StringTypeDeclaration) {
             jtype = typeMap.get(decl.type());
