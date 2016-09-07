@@ -1,0 +1,43 @@
+#%RAML 1.0
+title: API with Types
+types:
+  ObjectList:
+    properties:
+      list: 
+        type: array
+        items: object
+  NameList:
+    properties:
+      list: 
+        type: array
+        items: Name
+  PersonList:
+    properties:
+      list: 
+        type: array
+        items: Person
+  StringList:
+    properties:
+      list: 
+        type: array
+        items: string
+  BooleanList:
+    properties:
+      list: BooleanArray
+  DigitList:
+    properties:
+      list: DigitArray
+  BooleanArray:
+    type: array
+    items: boolean
+  DigitArray:
+    type: array
+    items: Digit
+  Digit:
+    type: integer      
+  Name:
+    maxLength: 80
+  Person:
+    properties:
+      firstName: string
+      lastName: string

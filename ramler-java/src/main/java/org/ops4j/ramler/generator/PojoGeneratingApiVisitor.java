@@ -19,15 +19,11 @@ package org.ops4j.ramler.generator;
 
 import static java.util.stream.Collectors.toList;
 
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
-
-import javax.annotation.Generated;
 
 import org.ops4j.ramler.exc.Exceptions;
 import org.raml.v2.api.model.v10.datamodel.ArrayTypeDeclaration;
@@ -66,21 +62,9 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
 
     @Override
     public void visitObjectTypeStart(ObjectTypeDeclaration type) {
-        try {
-            JDefinedClass klass = pkg._class(type.name());
-            context.addType(type.type(), klass);
-            klass.annotate(Generated.class).
-                param("value", "org.ops4j.ramler").
-                param("date", LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).toString());
-
-            addTypeParameters(klass, type);
-            addBaseClass(klass, type);
-
-            klass.javadoc().add("This is a generated class.");
-        }
-        catch (JClassAlreadyExistsException exc) {
-            throw Exceptions.unchecked(exc);
-        }
+        JDefinedClass klass = pkg._getClass(type.name());
+        addTypeParameters(klass, type);
+        addBaseClass(klass, type);
     }
 
     private void addBaseClass(JDefinedClass klass, ObjectTypeDeclaration type) {
@@ -168,7 +152,7 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
 
     private void generateListFieldAndAccessors(JDefinedClass klass, ArrayTypeDeclaration property) {
         String fieldName = property.name();
-        JType elementType = context.getReferencedJavaType(property.items());
+        JType elementType = context.getJavaType(property.items().type());
         JClass listType = codeModel.ref(List.class).narrow(elementType);
         JFieldVar field = klass.field(JMod.PRIVATE, listType, fieldName);
 

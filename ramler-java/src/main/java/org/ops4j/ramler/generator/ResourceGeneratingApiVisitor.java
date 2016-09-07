@@ -99,8 +99,9 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
                 outerResource = resource;
                 klass = pkg
                     ._interface(Names.buildResourceInterfaceName(resource, context.getConfig()));
-                klass.annotate(Generated.class).param("value", getClass().getName()).param("date",
-                    LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).toString());
+                klass.annotate(Generated.class).
+                    param("value", "org.ops4j.ramler").
+                    param("date", LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).toString());
                 klass.annotate(Path.class).param("value", resource.resourcePath());
                 
                 if (mediaTypes.size() > 1) {

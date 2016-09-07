@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.raml.v2.api.model.v10.api.Api;
+import org.ops4j.ramler.model.ApiModel;
 import org.raml.v2.api.model.v10.datamodel.ArrayTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.BooleanTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.DateTimeOnlyTypeDeclaration;
@@ -55,13 +55,13 @@ public class GeneratorContext {
 
     private JCodeModel codeModel;
 
-    private Api api;
-
     private JPackage modelPackage;
 
     private JPackage apiPackage;
 
     private Map<String, JType> typeMap;
+
+    private ApiModel apiModel;
 
     /**
      * Creates a generator context for the given configuration.
@@ -199,6 +199,22 @@ public class GeneratorContext {
         }
     }
 
+    public JType getJavaType(String type) {
+        if (type.equals("object")) {
+            return codeModel.ref(Object.class);
+        }
+        if (type.equals("string")) {
+            return codeModel.ref(String.class);
+        }
+        if (type.equals("integer")) {
+            return codeModel.ref(Integer.class);
+        }
+        if (type.equals("boolean")) {
+            return codeModel.ref(Boolean.class);
+        }
+        return getReferencedJavaType(apiModel.getDeclaredType(type));
+    }
+
     /**
      * @return the config
      */
@@ -232,16 +248,16 @@ public class GeneratorContext {
     /**
      * @return the api
      */
-    public Api getApi() {
-        return api;
+    public ApiModel getApiModel() {
+        return apiModel;
     }
 
     /**
      * @param api
      *            the api to set
      */
-    public void setApi(Api api) {
-        this.api = api;
+    public void setApiModel(ApiModel apiModel) {
+        this.apiModel = apiModel;
     }
 
     /**

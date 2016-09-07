@@ -52,4 +52,18 @@ public class GeneratorTest {
         Generator generator = new Generator(config);
         generator.generate();
     }
+
+    @Test
+    public void shouldGenerateArrayTypes() {
+        File input = new File("src/test/resources/raml/array.raml");
+        assertTrue(input.isFile());
+        
+        Configuration config = new Configuration();
+        config.setSourceFile(input);
+        config.setBasePackage("org.ops4j.raml.array");
+        config.setTargetDir(new File("target/generated/raml"));
+
+        Generator generator = new Generator(config);
+        generator.generate();
+    }
 }

@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.stream.Stream;
 
 import org.ops4j.ramler.exc.Exceptions;
+import org.ops4j.ramler.model.ApiModel;
 import org.raml.v2.api.RamlModelBuilder;
 import org.raml.v2.api.RamlModelResult;
 import org.raml.v2.api.model.common.ValidationResult;
@@ -81,15 +82,16 @@ public class Generator {
         }
 
         Api api = ramlModelResult.getApiV10();
-        context.setApi(api);
+        context.setApiModel(new ApiModel(api));
         return api;
     }
 
     private void buildCodeModel(Api api) {
+        PojoCreatingApiVisitor pojoCreator = new PojoCreatingApiVisitor(context);
         PojoGeneratingApiVisitor pojoVisitor = new PojoGeneratingApiVisitor(context);
         ResourceGeneratingApiVisitor resourceVisitor = new ResourceGeneratingApiVisitor(context);
         ApiTraverser traverser = new ApiTraverser();
-        Stream.of(pojoVisitor, resourceVisitor).forEach(v -> traverser.traverse(api, v));
+        Stream.of(pojoCreator, pojoVisitor, resourceVisitor).forEach(v -> traverser.traverse(api, v));
     }
 
     private void writeCodeModel() {
