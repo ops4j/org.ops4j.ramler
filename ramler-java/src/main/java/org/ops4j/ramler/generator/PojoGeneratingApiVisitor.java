@@ -204,12 +204,14 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
             .flatMap(t -> findTypeParam(klass, t));
     }
 
+    // TODO factor out
     private Stream<String> findTypeArgs(ObjectTypeDeclaration property) {
         return property.annotations().stream()
             .filter(a -> a.annotation().name().equals("typeArgs"))
             .flatMap(a -> findAnnotationValues(a));
     }
     
+    // TODO factor out
     private Stream<String> findAnnotationValues(AnnotationRef ref) {
         TypeInstanceProperty tip = ref.structuredValue().properties().get(0);
         return tip.values().stream().map(ti -> ti.value()).map(String.class::cast);

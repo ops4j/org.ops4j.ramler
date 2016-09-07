@@ -47,8 +47,7 @@ types:
         type: Age
       address:
         type: Address
-      favouriteColour:
-        type: Colour
+      favouriteColour?: Colour
       registered:
         type: boolean
       dateOfBirth:
@@ -66,6 +65,9 @@ types:
       q :
         type: string
         default: ""
+      sort:
+        type: string
+        required: false
     responses:
       200:
         body:
