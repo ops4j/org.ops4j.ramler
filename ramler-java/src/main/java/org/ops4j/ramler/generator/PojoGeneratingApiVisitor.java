@@ -163,7 +163,16 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
             ObjectTypeDeclaration property) {
         String fieldName = property.name();
 
-        JType jtype = context.getJavaType(property);
+        JType jtype = findTypeVar(klass, property).orElse(context.getJavaType(property));
+        List<String> args = context.getApiModel().getStringAnnotations(property, "typeArgs");
+        if (!args.isEmpty()) {
+            JClass jclass = (JClass) jtype;
+            for (String arg : args) {
+                JType typeArg = findTypeParam(klass, arg).get();
+                jclass = jclass.narrow(typeArg);
+            }
+            jtype = jclass;
+        }
         JFieldVar field = klass.field(JMod.PRIVATE, jtype, fieldName);
 
         generateGetter(klass, field, this::getGetterName);
