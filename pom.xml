@@ -29,6 +29,7 @@
 
     <modules>
         <module>ramler-java</module>
+        <module>ramler-maven-plugin</module>
     </modules>
     <dependencyManagement>
         <dependencies>
