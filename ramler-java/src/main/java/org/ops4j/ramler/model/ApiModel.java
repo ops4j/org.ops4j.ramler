@@ -1,5 +1,6 @@
 package org.ops4j.ramler.model;
 
+import static java.util.stream.Collectors.toList;
 import static org.ops4j.ramler.model.Metatype.ANY;
 import static org.ops4j.ramler.model.Metatype.ARRAY;
 import static org.ops4j.ramler.model.Metatype.BOOLEAN;
@@ -16,7 +17,9 @@ import static org.ops4j.ramler.model.Metatype.TIME_ONLY;
 import static org.ops4j.ramler.model.Metatype.UNION;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import org.raml.v2.api.model.v08.parameters.NumberTypeDeclaration;
 import org.raml.v2.api.model.v10.api.Api;
@@ -33,7 +36,9 @@ import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.StringTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.TimeOnlyTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
+import org.raml.v2.api.model.v10.datamodel.TypeInstanceProperty;
 import org.raml.v2.api.model.v10.datamodel.UnionTypeDeclaration;
+import org.raml.v2.api.model.v10.declarations.AnnotationRef;
 
 public class ApiModel {
 
@@ -166,4 +171,17 @@ public class ApiModel {
         }
         throw new IllegalArgumentException("cannot determine metatype: " + "name=" + type.name() +", type=" + type.type());
     }
+    
+    public List<String> getStringAnnotations(TypeDeclaration decl, String annotationName) {
+        return decl.annotations().stream()
+                .filter(a -> a.annotation().name().equals(annotationName))
+                .flatMap(a -> findAnnotationValues(a)).collect(toList());
+    }
+
+    private Stream<String> findAnnotationValues(AnnotationRef ref) {
+        TypeInstanceProperty tip = ref.structuredValue().properties().get(0);
+        return tip.values().stream().map(ti -> ti.value()).map(String.class::cast);
+    }
+
+    
 }

@@ -27,7 +27,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.stream.Stream;
 
 import javax.annotation.Generated;
 import javax.ws.rs.Consumes;
@@ -44,8 +43,6 @@ import org.raml.v2.api.model.v10.api.Api;
 import org.raml.v2.api.model.v10.datamodel.FileTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
-import org.raml.v2.api.model.v10.datamodel.TypeInstanceProperty;
-import org.raml.v2.api.model.v10.declarations.AnnotationRef;
 import org.raml.v2.api.model.v10.methods.Method;
 import org.raml.v2.api.model.v10.resources.Resource;
 
@@ -183,7 +180,7 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
                 TypeDeclaration body = response.body().get(0);
 
                 JType resultType = context.getJavaType(body);
-                List<String> args = findTypeArgs(body).collect(toList());
+                List<String> args = context.getApiModel().getStringAnnotations(body, "typeArgs");
                 if (!args.isEmpty()) {
                     JClass jclass = (JClass) resultType;
                     for (String arg : args) {
@@ -201,20 +198,6 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
         }
     }
 
-    // TODO factor out
-    private Stream<String> findTypeArgs(TypeDeclaration property) {
-        return property.annotations().stream()
-            .filter(a -> a.annotation().name().equals("typeArgs"))
-            .flatMap(a -> findAnnotationValues(a));
-    }
-
-    // TODO factor out
-    private Stream<String> findAnnotationValues(AnnotationRef ref) {
-        TypeInstanceProperty tip = ref.structuredValue().properties().get(0);
-        return tip.values().stream().map(ti -> ti.value()).map(String.class::cast);
-    }
-        
-    
     private void addFormParameters(JMethod codeMethod, TypeDeclaration body) {
         ObjectTypeDeclaration type = (ObjectTypeDeclaration) body;
         for (TypeDeclaration param : type.properties()) {

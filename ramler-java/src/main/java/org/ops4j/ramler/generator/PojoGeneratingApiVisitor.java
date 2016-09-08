@@ -17,8 +17,6 @@
  */
 package org.ops4j.ramler.generator;
 
-import static java.util.stream.Collectors.toList;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -177,7 +175,7 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         String fieldName = property.name();
 
         JType jtype = findTypeVar(klass, property).orElse(context.getJavaType(property));
-        List<String> args = findTypeArgs(property).collect(toList());
+        List<String> args = context.getApiModel().getStringAnnotations(property, "typeArgs");
         if (!args.isEmpty()) {
             JClass jclass = (JClass) jtype;
             for (String arg : args) {
@@ -196,19 +194,6 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         return property.annotations().stream()
                 .filter(a -> a.annotation().name().equals("typeParam")).findFirst()
                 .flatMap(t -> findTypeParam(klass, t));
-    }
-
-    // TODO factor out
-    private Stream<String> findTypeArgs(TypeDeclaration property) {
-        return property.annotations().stream()
-                .filter(a -> a.annotation().name().equals("typeArgs"))
-                .flatMap(a -> findAnnotationValues(a));
-    }
-
-    // TODO factor out
-    private Stream<String> findAnnotationValues(AnnotationRef ref) {
-        TypeInstanceProperty tip = ref.structuredValue().properties().get(0);
-        return tip.values().stream().map(ti -> ti.value()).map(String.class::cast);
     }
 
     private Optional<JType> findTypeParam(JDefinedClass klass, AnnotationRef typeParam) {
