@@ -83,10 +83,10 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
     }
 
     private void addTypeParameters(JDefinedClass klass, ObjectTypeDeclaration type) {
-        Optional<AnnotationRef> typeParams = type.annotations().stream()
-                .filter(a -> a.annotation().name().equals("typeParams")).findFirst();
-        if (typeParams.isPresent()) {
-            TypeInstanceProperty prop = typeParams.get().structuredValue().properties().get(0);
+        Optional<AnnotationRef> typeVars = type.annotations().stream()
+                .filter(a -> a.annotation().name().equals("typeVars")).findFirst();
+        if (typeVars.isPresent()) {
+            TypeInstanceProperty prop = typeVars.get().structuredValue().properties().get(0);
             prop.values().forEach(i -> klass.generify(i.value().toString()));
         }
     }
@@ -201,12 +201,12 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
 
     private Optional<JType> findTypeVar(JDefinedClass klass, TypeDeclaration property) {
         return property.annotations().stream()
-                .filter(a -> a.annotation().name().equals("typeParam")).findFirst()
+                .filter(a -> a.annotation().name().equals("typeVar")).findFirst()
                 .flatMap(t -> findTypeParam(klass, t));
     }
 
-    private Optional<JType> findTypeParam(JDefinedClass klass, AnnotationRef typeParam) {
-        String paramName = typeParam.structuredValue().value().toString();
+    private Optional<JType> findTypeParam(JDefinedClass klass, AnnotationRef typeVar) {
+        String paramName = typeVar.structuredValue().value().toString();
         return Stream.of(klass.typeParams()).map(JType.class::cast)
                 .filter(t -> t.name().equals(paramName)).findFirst();
     }

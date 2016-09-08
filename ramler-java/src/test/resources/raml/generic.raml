@@ -4,9 +4,9 @@ version: 0.1
 mediaType: application/json
 baseUri: http://localhost:8080
 annotationTypes:
-  typeParam: string
+  typeVar: string
   typeArgs:  string[]
-  typeParams:  string[]
+  typeVars:  string[]
   notes:  string[]
 types:
   Status:
@@ -17,13 +17,13 @@ types:
       text : string
       success : boolean
   Result:
-    (typeParams): [T]
+    (typeVars): [T]
     properties:
       result:
-        (typeParam): T
+        (typeVar): T
         type: any
   Response:
-    (typeParams): [T]
+    (typeVars): [T]
     properties:
       data:
         type : Result
