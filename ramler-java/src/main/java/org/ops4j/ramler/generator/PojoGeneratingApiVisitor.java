@@ -62,8 +62,18 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
     @Override
     public void visitObjectTypeStart(ObjectTypeDeclaration type) {
         JDefinedClass klass = pkg._getClass(type.name());
+        addJavadoc(klass, type);
         addTypeParameters(klass, type);
         addBaseClass(klass, type);
+    }
+
+    private void addJavadoc(JDefinedClass klass, ObjectTypeDeclaration type) {
+        if (type.description() == null) {
+            klass.javadoc().add("Generated from a RAML specification.");                
+        }
+        else {
+            klass.javadoc().add(type.description().value());                                
+        }
     }
 
     private void addBaseClass(JDefinedClass klass, ObjectTypeDeclaration type) {
@@ -142,8 +152,8 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         String fieldName = property.name();
         JType jtype = context.getJavaType(property);
         JFieldVar field = klass.field(JMod.PRIVATE, jtype, fieldName);
-
-        generateGetter(klass, field, this::getGetterName);
+        
+        generateGetter(property, klass, field, this::getGetterName);
         generateSetter(klass, jtype, fieldName);
     }
 
@@ -157,6 +167,10 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         getter.body()._if(field.eq(JExpr._null()))._then().assign(field,
                 JExpr._new(codeModel.ref(ArrayList.class).narrow(elementType)));
         getter.body()._return(field);
+        
+        if (property.description() != null) {
+            getter.javadoc().add(property.description().value());
+        }
     }
 
     private void generateObjectFieldAndAccessors(JDefinedClass klass,
@@ -175,7 +189,7 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         }
         JFieldVar field = klass.field(JMod.PRIVATE, jtype, fieldName);
 
-        generateGetter(klass, field, this::getGetterName);
+        generateGetter(property, klass, field, this::getGetterName);
         generateSetter(klass, jtype, fieldName);
     }
 
@@ -195,7 +209,7 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         }
         JFieldVar field = klass.field(JMod.PRIVATE, jtype, fieldName);
 
-        generateGetter(klass, field, this::getGetterName);
+        generateGetter(property, klass, field, this::getGetterName);
         generateSetter(klass, jtype, fieldName);
     }
 
@@ -216,9 +230,12 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
                 .filter(t -> t.name().equals(paramName)).findFirst();
     }
 
-    private void generateGetter(JDefinedClass klass, JFieldVar field, UnaryOperator<String> op) {
+    private void generateGetter(TypeDeclaration type, JDefinedClass klass, JFieldVar field, UnaryOperator<String> op) {
         JMethod getter = klass.method(JMod.PUBLIC, field.type(), op.apply(field.name()));
         getter.body()._return(field);
+        if (type.description() != null) {
+            getter.javadoc().add(type.description().value());
+        }
     }
 
     private void generateSetter(JDefinedClass klass, JType fieldType, String fieldName) {
@@ -233,7 +250,7 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         JType jtype = context.getJavaType(property);
         JFieldVar field = klass.field(JMod.PRIVATE, jtype, fieldName);
 
-        generateGetter(klass, field, this::getCheckerName);
+        generateGetter(property, klass, field, this::getCheckerName);
         generateSetter(klass, jtype, fieldName);
     }
 

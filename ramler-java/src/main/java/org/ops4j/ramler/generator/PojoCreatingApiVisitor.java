@@ -48,8 +48,6 @@ public class PojoCreatingApiVisitor implements ApiVisitor {
             klass.annotate(Generated.class).
                 param("value", "org.ops4j.ramler").
                 param("date", LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).toString());
-
-            klass.javadoc().add("This is a generated class.");
         }
         catch (JClassAlreadyExistsException exc) {
             throw Exceptions.unchecked(exc);
