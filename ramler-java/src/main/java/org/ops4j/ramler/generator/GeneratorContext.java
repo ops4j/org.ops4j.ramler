@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.ops4j.ramler.model.ApiModel;
+import org.raml.v2.api.model.v10.datamodel.AnyTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.ArrayTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.BooleanTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.DateTimeOnlyTypeDeclaration;
@@ -122,6 +123,9 @@ public class GeneratorContext {
         }
         else if (decl instanceof FileTypeDeclaration) {
             jtype = codeModel.ref(InputStream.class);
+        }
+        else if (decl instanceof AnyTypeDeclaration) {
+            jtype = codeModel.ref(Object.class);
         }
         return jtype;
     }
