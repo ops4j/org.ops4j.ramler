@@ -134,14 +134,14 @@ public class SimpleObjectTest {
         assertProperty(klass, "f", "float", "getF", "setF");
         assertProperty(klass, "fo", "Float", "getFo", "setFo");
         assertProperty(klass, "d", "double", "getD", "setD");
-        assertProperty(klass, "do", "Double", "getDo", "setDo");
+        assertProperty(klass, "dbl", "Double", "getDbl", "setDbl");
         verifyClass();
     }
 
     @Test
     public void shouldFindTemporalsMembers() {
         expectClass("Temporals");
-        assertProperty(klass, "do", "LocalDate", "getDo", "setDo");
+        assertProperty(klass, "date", "LocalDate", "getDate", "setDate");
         assertProperty(klass, "to", "LocalTime", "getTo", "setTo");
         assertProperty(klass, "dto", "LocalDateTime", "getDto", "setDto");
         assertProperty(klass, "dt", "ZonedDateTime", "getDt", "setDt");
