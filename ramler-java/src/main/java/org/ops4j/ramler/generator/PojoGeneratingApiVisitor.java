@@ -70,10 +70,10 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
 
     private void addJavadoc(JDefinedClass klass, ObjectTypeDeclaration type) {
         if (type.description() == null) {
-            klass.javadoc().add("Generated from a RAML specification.");                
+            klass.javadoc().add("Generated from a RAML specification.");
         }
         else {
-            klass.javadoc().add(type.description().value());                                
+            klass.javadoc().add(type.description().value());
         }
     }
 
@@ -82,17 +82,17 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
             JClass baseClass = pkg._getClass(type.type());
 
             Optional<AnnotationRef> typeArgs = type.annotations().stream()
-                    .filter(a -> a.annotation().name().equals("typeArgs")).findFirst();
+                .filter(a -> a.annotation().name().equals("typeArgs")).findFirst();
             if (typeArgs.isPresent()) {
                 TypeInstanceProperty prop = typeArgs.get().structuredValue().properties().get(0);
                 JClass[] args = prop.values().stream().map(v -> pkg._getClass(v.value().toString()))
-                        .toArray(JClass[]::new);
+                    .toArray(JClass[]::new);
                 baseClass = baseClass.narrow(args);
             }
             klass._extends(baseClass);
         }
     }
-    
+
     private void addDiscriminator(JDefinedClass klass, ObjectTypeDeclaration type) {
         if (type.discriminator() == null) {
             return;
@@ -101,16 +101,15 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         if (discriminatorValue == null) {
             discriminatorValue = type.name();
         }
-        
-        JFieldVar field = klass.field(JMod.PUBLIC | JMod.STATIC | JMod.FINAL, codeModel._ref(String.class), "DISCRIMINATOR");
-        field.init(JExpr.lit(discriminatorValue));        
-    }
 
-    
+        JFieldVar field = klass.field(JMod.PUBLIC | JMod.STATIC | JMod.FINAL,
+            codeModel._ref(String.class), "DISCRIMINATOR");
+        field.init(JExpr.lit(discriminatorValue));
+    }
 
     private void addTypeParameters(JDefinedClass klass, ObjectTypeDeclaration type) {
         Optional<AnnotationRef> typeVars = type.annotations().stream()
-                .filter(a -> a.annotation().name().equals("typeVars")).findFirst();
+            .filter(a -> a.annotation().name().equals("typeVars")).findFirst();
         if (typeVars.isPresent()) {
             TypeInstanceProperty prop = typeVars.get().structuredValue().properties().get(0);
             prop.values().forEach(i -> klass.generify(i.value().toString()));
@@ -148,7 +147,8 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
             for (String enumValue : type.enumValues()) {
                 klass.enumConstant(enumValue.toUpperCase());
             }
-        } catch (JClassAlreadyExistsException exc) {
+        }
+        catch (JClassAlreadyExistsException exc) {
             throw Exceptions.unchecked(exc);
         }
     }
@@ -156,13 +156,17 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
     private void generateFieldAndAccessors(JDefinedClass klass, TypeDeclaration property) {
         if (property instanceof ObjectTypeDeclaration) {
             generateObjectFieldAndAccessors(klass, (ObjectTypeDeclaration) property);
-        } else if (property instanceof ArrayTypeDeclaration) {
+        }
+        else if (property instanceof ArrayTypeDeclaration) {
             generateListFieldAndAccessors(klass, (ArrayTypeDeclaration) property);
-        } else if (property instanceof BooleanTypeDeclaration) {
+        }
+        else if (property instanceof BooleanTypeDeclaration) {
             generateBooleanFieldAndAccessors(klass, (BooleanTypeDeclaration) property);
-        } else if (property instanceof AnyTypeDeclaration) {
+        }
+        else if (property instanceof AnyTypeDeclaration) {
             generateAnyFieldAndAccessors(klass, (AnyTypeDeclaration) property);
-        } else {
+        }
+        else {
             generateSimpleFieldAndAccessor(klass, property);
         }
     }
@@ -171,13 +175,13 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         String fieldName = property.name();
         JType jtype = context.getJavaType(property);
         JFieldVar field = klass.field(JMod.PRIVATE, jtype, fieldName);
-        
+
         generateGetter(property, klass, field, this::getGetterName);
         generateSetter(klass, jtype, fieldName);
     }
 
     private void generateDiscriminatorAccessors(JDefinedClass klass, TypeDeclaration property) {
-        
+
         generateDiscriminatorGetter(property, klass, property.name());
         generateDiscriminatorSetter(klass, klass, property.name());
     }
@@ -190,9 +194,9 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
 
         JMethod getter = klass.method(JMod.PUBLIC, listType, getGetterName(fieldName));
         getter.body()._if(field.eq(JExpr._null()))._then().assign(field,
-                JExpr._new(codeModel.ref(ArrayList.class).narrow(elementType)));
+            JExpr._new(codeModel.ref(ArrayList.class).narrow(elementType)));
         getter.body()._return(field);
-        
+
         if (property.description() != null) {
             getter.javadoc().add(property.description().value());
         }
@@ -200,7 +204,7 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
     }
 
     private void generateObjectFieldAndAccessors(JDefinedClass klass,
-            ObjectTypeDeclaration property) {
+        ObjectTypeDeclaration property) {
         String fieldName = property.name();
 
         JType jtype = findTypeVar(klass, property).orElse(context.getJavaType(property));
@@ -219,8 +223,7 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         generateSetter(klass, jtype, fieldName);
     }
 
-    private void generateAnyFieldAndAccessors(JDefinedClass klass,
-            AnyTypeDeclaration property) {
+    private void generateAnyFieldAndAccessors(JDefinedClass klass, AnyTypeDeclaration property) {
         String fieldName = property.name();
 
         JType jtype = findTypeVar(klass, property).orElse(context.getJavaType(property));
@@ -240,23 +243,23 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
     }
 
     private Optional<JType> findTypeVar(JDefinedClass klass, TypeDeclaration property) {
-        return property.annotations().stream()
-                .filter(a -> a.annotation().name().equals("typeVar")).findFirst()
-                .flatMap(t -> findTypeParam(klass, t));
+        return property.annotations().stream().filter(a -> a.annotation().name().equals("typeVar"))
+            .findFirst().flatMap(t -> findTypeParam(klass, t));
     }
 
     private Optional<JType> findTypeParam(JDefinedClass klass, AnnotationRef typeVar) {
         String paramName = typeVar.structuredValue().value().toString();
         return Stream.of(klass.typeParams()).map(JType.class::cast)
-                .filter(t -> t.name().equals(paramName)).findFirst();
+            .filter(t -> t.name().equals(paramName)).findFirst();
     }
 
     private Optional<JType> findTypeParam(JClass klass, String paramName) {
         return Stream.of(klass.typeParams()).map(JType.class::cast)
-                .filter(t -> t.name().equals(paramName)).findFirst();
+            .filter(t -> t.name().equals(paramName)).findFirst();
     }
 
-    private void generateGetter(TypeDeclaration type, JDefinedClass klass, JFieldVar field, UnaryOperator<String> op) {
+    private void generateGetter(TypeDeclaration type, JDefinedClass klass, JFieldVar field,
+        UnaryOperator<String> op) {
         JMethod getter = klass.method(JMod.PUBLIC, field.type(), op.apply(field.name()));
         getter.body()._return(field);
         if (type.description() != null) {
@@ -271,7 +274,7 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
     }
 
     private void generateBooleanFieldAndAccessors(JDefinedClass klass,
-            BooleanTypeDeclaration property) {
+        BooleanTypeDeclaration property) {
         String fieldName = property.name();
         JType jtype = context.getJavaType(property);
         JFieldVar field = klass.field(JMod.PRIVATE, jtype, fieldName);
@@ -279,16 +282,19 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         generateGetter(property, klass, field, this::getCheckerName);
         generateSetter(klass, jtype, fieldName);
     }
-    
-    private void generateDiscriminatorGetter(TypeDeclaration type, JDefinedClass klass, String property) {
-        JMethod getter = klass.method(JMod.PUBLIC, codeModel._ref(String.class), getGetterName(property));
+
+    private void generateDiscriminatorGetter(TypeDeclaration type, JDefinedClass klass,
+        String property) {
+        JMethod getter = klass.method(JMod.PUBLIC, codeModel._ref(String.class),
+            getGetterName(property));
         getter.body()._return(klass.staticRef("DISCRIMINATOR"));
         if (type.description() != null) {
             getter.javadoc().add(type.description().value());
         }
     }
 
-    private void generateDiscriminatorSetter(JDefinedClass klass, JType fieldType, String fieldName) {
+    private void generateDiscriminatorSetter(JDefinedClass klass, JType fieldType,
+        String fieldName) {
         JMethod setter = klass.method(JMod.PUBLIC, codeModel.VOID, getSetterName(fieldName));
         setter.param(fieldType, fieldName);
         setter.body().directStatement("// empty");

@@ -112,8 +112,11 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
                     klass.annotate(Consumes.class).param("value", mediaTypes.get(0));
                 }                
             }
-            else {
+            else if (innerResource == null) {
                 innerResource = resource;
+            }
+            else {
+                throw new IllegalStateException("cannot handle resources nested more than two levels");
             }
 
         }

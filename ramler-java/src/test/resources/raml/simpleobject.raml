@@ -23,6 +23,76 @@ types:
       token: string
   Name:
     maxLength: 80
+  Integers:
+    properties:
+      i8:
+        type: integer
+        format: int8
+      i8o:
+        type: integer
+        format: int8
+        required: false
+      i16:
+        type: integer
+        format: int16
+      i16o:
+        type: integer
+        format: int16
+        required: false
+      i32:
+        type: integer
+        format: int32
+      i32o:
+        type: integer
+        format: int32
+        required: false
+      i64:
+        type: integer
+        format: int64
+      i64o:
+        type: integer
+        format: int64
+        required: false
+      i:
+        type: integer
+        format: int
+      io:
+        type: integer
+        format: int
+        required: false
+      l:
+        type: integer
+        format: long
+      lo:
+        type: integer
+        format: long
+        required: false        
+  Numbers:
+    properties:
+      f:
+        type: number
+        format: float
+      fo:
+        type: number
+        format: float
+        required: false  
+      d:
+        type: number
+        format: double
+      do:
+        type: number
+        format: double
+        required: false  
+  Temporals:
+    properties:
+      do:
+        type: date-only
+      to:
+        type: time-only
+      dto:
+        type: datetime-only
+      dt:
+        type: datetime
   Person:
     properties:
       firstname:

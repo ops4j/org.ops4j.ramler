@@ -26,20 +26,6 @@ import org.junit.Test;
 public class GeneratorTest {
 
     @Test
-    public void shouldGeneratePojos() {
-        File input = new File("src/test/resources/raml/simpleobject.raml");
-        assertTrue(input.isFile());
-        
-        Configuration config = new Configuration();
-        config.setSourceFile(input);
-        config.setBasePackage("org.ops4j.raml.demo");
-        config.setTargetDir(new File("target/generated/raml"));
-
-        Generator generator = new Generator(config);
-        generator.generate();
-    }
-
-    @Test
     public void shouldGenerateGenericPojos() {
         File input = new File("src/test/resources/raml/generic.raml");
         assertTrue(input.isFile());

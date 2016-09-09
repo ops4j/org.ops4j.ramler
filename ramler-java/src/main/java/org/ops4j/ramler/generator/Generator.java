@@ -58,6 +58,10 @@ public class Generator {
         this.config = config;
         this.context = new GeneratorContext(config);
     }
+    
+    GeneratorContext getContext() {
+        return context;
+    }
 
     /**
      * Generates code for the given configuration.
@@ -68,7 +72,7 @@ public class Generator {
             return;
         }
 
-        buildCodeModel(api);
+        buildCodeModel();
         writeCodeModel();
     }
 
@@ -86,12 +90,12 @@ public class Generator {
         return api;
     }
 
-    private void buildCodeModel(Api api) {
+    private void buildCodeModel() {
         PojoCreatingApiVisitor pojoCreator = new PojoCreatingApiVisitor(context);
         PojoGeneratingApiVisitor pojoVisitor = new PojoGeneratingApiVisitor(context);
         ResourceGeneratingApiVisitor resourceVisitor = new ResourceGeneratingApiVisitor(context);
         ApiTraverser traverser = new ApiTraverser();
-        Stream.of(pojoCreator, pojoVisitor, resourceVisitor).forEach(v -> traverser.traverse(api, v));
+        Stream.of(pojoCreator, pojoVisitor, resourceVisitor).forEach(v -> traverser.traverse(context.getApiModel().api(), v));
     }
 
     private void writeCodeModel() {

@@ -109,17 +109,11 @@ public interface ApiVisitor {
         // empty
     }
 
-    /**
-     * @param library
-     */
     default void visitLibraryStart(Library library) {
-        
+        // empty        
     }
 
-    /**
-     * @param library
-     */
     default void visitLibraryEnd(Library library) {
-        
+        // empty        
     }
 }

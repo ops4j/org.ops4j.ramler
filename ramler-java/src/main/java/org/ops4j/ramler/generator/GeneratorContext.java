@@ -35,6 +35,7 @@ import org.raml.v2.api.model.v10.datamodel.DateTimeTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.DateTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.FileTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.IntegerTypeDeclaration;
+import org.raml.v2.api.model.v10.datamodel.NumberTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.StringTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.TimeOnlyTypeDeclaration;
@@ -79,15 +80,26 @@ public class GeneratorContext {
         apiPackage = basePackage.subPackage(config.getApiPackage());
     }
 
+    /**
+     * Stores the Java type for a given RAML type.
+     * @param typeName RAML type name
+     * @param type corresponding Java type
+     */
     public void addType(String typeName, JType type) {
         typeMap.put(typeName, type);
     }
 
+    /**
+     * Finds the Java type for a given RAML type. 
+     * Prerequisite: The type has been stored with {@link #addType(String, JType)}.
+     * @param typeName RAML type name
+     * @return corresponding Java type
+     */
     public JType findType(String typeName) {
         return typeMap.get(typeName);
     }
 
-    public JType getReferencedJavaType(TypeDeclaration decl) {
+    private JType getReferencedJavaType(TypeDeclaration decl) {
         JType jtype = null;
         if (decl instanceof StringTypeDeclaration) {
             jtype = typeMap.get(decl.type());
@@ -97,6 +109,9 @@ public class GeneratorContext {
         }
         else if (decl instanceof IntegerTypeDeclaration) {
             jtype = getNumberType((IntegerTypeDeclaration) decl);
+        }
+        else if (decl instanceof NumberTypeDeclaration) {
+            jtype = getNumberType((NumberTypeDeclaration) decl);
         }
         else if (decl instanceof BooleanTypeDeclaration) {
             jtype = getBooleanType((BooleanTypeDeclaration) decl);
@@ -139,19 +154,20 @@ public class GeneratorContext {
         }
     }
 
-    private JType getNumberType(IntegerTypeDeclaration decl) {
+    private JType getNumberType(NumberTypeDeclaration decl) {
         if (decl.format() == null) {
-            return getIntegerType(decl);
+            return getIntegerType((IntegerTypeDeclaration) decl);
         }
         switch (decl.format()) {
             case "long":
-                return getLongType(decl);
+            case "int64":
+                return getLongType((IntegerTypeDeclaration) decl);
             case "float":
                 return getFloatType(decl);
             case "double":
                 return getDoubleType(decl);
             default:
-                return getIntegerType(decl);
+                return getIntegerType((IntegerTypeDeclaration) decl);
         }
     }
 
@@ -164,7 +180,7 @@ public class GeneratorContext {
         }
     }
 
-    private JType getFloatType(IntegerTypeDeclaration decl) {
+    private JType getFloatType(NumberTypeDeclaration decl) {
         if (decl.required()) {
             return codeModel.FLOAT;
         }
@@ -173,7 +189,7 @@ public class GeneratorContext {
         }
     }
 
-    private JType getDoubleType(IntegerTypeDeclaration decl) {
+    private JType getDoubleType(NumberTypeDeclaration decl) {
         if (decl.required()) {
             return codeModel.DOUBLE;
         }
