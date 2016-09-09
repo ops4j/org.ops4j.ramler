@@ -196,6 +196,7 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         if (property.description() != null) {
             getter.javadoc().add(property.description().value());
         }
+        generateSetter(klass, listType, fieldName);
     }
 
     private void generateObjectFieldAndAccessors(JDefinedClass klass,
