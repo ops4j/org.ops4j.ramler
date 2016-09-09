@@ -87,14 +87,6 @@ public class ApiModel {
         return item.type().replace("[]", "");
     }
     
-    public String getBaseType(TypeDeclaration type) {
-        TypeDeclaration declaredType = getDeclaredType(type.type());
-        if (declaredType != null) {
-            return getBaseType(declaredType);
-        }        
-        return type.type();        
-    }
-    
     public boolean isPrimitive(TypeDeclaration type) {
         switch (metatype(type)){
             case STRING:
@@ -182,6 +174,4 @@ public class ApiModel {
         TypeInstanceProperty tip = ref.structuredValue().properties().get(0);
         return tip.values().stream().map(ti -> ti.value()).map(String.class::cast);
     }
-
-    
 }

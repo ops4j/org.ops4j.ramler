@@ -30,7 +30,6 @@ import org.raml.v2.api.model.v10.datamodel.BooleanTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.StringTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
-import org.raml.v2.api.model.v10.datamodel.TypeInstanceProperty;
 import org.raml.v2.api.model.v10.declarations.AnnotationRef;
 
 import com.sun.codemodel.JClass;
@@ -81,13 +80,9 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         if (!type.type().equals("object")) {
             JClass baseClass = pkg._getClass(type.type());
 
-            Optional<AnnotationRef> typeArgs = type.annotations().stream()
-                .filter(a -> a.annotation().name().equals("typeArgs")).findFirst();
-            if (typeArgs.isPresent()) {
-                TypeInstanceProperty prop = typeArgs.get().structuredValue().properties().get(0);
-                JClass[] args = prop.values().stream().map(v -> pkg._getClass(v.value().toString()))
-                    .toArray(JClass[]::new);
-                baseClass = baseClass.narrow(args);
+            List<String> typeArgs = context.getApiModel().getStringAnnotations(type, "typeArgs");
+            if (!typeArgs.isEmpty()) {
+                baseClass = baseClass.narrow(typeArgs.stream().map(pkg::_getClass).toArray(JClass[]::new));
             }
             klass._extends(baseClass);
         }
@@ -108,12 +103,8 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
     }
 
     private void addTypeParameters(JDefinedClass klass, ObjectTypeDeclaration type) {
-        Optional<AnnotationRef> typeVars = type.annotations().stream()
-            .filter(a -> a.annotation().name().equals("typeVars")).findFirst();
-        if (typeVars.isPresent()) {
-            TypeInstanceProperty prop = typeVars.get().structuredValue().properties().get(0);
-            prop.values().forEach(i -> klass.generify(i.value().toString()));
-        }
+        List<String> typeVars = context.getApiModel().getStringAnnotations(type, "typeVars");
+        typeVars.forEach(klass::generify);
     }
 
     @Override

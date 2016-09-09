@@ -91,7 +91,7 @@ public class ParserTest {
         assertMemberType(props.get(3), "address", "Address", "object");
         assertMemberType(props.get(4), "favouriteColour", "Colour", "string");
         assertMemberType(props.get(5), "registered", "boolean", "boolean");
-        assertMemberType(props.get(6), "dateOfBirth", "date-only", "date-only");
+        assertMemberType(props.get(6), "dateOfBirth", "date-only", "date_only");
         assertMemberType(props.get(7), "registrationDate", "datetime", "datetime");
         
         TypeDeclaration favouriteColour = userType.properties().get(4);
@@ -111,7 +111,7 @@ public class ParserTest {
     private void assertMemberType(TypeDeclaration type, String memberName, String typeName, String baseType) {
         assertThat(type.name(), is(memberName));
         assertThat(type.type(), is(typeName));
-        assertThat(apiModel.getBaseType(type), is(baseType));
+        assertThat(apiModel.metatype(type).toString().toLowerCase(), is(baseType.toLowerCase()));
     }
     
     @Test
