@@ -65,6 +65,7 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         addJavadoc(klass, type);
         addTypeParameters(klass, type);
         addBaseClass(klass, type);
+        addDiscriminator(klass, type);
     }
 
     private void addJavadoc(JDefinedClass klass, ObjectTypeDeclaration type) {
@@ -91,6 +92,21 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
             klass._extends(baseClass);
         }
     }
+    
+    private void addDiscriminator(JDefinedClass klass, ObjectTypeDeclaration type) {
+        if (type.discriminator() == null) {
+            return;
+        }
+        String discriminatorValue = type.discriminatorValue();
+        if (discriminatorValue == null) {
+            discriminatorValue = type.name();
+        }
+        
+        JFieldVar field = klass.field(JMod.PUBLIC | JMod.STATIC | JMod.FINAL, codeModel._ref(String.class), "DISCRIMINATOR");
+        field.init(JExpr.lit(discriminatorValue));        
+    }
+
+    
 
     private void addTypeParameters(JDefinedClass klass, ObjectTypeDeclaration type) {
         Optional<AnnotationRef> typeVars = type.annotations().stream()
@@ -104,7 +120,10 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
     @Override
     public void visitObjectTypeProperty(ObjectTypeDeclaration type, TypeDeclaration property) {
         JDefinedClass klass = pkg._getClass(type.name());
-        if (!isInherited(type, property)) {
+        if (property.name().equals(type.discriminator())) {
+            generateDiscriminatorAccessors(klass, property);
+        }
+        else if (!isInherited(type, property)) {
             generateFieldAndAccessors(klass, property);
         }
     }
@@ -155,6 +174,12 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         
         generateGetter(property, klass, field, this::getGetterName);
         generateSetter(klass, jtype, fieldName);
+    }
+
+    private void generateDiscriminatorAccessors(JDefinedClass klass, TypeDeclaration property) {
+        
+        generateDiscriminatorGetter(property, klass, property.name());
+        generateDiscriminatorSetter(klass, klass, property.name());
     }
 
     private void generateListFieldAndAccessors(JDefinedClass klass, ArrayTypeDeclaration property) {
@@ -252,6 +277,20 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
 
         generateGetter(property, klass, field, this::getCheckerName);
         generateSetter(klass, jtype, fieldName);
+    }
+    
+    private void generateDiscriminatorGetter(TypeDeclaration type, JDefinedClass klass, String property) {
+        JMethod getter = klass.method(JMod.PUBLIC, codeModel._ref(String.class), getGetterName(property));
+        getter.body()._return(klass.staticRef("DISCRIMINATOR"));
+        if (type.description() != null) {
+            getter.javadoc().add(type.description().value());
+        }
+    }
+
+    private void generateDiscriminatorSetter(JDefinedClass klass, JType fieldType, String fieldName) {
+        JMethod setter = klass.method(JMod.PUBLIC, codeModel.VOID, getSetterName(fieldName));
+        setter.param(fieldType, fieldName);
+        setter.body().directStatement("// empty");
     }
 
     private String getCheckerName(String fieldName) {

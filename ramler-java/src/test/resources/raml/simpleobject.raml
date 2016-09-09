@@ -35,8 +35,10 @@ types:
           type: Age
   Employee:
     type: Person
+    discriminator: objectType
     properties:
       department: string
+      objectType: string
   User:
     properties:
       firstname:
