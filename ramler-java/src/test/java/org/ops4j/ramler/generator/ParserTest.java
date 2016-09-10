@@ -23,14 +23,12 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 import static org.ops4j.ramler.model.Metatype.ARRAY;
 import static org.ops4j.ramler.model.Metatype.BOOLEAN;
 import static org.ops4j.ramler.model.Metatype.INTEGER;
 import static org.ops4j.ramler.model.Metatype.OBJECT;
 import static org.ops4j.ramler.model.Metatype.STRING;
 
-import java.io.File;
 import java.util.List;
 
 import org.junit.Test;
@@ -54,9 +52,7 @@ public class ParserTest {
     private ApiModel apiModel;
     
     private void parse(String simpleName) {
-        File input = new File("src/test/resources/raml", simpleName);
-        assertTrue(input.isFile());
-        RamlModelResult ramlModelResult = new RamlModelBuilder().buildApi(input);
+        RamlModelResult ramlModelResult = new RamlModelBuilder().buildApi("raml/" + simpleName);
         assertFalse(ramlModelResult.hasErrors());
         Api api = ramlModelResult.getApiV10();
         apiModel = new ApiModel(api);        

@@ -36,7 +36,7 @@ import org.sonatype.plexus.build.incremental.BuildContext;
 public abstract class AbstractRamlerMojo extends AbstractMojo {
 
     @Parameter(required = true)
-    protected File model;
+    protected String model;
 
     @Parameter(name = "package", required = true)
     private String packageName;

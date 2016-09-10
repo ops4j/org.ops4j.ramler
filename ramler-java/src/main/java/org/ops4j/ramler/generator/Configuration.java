@@ -34,7 +34,7 @@ public class Configuration {
 
     private String apiPackage;
 
-    private File sourceFile;
+    private String sourceFile;
 
     private File targetDir;
 
@@ -111,7 +111,7 @@ public class Configuration {
      * 
      * @return the source file
      */
-    public File getSourceFile() {
+    public String getSourceFile() {
         return sourceFile;
     }
 
@@ -121,7 +121,7 @@ public class Configuration {
      * @param sourceFile
      *            top-level RAML source file
      */
-    public void setSourceFile(File sourceFile) {
+    public void setSourceFile(String sourceFile) {
         this.sourceFile = sourceFile;
     }
 

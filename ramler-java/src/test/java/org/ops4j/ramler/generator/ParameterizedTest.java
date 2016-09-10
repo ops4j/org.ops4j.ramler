@@ -25,7 +25,6 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.util.HashSet;
@@ -55,8 +54,7 @@ public class ParameterizedTest {
 
     @BeforeClass
     public static void shouldGenerateArrays() {
-        File input = new File("src/test/resources/raml/parameterized.raml");
-        assertTrue(input.isFile());
+        String input = "raml/parameterized.raml";
         
         Configuration config = new Configuration();
         config.setSourceFile(input);

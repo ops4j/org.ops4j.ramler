@@ -25,7 +25,6 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.util.HashSet;
@@ -53,11 +52,8 @@ public class ArrayTest {
 
     @BeforeClass
     public static void shouldGenerateArrays() {
-        File input = new File("src/test/resources/raml/array.raml");
-        assertTrue(input.isFile());
-        
         Configuration config = new Configuration();
-        config.setSourceFile(input);
+        config.setSourceFile("src/test/resources/raml/array.raml");
         config.setBasePackage("org.ops4j.raml.array");
         config.setTargetDir(new File("target/generated/raml"));
 

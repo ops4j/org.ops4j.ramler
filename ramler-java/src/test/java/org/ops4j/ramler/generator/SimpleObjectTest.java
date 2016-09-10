@@ -26,7 +26,6 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.util.HashSet;
@@ -58,11 +57,8 @@ public class SimpleObjectTest {
 
     @BeforeClass
     public static void shouldGeneratePojos() {
-        File input = new File("src/test/resources/raml/simpleobject.raml");
-        assertTrue(input.isFile());
-        
         Configuration config = new Configuration();
-        config.setSourceFile(input);
+        config.setSourceFile("raml/simpleobject.raml");
         config.setBasePackage("org.ops4j.raml.demo");
         config.setTargetDir(new File("target/generated/raml"));
 
