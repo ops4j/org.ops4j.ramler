@@ -47,7 +47,6 @@ import org.raml.v2.api.model.v10.methods.Method;
 import org.raml.v2.api.model.v10.resources.Resource;
 
 import com.sun.codemodel.JAnnotatable;
-import com.sun.codemodel.JAnnotationArrayMember;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JCodeModel;
@@ -94,23 +93,9 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
         try {
             if (outerResource == null) {
                 outerResource = resource;
-                klass = pkg
-                    ._interface(Names.buildResourceInterfaceName(resource, context.getConfig()));
-                klass.annotate(Generated.class).
-                    param("value", "org.ops4j.ramler").
-                    param("date", LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).toString());
-                klass.annotate(Path.class).param("value", resource.resourcePath());
-                
-                if (mediaTypes.size() > 1) {
-                    JAnnotationArrayMember producesArray = klass.annotate(Produces.class).paramArray("value");
-                    mediaTypes.forEach(m -> producesArray.param(m));
-                    JAnnotationArrayMember consumesArray = klass.annotate(Consumes.class).paramArray("value");
-                    mediaTypes.forEach(m -> consumesArray.param(m));
-                }
-                else if (!mediaTypes.isEmpty()) {
-                    klass.annotate(Produces.class).param("value", mediaTypes.get(0));
-                    klass.annotate(Consumes.class).param("value", mediaTypes.get(0));
-                }                
+
+                createResourceInterface(resource);                
+                addMediaTypes();
             }
             else if (innerResource == null) {
                 innerResource = resource;
@@ -118,10 +103,29 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
             else {
                 throw new IllegalStateException("cannot handle resources nested more than two levels");
             }
-
         }
         catch (JClassAlreadyExistsException exc) {
             throw Exceptions.unchecked(exc);
+        }
+    }
+
+    private void createResourceInterface(Resource resource) throws JClassAlreadyExistsException {
+        klass = pkg
+            ._interface(Names.buildResourceInterfaceName(resource, context.getConfig()));
+        klass.annotate(Generated.class).
+            param("value", "org.ops4j.ramler").
+            param("date", LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).toString());
+        klass.annotate(Path.class).param("value", resource.resourcePath());        
+    }
+
+    private void addMediaTypes() {
+        if (mediaTypes.size() > 1) {
+            mediaTypes.forEach(m -> klass.annotate(Produces.class).paramArray("value").param(m));
+            mediaTypes.forEach(m -> klass.annotate(Consumes.class).paramArray("value").param(m));
+        }
+        else if (!mediaTypes.isEmpty()) {
+            klass.annotate(Produces.class).param("value", mediaTypes.get(0));
+            klass.annotate(Consumes.class).param("value", mediaTypes.get(0));
         }
     }
 
@@ -140,37 +144,29 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
     public void visitMethodStart(Method method) {
         String methodName = Names.buildVariableName(method.displayName().value());
         JMethod codeMethod = klass.method(JMod.NONE, klass, methodName);
+        
+        addJavadoc(method, codeMethod);
+        addSubresourcePath(codeMethod);
         addHttpMethodAnnotation(method.method(), codeMethod);
+        addBodyParameters(method, codeMethod);
+        addPathParameters(method, codeMethod);
+        addQueryParameters(method, codeMethod);
+        addReturnType(method, codeMethod);        
+    }
 
+    private void addSubresourcePath(JMethod codeMethod) {
         if (innerResource != null) {
             codeMethod.annotate(Path.class).param("value", innerResource.relativeUri().value());
         }
+    }
 
-        if (!method.body().isEmpty()) {
-            TypeDeclaration body = method.body().get(0);
-            if (body.name().equals("multipart/form-data")) {
-                addFormParameters(codeMethod, body);
-            }
-            else {
-                codeMethod.param(context.getJavaType(body), Names.buildVariableName(body.type()));
-            }
+    private void addJavadoc(Method method, JMethod codeMethod) {
+        if (method.displayName() != null) {
+            codeMethod.javadoc().add(method.displayName().value());
         }
+    }
 
-        for (TypeDeclaration pathParam : method.resource().uriParameters()) {
-            JVar param = codeMethod.param(context.getJavaType(pathParam),
-                Names.buildVariableName(pathParam.name()));
-            param.annotate(PathParam.class).param("value", pathParam.name());
-        }
-
-        for (TypeDeclaration queryParam : method.queryParameters()) {
-            JVar param = codeMethod.param(context.getJavaType(queryParam),
-                Names.buildVariableName(queryParam.name()));
-            param.annotate(QueryParam.class).param("value", queryParam.name());
-            if (queryParam.defaultValue() != null) {
-                param.annotate(DefaultValue.class).param("value", queryParam.defaultValue());
-            }
-        }
-
+    private void addReturnType(Method method, JMethod codeMethod) {
         if (method.responses().isEmpty()) {
             codeMethod.type(codeModel.VOID);
         }
@@ -181,23 +177,54 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
             }
             else {
                 TypeDeclaration body = response.body().get(0);
-
                 JType resultType = context.getJavaType(body);
-                List<String> args = context.getApiModel().getStringAnnotations(body, "typeArgs");
-                if (!args.isEmpty()) {
-                    JClass jclass = (JClass) resultType;
-                    for (String arg : args) {
-                        JType typeArg = context.getModelPackage()._getClass(arg);
-                        jclass = jclass.narrow(typeArg);
-                    }
-                    resultType = jclass;
-                }
-                
+                resultType = addTypeArguments(resultType, body);                
                 codeMethod.type(resultType);
             }
         }
-        if (method.displayName() != null) {
-            codeMethod.javadoc().add(method.displayName().value());
+    }
+
+    private JType addTypeArguments(JType resultType, TypeDeclaration body) {
+        List<String> args = context.getApiModel().getStringAnnotations(body, "typeArgs");
+        if (!args.isEmpty()) {
+            JClass jclass = (JClass) resultType;
+            for (String arg : args) {
+                JType typeArg = context.getModelPackage()._getClass(arg);
+                jclass = jclass.narrow(typeArg);
+            }
+            resultType = jclass;
+        }
+        return resultType;
+    }
+
+    private void addQueryParameters(Method method, JMethod codeMethod) {
+        for (TypeDeclaration queryParam : method.queryParameters()) {
+            JVar param = codeMethod.param(context.getJavaType(queryParam),
+                Names.buildVariableName(queryParam.name()));
+            param.annotate(QueryParam.class).param("value", queryParam.name());
+            if (queryParam.defaultValue() != null) {
+                param.annotate(DefaultValue.class).param("value", queryParam.defaultValue());
+            }
+        }
+    }
+
+    private void addPathParameters(Method method, JMethod codeMethod) {
+        for (TypeDeclaration pathParam : method.resource().uriParameters()) {
+            JVar param = codeMethod.param(context.getJavaType(pathParam),
+                Names.buildVariableName(pathParam.name()));
+            param.annotate(PathParam.class).param("value", pathParam.name());
+        }
+    }
+
+    private void addBodyParameters(Method method, JMethod codeMethod) {
+        if (!method.body().isEmpty()) {
+            TypeDeclaration body = method.body().get(0);
+            if (body.name().equals("multipart/form-data")) {
+                addFormParameters(codeMethod, body);
+            }
+            else {
+                codeMethod.param(context.getJavaType(body), Names.buildVariableName(body.type()));
+            }
         }
     }
 
