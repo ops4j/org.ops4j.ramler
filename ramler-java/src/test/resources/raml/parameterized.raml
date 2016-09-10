@@ -3,10 +3,9 @@ title: Generic Type
 version: 0.1
 mediaType: application/json
 baseUri: http://localhost:8080
+uses:
+  g: generics.raml
 annotationTypes:
-  typeVar: string
-  typeArgs:  string[]
-  typeVars:  string[]
   notes:  string[]
 types:
   Status:
@@ -17,17 +16,17 @@ types:
       text : string
       success : boolean
   Result:
-    (typeVars): [T]
+    (g.typeVars): [T]
     properties:
       result:
-        (typeVar): T
+        (g.typeVar): T
         type: any
   Response:
-    (typeVars): [T]
+    (g.typeVars): [T]
     properties:
       data:
         type : Result
-        (typeArgs):
+        (g.typeArgs):
         - T
       status: Status
       success: boolean
@@ -51,7 +50,7 @@ types:
        }
   AnimalResponse:
     type: Response
-    (typeArgs): [Animal]
+    (g.typeArgs): [Animal]
     properties:
       result:
         type: Animal

@@ -1,0 +1,59 @@
+#%RAML 1.0 Library
+usage: |
+  Annotations for Java code generators to create Java generics from
+  annotated RAML types.
+annotationTypes:
+  typeVar:
+    displayName: Type variable
+    type: string
+    allowedTargets: TypeDeclaration
+    description: |
+      References a type variable defined on an `object` type.
+
+      This annotation may only be applied to a property of an `object` type
+      annotated with `typeVars`. The argument of this `typeVar` annotation
+      must be one of the arguments of the `typeVars` annotation of the
+      enclosing type.
+
+      The type of the given property must be `any`.
+
+      In the generated Java class, the type of the given property will
+      be the given type variable.
+  typeArgs:
+    displayName: Type arguments
+    type: string[]
+    allowedTargets: TypeDeclaration
+    description: |
+      List of type arguments for a reference to a given type. The referenced
+      type must be an `object` type annotated with `typeVars`.
+
+      The number of arguments of the `typeArgs` annotation must match the
+      number of arguments of the `typeVars` annotation of the referenced type.
+
+  typeVars:
+    displayName: Type variables
+    type: string[]
+    allowedTargets: TypeDeclaration
+    description: |
+      List of type variables, corresponding to the type parameters of a Java generic type.
+
+      This annotation may only be applied directly to the declaration of an `object` type,
+      which includes all types directly or indirectly extending `object`.
+
+      Example:
+
+      For the following RAML type
+
+      ```raml
+          Association:
+            type: object
+            (typeVars): [S, T]
+      ```
+
+      the Java generator will create a Java class
+
+      ```java
+         public class Association<S, T> {
+
+         }
+      ```

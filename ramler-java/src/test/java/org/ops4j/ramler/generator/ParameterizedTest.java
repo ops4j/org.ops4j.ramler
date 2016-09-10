@@ -44,7 +44,7 @@ import com.sun.codemodel.JPackage;
 import com.sun.codemodel.JType;
 import com.sun.codemodel.JTypeVar;
 
-public class GenericTest {
+public class ParameterizedTest {
 
     private static Generator generator;
     private static JCodeModel codeModel;
@@ -55,7 +55,7 @@ public class GenericTest {
 
     @BeforeClass
     public static void shouldGenerateArrays() {
-        File input = new File("src/test/resources/raml/generic.raml");
+        File input = new File("src/test/resources/raml/parameterized.raml");
         assertTrue(input.isFile());
         
         Configuration config = new Configuration();
