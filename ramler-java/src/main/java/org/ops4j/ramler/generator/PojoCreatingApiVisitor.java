@@ -17,11 +17,6 @@
  */
 package org.ops4j.ramler.generator;
 
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-
-import javax.annotation.Generated;
-
 import org.ops4j.ramler.exc.Exceptions;
 import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;
 
@@ -45,9 +40,7 @@ public class PojoCreatingApiVisitor implements ApiVisitor {
         try {
             JDefinedClass klass = pkg._class(type.name());
             context.addType(type.type(), klass);
-            klass.annotate(Generated.class).
-                param("value", "org.ops4j.ramler").
-                param("date", LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).toString());
+            context.annotateAsGenerated(klass);
         }
         catch (JClassAlreadyExistsException exc) {
             throw Exceptions.unchecked(exc);

@@ -21,25 +21,24 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
 import java.lang.annotation.Annotation;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-import javax.annotation.Generated;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.ops4j.ramler.exc.Exceptions;
 import org.raml.v2.api.model.v10.api.Api;
+import org.raml.v2.api.model.v10.bodies.Response;
 import org.raml.v2.api.model.v10.datamodel.FileTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
@@ -51,6 +50,8 @@ import com.sun.codemodel.JClass;
 import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JPackage;
@@ -112,21 +113,32 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
     private void createResourceInterface(Resource resource) throws JClassAlreadyExistsException {
         klass = pkg
             ._interface(Names.buildResourceInterfaceName(resource, context.getConfig()));
-        klass.annotate(Generated.class).
-            param("value", "org.ops4j.ramler").
-            param("date", LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).toString());
+        context.annotateAsGenerated(klass);
         klass.annotate(Path.class).param("value", resource.resourcePath());        
     }
 
     private void addMediaTypes() {
         if (mediaTypes.size() > 1) {
-            mediaTypes.forEach(m -> klass.annotate(Produces.class).paramArray("value").param(m));
-            mediaTypes.forEach(m -> klass.annotate(Consumes.class).paramArray("value").param(m));
+            mediaTypes.forEach(m -> klass.annotate(Produces.class).paramArray("value").param(mediaType(m)));
+            mediaTypes.forEach(m -> klass.annotate(Consumes.class).paramArray("value").param(mediaType(m)));
         }
         else if (!mediaTypes.isEmpty()) {
-            klass.annotate(Produces.class).param("value", mediaTypes.get(0));
-            klass.annotate(Consumes.class).param("value", mediaTypes.get(0));
+            JExpression m = mediaType(mediaTypes.get(0));
+            klass.annotate(Produces.class).param("value", m);
+            klass.annotate(Consumes.class).param("value", m);
         }
+    }
+    
+    private JExpression mediaType(String mediaType) {
+        if (mediaType.equals(MediaType.APPLICATION_JSON)) {
+            JClass klass = (JClass) codeModel._ref(MediaType.class);
+            return klass.staticRef("APPLICATION_JSON");
+        }
+        else if (mediaType.equals(MediaType.APPLICATION_XML)) {
+            JClass klass = (JClass) codeModel._ref(MediaType.class);
+            return klass.staticRef("APPLICATION_XML");
+        }
+        return JExpr.lit(mediaType);
     }
 
     @Override
@@ -171,7 +183,7 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
             codeMethod.type(codeModel.VOID);
         }
         else {
-            org.raml.v2.api.model.v10.bodies.Response response = method.responses().get(0);
+            Response response = method.responses().get(0);
             if (response.body().isEmpty()) {
                 codeMethod.type(codeModel.VOID);
             }
@@ -219,7 +231,7 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
     private void addBodyParameters(Method method, JMethod codeMethod) {
         if (!method.body().isEmpty()) {
             TypeDeclaration body = method.body().get(0);
-            if (body.name().equals("multipart/form-data")) {
+            if (body.name().equals(MediaType.MULTIPART_FORM_DATA)) {
                 addFormParameters(codeMethod, body);
             }
             else {

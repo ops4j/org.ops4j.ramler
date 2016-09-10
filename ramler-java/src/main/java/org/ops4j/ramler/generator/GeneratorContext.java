@@ -22,9 +22,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.annotation.Generated;
 
 import org.ops4j.ramler.model.ApiModel;
 import org.raml.v2.api.model.v10.datamodel.AnyTypeDeclaration;
@@ -42,6 +45,7 @@ import org.raml.v2.api.model.v10.datamodel.TimeOnlyTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
 
 import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JPackage;
 import com.sun.codemodel.JType;
 
@@ -233,6 +237,12 @@ public class GeneratorContext {
             return codeModel.ref(Boolean.class);
         }
         return getReferencedJavaType(apiModel.getDeclaredType(type));
+    }
+    
+    public void annotateAsGenerated(JDefinedClass klass) {
+        klass.annotate(Generated.class).
+        param("value", "org.ops4j.ramler").
+        param("date", LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).toString());        
     }
 
     /**
