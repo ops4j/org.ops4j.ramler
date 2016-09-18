@@ -1,0 +1,24 @@
+<h2 id="{{name}}">{{displayName.value}}</h2>
+
+{{#if examples}}
+<pre class="highlight json">
+{{examples.0.value}}
+</pre>
+{{/if}}
+
+{{#if description}}
+{{#markdown}}{{description.value}}{{/markdown}}
+{{/if}}
+
+{{#if properties}}
+<table>
+    <thead>
+        <td>Property name</td>
+        <td>Type</td>
+        <td>Description</td>        
+    </thead>
+{{#properties}}
+{{>property}}    
+{{/properties}}    
+</table>
+{{/if}}

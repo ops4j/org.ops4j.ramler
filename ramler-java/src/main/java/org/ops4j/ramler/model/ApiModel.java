@@ -16,7 +16,8 @@ import static org.ops4j.ramler.model.Metatype.STRING;
 import static org.ops4j.ramler.model.Metatype.TIME_ONLY;
 import static org.ops4j.ramler.model.Metatype.UNION;
 
-import java.util.HashMap;
+import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -39,12 +40,13 @@ import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.TypeInstanceProperty;
 import org.raml.v2.api.model.v10.datamodel.UnionTypeDeclaration;
 import org.raml.v2.api.model.v10.declarations.AnnotationRef;
+import org.raml.v2.api.model.v10.resources.Resource;
 
 public class ApiModel {
 
     private Api api;
     
-    private Map<String, TypeDeclaration> types = new HashMap<>();
+    private Map<String, TypeDeclaration> types = new LinkedHashMap<>();
     
     public ApiModel(Api api) {
         this.api = api;
@@ -56,7 +58,20 @@ public class ApiModel {
     }
 
     private void mapTypes() {
-        api.types().forEach(t -> types.put(t.name(), t));
+        api.types().stream().sorted((l, r) -> l.name().compareTo(r.name())).
+            forEach(t -> types.put(t.name(), t));
+    }
+    
+    public Collection<TypeDeclaration> getTypes() {
+        return types.values();
+    }
+    
+    public String getTitle() {
+        return api.title().value();
+    }
+    
+    public Collection<Resource> getResources() {
+        return api.resources().stream().sorted((l, r) -> l.displayName().value().compareTo(r.displayName().value())).collect(toList());
     }
     
     public TypeDeclaration getDeclaredType(String typeName) {

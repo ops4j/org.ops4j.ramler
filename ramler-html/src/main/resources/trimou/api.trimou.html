@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>{{title}}</title>
+
+    <link href="css/screen.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="css/print.css" rel="stylesheet" type="text/css" media="print" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/styles/darcula.min.css"/>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script>
+    <script src="js/lib/jquery.highlight.js"></script>
+    <script src="js/lib/jquery.tocify.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lunr.js/0.5.7/lunr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/3.1.8/imagesloaded.pkgd.min.js"></script>
+    <script src="js/app/lang.js"></script>
+    <script src="js/app/search.js"></script>
+    <script src="js/app/toc.js"></script>
+
+    <script>
+      hljs.initHighlightingOnLoad();    
+    </script>
+  </head>
+
+  <body class="index" data-languages="[&quot;json&quot;]">
+    <a href="#" id="nav-button">
+      <span>
+        NAV
+        <img src="images/navbar.png" />
+      </span>
+    </a>
+    <div class="tocify-wrapper">
+      <img src="images/logo.png" />
+        <div class="lang-selector">
+            <a href="#" data-language-name="json"> JSON</a>
+        </div>
+        <div class="search">
+          <input type="text" class="search" id="input-search" placeholder="Search">
+        </div>
+        <ul class="search-results"></ul>
+      <div id="toc">
+      </div>
+        <ul class="toc-footer">
+            <li><a href="http://github.com/hwellmann/org.ops4j.ramler">Powered by OPS4J Ramler</a></li>
+        </ul>
+    </div>
+    <div class="page-wrapper">
+        <div class="content">
+            <h1 id="resources">Resources</h1>
+            {{#resources}}
+            {{>resource}}
+                    
+            {{/resources}}
+                    
+            <h1 id="types">Types</h1>
+            {{#types}}
+            {{>type}}
+                    
+            {{/types}}
+                    
+        </div>
+        <div class="dark-box">
+          <div class="lang-selector">
+              <a href="#" data-language-name="json"> JSON</a>
+          </div>
+        </div>
+    </div>
+  </body>
+</html>

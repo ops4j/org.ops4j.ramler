@@ -30,6 +30,7 @@
     <modules>
         <module>ramler-java</module>
         <module>ramler-maven-plugin</module>
+        <module>ramler-html</module>
     </modules>
     <dependencyManagement>
         <dependencies>

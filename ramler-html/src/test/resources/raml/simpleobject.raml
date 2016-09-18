@@ -1,0 +1,210 @@
+#%RAML 1.0
+title: API with Types
+mediaType: application/json
+types:
+  Address:
+    description: |
+      Postal address.
+
+    properties:
+      city:
+        type: string
+        description: A city, preferably with the official postal name.
+      street:
+        type: string
+        description: |
+          A street name, **not** including the house number.
+
+          Preferably the official postal street name.
+    examples:
+      one:
+        city: Hamburg
+        street: Ruhrstraße
+      two:
+        city: Hannover
+        street: Lister Straße
+  Age:
+    type: integer
+    format: int16
+    minimum: 0
+    maximum: 120
+    example:
+      value: 37
+  Colour:
+    type: string
+    enum:
+    - RED
+    - YELLOW
+    - GREEN
+  FileResponse:
+    properties:
+      fileName : string
+      token: string
+  Name:
+    maxLength: 80
+  NameList:
+    type: array
+    items: string
+    example: ["foo", "bar"]
+  Integers:
+    properties:
+      i8:
+        type: integer
+        format: int8
+      i8o:
+        type: integer
+        format: int8
+        required: false
+      i16:
+        type: integer
+        format: int16
+      i16o:
+        type: integer
+        format: int16
+        required: false
+      i32:
+        type: integer
+        format: int32
+      i32o:
+        type: integer
+        format: int32
+        required: false
+      i64:
+        type: integer
+        format: int64
+      i64o:
+        type: integer
+        format: int64
+        required: false
+      i:
+        type: integer
+        format: int
+      io:
+        type: integer
+        format: int
+        required: false
+  Numbers:
+    properties:
+      f:
+        type: number
+        format: float
+      fo:
+        type: number
+        format: float
+        required: false
+      d:
+        type: number
+        format: double
+      dbl:
+        type: number
+        format: double
+        required: false
+  Temporals:
+    properties:
+      date:
+        type: date-only
+      to:
+        type: time-only
+      dto:
+        type: datetime-only
+      dt:
+        type: datetime
+  Person:
+    properties:
+      firstname:
+        type: string
+      lastname:
+          type: string
+      address:
+          type: Address
+      age:
+          type: Age
+  Employee:
+    type: Person
+    discriminator: objectType
+    properties:
+      department: string
+      objectType: string
+  User:
+    properties:
+      firstname:
+        type: string
+      lastname:
+        type: Name
+      age:
+        type: Age
+      address:
+        type: Address
+      favouriteColour?: Colour
+      registered:
+        type: boolean
+      dateOfBirth:
+        type: date-only
+      registrationDate:
+        type: datetime
+  UserGroup:
+    properties:
+      name: string
+      users : User[]
+    examples:
+      one:
+        name: Editors
+        users:
+        - firstname: Anna
+          lastname: Walter
+          age: 32
+          address:
+            city: Hamburg
+            street: Colonnaden
+          registered: true
+          dateOfBirth: 1985-04-30
+          registrationDate: 2016-02-28T16:41:41.090Z
+/user:
+  displayName: User
+  get:
+    displayName: find all users
+    queryParameters:
+      q :
+        type: string
+        default: ""
+      sort:
+        type: string
+        required: false
+    responses:
+      200:
+        body:
+          type: User[]
+  post:
+    displayName: create user
+    body:
+      type : User
+    responses:
+      200:
+        body:
+          type: User
+  /{id}:
+    uriParameters:
+      id:
+        type : integer
+    get:
+      displayName: find user by id
+      responses:
+        200:
+          body:
+            type: User
+    delete:
+      displayName: delete user by id
+      responses:
+        204:
+/file:
+  displayName: File
+  post:
+    body:
+      multipart/form-data:
+        properties:
+          fileName: string
+          file: file
+    responses:
+      200:
+        body:
+          type: FileResponse
