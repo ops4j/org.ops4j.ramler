@@ -31,8 +31,8 @@ import org.apache.maven.plugins.annotations.Parameter;
  * @author hwellmann
  *
  */
-@Mojo(name = "generate-test", defaultPhase = LifecyclePhase.GENERATE_TEST_SOURCES)
-public class GenerateTestMojo extends AbstractRamlerMojo {
+@Mojo(name = "java-test", defaultPhase = LifecyclePhase.GENERATE_TEST_SOURCES)
+public class GenerateTestMojo extends AbstractJavaMojo {
 
     @Parameter(defaultValue = "${project.build.directory}/generated-test-sources/ramler")
     private File outputDir;

@@ -26,13 +26,13 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 /** 
- * Generates sources from a RAML model.
+ * Generates Java sources from a RAML model.
  * 
  * @author hwellmann
  *
  */
-@Mojo(name = "generate", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
-public class GenerateMojo extends AbstractRamlerMojo {
+@Mojo(name = "java", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
+public class JavaMojo extends AbstractJavaMojo {
 
     @Parameter(defaultValue = "${project.build.directory}/generated-sources/ramler")
     private File outputDir;

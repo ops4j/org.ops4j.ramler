@@ -30,10 +30,12 @@ import org.ops4j.ramler.generator.Generator;
 import org.sonatype.plexus.build.incremental.BuildContext;
 
 /**
+ * Generates Java test sources from a RAML model.
+ * 
  * @author hwellmann
  *
  */
-public abstract class AbstractRamlerMojo extends AbstractMojo {
+public abstract class AbstractJavaMojo extends AbstractMojo {
 
     @Parameter(required = true)
     protected String model;
@@ -62,7 +64,8 @@ public abstract class AbstractRamlerMojo extends AbstractMojo {
             Generator generator = new Generator(config);
             generator.generate();
             refreshGeneratedSources();
-        } else {
+        }
+        else {
             getLog().info("Java model is up-to-date");
         }
     }
@@ -71,7 +74,6 @@ public abstract class AbstractRamlerMojo extends AbstractMojo {
         getLog().debug("refreshing " + getOutputDir());
         buildContext.refresh(getOutputDir());
     }
-
 
     public abstract File getOutputDir();
 
@@ -87,7 +89,8 @@ public abstract class AbstractRamlerMojo extends AbstractMojo {
     /**
      * Gets the package name for the generated sources.
      *
-     * @param packageName the genPackage to set
+     * @param packageName
+     *            the genPackage to set
      */
     public void setPackage(String packageName) {
         this.packageName = packageName;
