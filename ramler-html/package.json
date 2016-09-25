@@ -6,6 +6,7 @@
     "license": "Apache-2.0",
     "devDependencies": {
         "grunt": "1.0.1",
+        "grunt-cli": "1.2.0",
         "grunt-sass": "1.2.1"
     }
 }
