@@ -22,6 +22,10 @@ public class HtmlConfiguration {
     private String sourceFile;
 
     private String targetDir;
+    
+    private String templateDir;
+    
+    private String webResourceDir;
 
     public String getSourceFile() {
         return sourceFile;
@@ -38,7 +42,20 @@ public class HtmlConfiguration {
     public void setTargetDir(String targetDir) {
         this.targetDir = targetDir;
     }
-    
-    
 
+    public String getTemplateDir() {
+        return templateDir;
+    }
+
+    public void setTemplateDir(String templateDir) {
+        this.templateDir = templateDir;
+    }
+
+    public String getWebResourceDir() {
+        return webResourceDir;
+    }
+
+    public void setWebResourceDir(String webResourceDir) {
+        this.webResourceDir = webResourceDir;
+    }
 }

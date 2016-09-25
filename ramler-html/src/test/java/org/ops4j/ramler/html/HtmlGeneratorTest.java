@@ -18,6 +18,9 @@
 package org.ops4j.ramler.html;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.junit.Test;
 
@@ -30,5 +33,11 @@ public class HtmlGeneratorTest {
         config.setTargetDir("target/html");
         HtmlGenerator generator = new HtmlGenerator(config);
         generator.generate();
+    }
+    
+    @Test
+    public void shouldWalkTree() throws IOException {
+        Path root = Paths.get("src/main/resources");
+        Files.walk(root).forEach(p -> { Path r = root.relativize(p); System.out.println(r);});
     }
 }

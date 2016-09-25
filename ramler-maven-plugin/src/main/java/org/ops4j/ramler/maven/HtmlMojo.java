@@ -47,6 +47,19 @@ public class HtmlMojo extends AbstractMojo {
 
     @Parameter(defaultValue = "${project.build.directory}/ramler/html")
     private File outputDir;
+    
+    /**
+     * Directory with web resources to be used instead of the built-in resources.
+     */
+    @Parameter
+    private File webResourceDir;
+    
+    /**
+     * Directory with Trimou templates which take precedence over the built-in templates.
+     * The entry template is named {@code api.trimou.html}.
+     */
+    @Parameter
+    private File templateDir;
 
     @Parameter(readonly = true, defaultValue = "${project}")
     protected MavenProject project;
@@ -65,6 +78,12 @@ public class HtmlMojo extends AbstractMojo {
             HtmlConfiguration config = new HtmlConfiguration();
             config.setSourceFile(model);
             config.setTargetDir(getOutputDir().getAbsolutePath());
+            if (templateDir != null) {
+                config.setTemplateDir(templateDir.getAbsolutePath());
+            }
+            if (webResourceDir != null) {
+                config.setWebResourceDir(webResourceDir.getAbsolutePath());
+            }
 
             HtmlGenerator generator = new HtmlGenerator(config);
             try {
@@ -93,5 +112,4 @@ public class HtmlMojo extends AbstractMojo {
     public void execute() throws MojoFailureException {
         generateWebResources();
     }
-
 }

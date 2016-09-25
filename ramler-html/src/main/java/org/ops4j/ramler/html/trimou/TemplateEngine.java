@@ -25,34 +25,18 @@ import org.trimou.engine.MustacheEngine;
 import org.trimou.engine.MustacheEngineBuilder;
 import org.trimou.engine.config.EngineConfigurationKey;
 import org.trimou.engine.locator.ClassPathTemplateLocator;
+import org.trimou.engine.locator.FileSystemTemplateLocator;
 import org.trimou.handlebars.HelpersBuilder;
 
 public class TemplateEngine {
+    
+    public static final String TEMPLATE_SUFFIX = "trimou.html";
 
     private static Logger log = LoggerFactory.getLogger(TemplateEngine.class);
 
     private MustacheEngine engine;
-
-    /**
-     * Constructs a template engine with some additional helpers and lambdas
-     * for HTML generation.
-     */
-    public TemplateEngine() {
-        ClassPathTemplateLocator genericLocator = new ClassPathTemplateLocator(100, "trimou",
-            "trimou.html");
-        engine = MustacheEngineBuilder.newBuilder()
-            .setProperty(EngineConfigurationKey.DEFAULT_FILE_ENCODING, "UTF-8")
-            .addTemplateLocator(genericLocator)
-            .registerHelper("example", new ExampleHelper())
-            .registerHelper("id", new IdHelper())
-            .registerHelpers(HelpersBuilder.builtin()
-                .addInclude()
-                .addSet()
-                .addSwitch()
-                .build())
-            .addGlobalData("markdown", new MarkdownLambda())
-            .build();
-    }
+    
+    private String templateDir;
 
     /**
      * Renders a template of the given name with the given action, using the parameter name
@@ -65,9 +49,44 @@ public class TemplateEngine {
      * @return rendered template
      */
     public String renderTemplate(String templateName, ApiModel api) {
-        Mustache mustache = engine.getMustache(templateName);
+        Mustache mustache = getEngine().getMustache(templateName);
         String result = mustache.render(api);
         log.debug(result);
         return result;
+    }
+
+    public String getTemplateDir() {
+        return templateDir;
+    }
+
+    public void setTemplateDir(String templateDir) {
+        this.templateDir = templateDir;
+    }
+
+    /**
+     * Constructs a template engine with some additional helpers and lambdas
+     * for HTML generation.
+     */
+    public MustacheEngine getEngine() {
+        if (engine == null) {
+            ClassPathTemplateLocator genericLocator = new ClassPathTemplateLocator(100, "trimou",
+                    TEMPLATE_SUFFIX);
+            MustacheEngineBuilder builder = MustacheEngineBuilder.newBuilder()
+                    .setProperty(EngineConfigurationKey.DEFAULT_FILE_ENCODING, "UTF-8")
+                    .addTemplateLocator(genericLocator)
+                    .registerHelper("example", new ExampleHelper())
+                    .registerHelper("id", new IdHelper())
+                    .registerHelpers(HelpersBuilder.builtin()
+                        .addInclude()
+                        .addSet()
+                        .addSwitch()
+                        .build())
+                    .addGlobalData("markdown", new MarkdownLambda());
+            if (templateDir != null) {
+                builder.addTemplateLocator(new FileSystemTemplateLocator(200, templateDir, TEMPLATE_SUFFIX));
+            }
+            engine = builder.build();
+        }
+        return engine;
     }
 }
