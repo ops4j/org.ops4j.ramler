@@ -48,6 +48,10 @@ public class LoggingApiVisitor implements ApiVisitor {
     
     @Override
     public void visitMethodStart(Method method) {
+        if (method.responses().isEmpty()) {
+            return;
+        }
+        
         Response response = method.responses().get(0);
         if (response.body().isEmpty()) {
             return;
