@@ -21,6 +21,11 @@ import org.pegdown.Extensions;
 import org.pegdown.PegDownProcessor;
 import org.trimou.lambda.InputProcessingLambda;
 
+/**
+ * Converts markdown text to HTML.
+ * @author hwellmann
+ *
+ */
 public class MarkdownLambda extends InputProcessingLambda {
 
     private PegDownProcessor processor = new PegDownProcessor(Extensions.FENCED_CODE_BLOCKS);

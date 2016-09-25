@@ -1,11 +1,12 @@
 <h2 id="{{name}}">{{displayName.value}}</h2>
-
-{{#if examples}}
-<pre class="highlight json">
-{{examples.0.value}}
-</pre>
+{{#set currentType=this}}
+{{#if example}}
+<pre><code class="json">{{example currentType example}}</code></pre>
 {{/if}}
-
+{{#examples}}
+<pre><code class="json">{{example currentType this}}</code></pre>
+{{/examples}}
+{{/set}}
 {{#if description}}
 {{#markdown}}{{description.value}}{{/markdown}}
 {{/if}}

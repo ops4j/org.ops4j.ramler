@@ -36,6 +36,12 @@ import org.raml.v2.api.model.v10.api.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Generates HTML documentation from a RAML 1.0 specification.
+ * 
+ * @author hwellmann
+ *
+ */
 public class HtmlGenerator {
 
     private static Logger log = LoggerFactory.getLogger(HtmlGenerator.class);
@@ -45,7 +51,7 @@ public class HtmlGenerator {
     private HtmlContext context;
 
     /**
-     * Creates a JAX-RS code generator with the given configuration.
+     * Creates an HTML generator with the given configuration.
      * 
      * @param config
      *            code generator configuration
@@ -60,7 +66,7 @@ public class HtmlGenerator {
     }
 
     /**
-     * Generates code for the given configuration.
+     * Generates HTML documentation for the given configuration.
      * @throws IOException 
      */
     public void generate() throws IOException {

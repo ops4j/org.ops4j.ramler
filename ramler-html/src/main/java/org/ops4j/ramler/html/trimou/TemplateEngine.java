@@ -17,6 +17,7 @@
  */
 package org.ops4j.ramler.html.trimou;
 
+import org.ops4j.ramler.model.ApiModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trimou.Mustache;
@@ -24,10 +25,6 @@ import org.trimou.engine.MustacheEngine;
 import org.trimou.engine.MustacheEngineBuilder;
 import org.trimou.engine.config.EngineConfigurationKey;
 import org.trimou.engine.locator.ClassPathTemplateLocator;
-import org.trimou.engine.resolver.CombinedIndexResolver;
-import org.trimou.engine.resolver.MapResolver;
-import org.trimou.engine.resolver.ReflectionResolver;
-import org.trimou.engine.resolver.ThisResolver;
 import org.trimou.handlebars.HelpersBuilder;
 
 public class TemplateEngine {
@@ -37,28 +34,22 @@ public class TemplateEngine {
     private MustacheEngine engine;
 
     /**
-     * Constructs a template engine for the given subprotocol.
-     * @param subprotocol JDBC subprotocol
+     * Constructs a template engine with some additional helpers and lambdas
+     * for HTML generation.
      */
     public TemplateEngine() {
-        // generic SQL templates
         ClassPathTemplateLocator genericLocator = new ClassPathTemplateLocator(100, "trimou",
             "trimou.html");
         engine = MustacheEngineBuilder.newBuilder()
             .setProperty(EngineConfigurationKey.DEFAULT_FILE_ENCODING, "UTF-8")
             .addTemplateLocator(genericLocator)
-            .registerHelpers(HelpersBuilder.empty()
-                .addEach()
-                .addIf()
+            .registerHelper("example", new ExampleHelper())
+            .registerHelper("id", new IdHelper())
+            .registerHelpers(HelpersBuilder.builtin()
+                .addInclude()
+                .addSet()
                 .addSwitch()
-                .addUnless()
                 .build())
-            // manually add default extension to avoid META-INF/service classloader issues
-            // when running under OSGi
-            .omitServiceLoaderConfigurationExtensions()
-            .addResolver(new ReflectionResolver())
-            .addResolver(new ThisResolver()).addResolver(new MapResolver())
-            .addResolver(new CombinedIndexResolver())
             .addGlobalData("markdown", new MarkdownLambda())
             .build();
     }
@@ -70,29 +61,12 @@ public class TemplateEngine {
      * @param templateName
      *            template name
      * @param api
-     *            Warp action JAXB model
+     *            RAML API model as context object
      * @return rendered template
      */
-    public String renderTemplate(String templateName, Object api) {
+    public String renderTemplate(String templateName, ApiModel api) {
         Mustache mustache = engine.getMustache(templateName);
         String result = mustache.render(api);
-        log.debug(result);
-        return result;
-    }
-
-    /**
-     * Renders a template of the given name with the given string argument. The argument
-     * is referenced in the template as {@code {{this}}}.
-     *
-     * @param templateName
-     *            template name
-     * @param argument
-     *            single template argument
-     * @return rendered template
-     */
-    public String renderTemplate(String templateName, String argument) {
-        Mustache mustache = engine.getMustache(templateName);
-        String result = mustache.render(argument);
         log.debug(result);
         return result;
     }

@@ -132,7 +132,7 @@ under the License.
   }
 
   function setupLanguages(l) {
-    var defaultLanguage = localStorage.getItem("language");
+	var defaultLanguage = localStorage.getItem("language");
 
     languages = l;
 
@@ -150,9 +150,19 @@ under the License.
       activateLanguage(languages[0]);
     }
   }
+  
+  function initHighlighting() {
+    $(document).ready(function() {
+	  $('pre code').each(function(i, block) {
+	    hljs.highlightBlock(block);
+	  });
+	});	  
+  }
 
-  // if we click on a language tab, activate that language
   $(function() {
+	initHighlighting();
+	
+    // if we click on a language tab, activate that language
     $(".lang-selector a").on("click", function() {
       var language = $(this).data("language-name");
       pushURL(language);

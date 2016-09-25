@@ -17,23 +17,15 @@
  */
 package org.ops4j.ramler.html;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class HtmlContext {
-
-    private static Logger log = LoggerFactory.getLogger(HtmlContext.class);
 
     private HtmlConfiguration config;
 
-    /**
-     * Creates a JAX-RS code generator with the given configuration.
-     * 
-     * @param config
-     *            code generator configuration
-     */
     public HtmlContext(HtmlConfiguration config) {
         this.config = config;
     }
-    
+
+    public HtmlConfiguration getConfig() {
+        return config;
+    }
 }
