@@ -86,8 +86,20 @@ public class HtmlGenerator {
     }
 
     private void writeWebResources(File targetDir) {        
-        Stream.of("css/print.css", "css/screen.css", "js/app/lang.js", "js/app/search.js", "js/app/toc.js",
-                "js/lib/jquery.highlight.js", "js/lib/jquery.tocify.js", "images/logo.png", "images/navbar.png").
+        Stream.of("css/print.css", 
+                "css/screen.css", 
+                "fonts/slate.eot",
+                "fonts/slate.svg",
+                "fonts/slate.ttf",
+                "fonts/slate.woff",
+                "fonts/slate.woff2",
+                "images/logo.png", 
+                "images/navbar.png",
+                "js/app/lang.js", 
+                "js/app/search.js", 
+                "js/app/toc.js",
+                "js/lib/jquery.highlight.js", 
+                "js/lib/jquery.tocify.js").
         forEach(f -> copyTo(f, targetDir));
     }
     
