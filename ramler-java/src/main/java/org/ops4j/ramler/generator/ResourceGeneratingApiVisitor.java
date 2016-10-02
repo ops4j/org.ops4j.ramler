@@ -21,6 +21,7 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -221,7 +222,12 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
     }
 
     private void addPathParameters(Method method, JMethod codeMethod) {
-        for (TypeDeclaration pathParam : method.resource().uriParameters()) {
+        List<TypeDeclaration> pathParams = new ArrayList<>();
+        if (method.resource().parentResource() != null) {
+            pathParams.addAll(method.resource().parentResource().uriParameters());
+        }
+        pathParams.addAll(method.resource().uriParameters());
+        for (TypeDeclaration pathParam : pathParams) {
             JVar param = codeMethod.param(context.getJavaType(pathParam),
                 Names.buildVariableName(pathParam.name()));
             param.annotate(PathParam.class).param("value", pathParam.name());

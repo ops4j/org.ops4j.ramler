@@ -1,0 +1,272 @@
+#%RAML 1.0
+title: Docker Registry HTTP API V2
+documentation:
+- title: Specification
+  content: |
+    The official API specification is located on [GitHub](https://github.com/docker/distribution/blob/master/docs/spec/api.md).
+mediaType: application/json
+baseUri: https://localhost:5000
+version: v2
+securitySchemes:
+  basic:
+    type: Basic Authentication
+securedBy: [basic]
+/v2/:
+  displayName: Registry
+  get:
+    displayName: find API version
+    responses:
+      200:
+        headers:
+          Docker-Distribution-API-Version:
+            type: string
+            enum:
+            - registry/2.0
+      401:
+        description: Unauthorized
+        headers:
+          Docker-Distribution-API-Version:
+            type: string
+            enum:
+            - registry/2.0
+        body:
+          type: Errors
+      404:
+        description: Endpoint does not implement registry v2 protocol
+/v2/_catalog:
+  displayName: Catalog
+  get:
+    displayName: find repositories
+    queryParameters:
+      n:
+        type: integer
+        required: false
+        description: Maximum number of results
+      last:
+        type: string
+        required: false
+        description: Last result from previous response
+    responses:
+      200:
+        headers:
+          Link:
+            description:
+            pattern: "</v2/_catalog?last=\\S+&n=\\d+>; rel=\"next\""
+            required: false
+        body:
+          type: Repositories
+
+/v2/{repository}:
+  displayName: Repository
+  uriParameters:
+    repository:
+      type: RepositoryName
+  /tags/list:
+    get:
+      displayName: find tags
+      responses:
+        200:
+          body:
+            type: Tags
+  /manifests/{reference}:
+    uriParameters:
+      reference:
+        type: Reference
+    get:
+      displayName: find manifest
+      responses:
+        200:
+          body:
+            application/vnd.docker.distribution.manifest.v2+json:
+              type: Manifest
+    put:
+      displayName: update manifest
+    delete:
+      displayName: delete manifest
+  /blobs/{digest}:
+    displayName: Blob
+    uriParameters:
+      digest:
+        type: Digest
+    get:
+      displayName: find blob
+    delete:
+      displayName: delete blob
+      responses:
+        202:
+          headers:
+            Content-Length:
+              type: string
+              pattern: "None"
+  /blobs/uploads:
+    displayName: Upload
+    post:
+      displayName: create upload
+  /blobs/uploads/{uuid}:
+    uriParameters:
+      uuid:
+        type: string
+    displayName: Upload
+    get:
+      displayName: find upload
+    #patch:
+    put:
+      displayName: update upload
+    delete:
+      displayName: delete upload
+types:
+  Configuration:
+    properties:
+      mediaType:
+        type: string
+        enum:
+        -  application/vnd.docker.container.image.v1+json
+      size:
+        type: integer
+      digest:
+        type: Digest
+  Digest:
+    type: string
+    pattern: "[A-Za-z0-9_+.-]+:[A-Fa-f0-9]+"
+  Error:
+    properties:
+      code: ErrorCode
+      message: string
+      detail: any
+    description: |
+      The error codes encountered via the API are enumerated in the following table:
+
+      |Code|Message|Description|
+      |----|-------|-----------|
+       `BLOB_UNKNOWN` | blob unknown to registry | This error may be returned when a blob is unknown to the registry in a specified repository. This can be returned with a standard get or if a manifest references an unknown layer during upload.
+       `BLOB_UPLOAD_INVALID` | blob upload invalid | The blob upload encountered an error and can no longer proceed.
+       `BLOB_UPLOAD_UNKNOWN` | blob upload unknown to registry | If a blob upload has been cancelled or was never started, this error code may be returned.
+       `DIGEST_INVALID` | provided digest did not match uploaded content | When a blob is uploaded, the registry will check that the content matches the digest provided by the client. The error may include a detail structure with the key "digest", including the invalid digest string. This error may also be returned when a manifest includes an invalid layer digest.
+       `MANIFEST_BLOB_UNKNOWN` | blob unknown to registry | This error may be returned when a manifest blob is  unknown to the registry.
+       `MANIFEST_INVALID` | manifest invalid | During upload, manifests undergo several checks ensuring validity. If those checks fail, this error may be returned, unless a more specific error is included. The detail will contain information the failed validation.
+       `MANIFEST_UNKNOWN` | manifest unknown | This error is returned when the manifest, identified by name and tag is unknown to the repository.
+       `MANIFEST_UNVERIFIED` | manifest failed signature verification | During manifest upload, if the manifest fails signature verification, this error will be returned.
+       `NAME_INVALID` | invalid repository name | Invalid repository name encountered either during manifest validation or any API operation.
+       `NAME_UNKNOWN` | repository name not known to registry | This is returned if the name used during an operation is unknown to the registry.
+       `SIZE_INVALID` | provided length did not match content length | When a layer is uploaded, the provided size will be checked against the uploaded content. If they do not match, this error will be returned.
+       `TAG_INVALID` | manifest tag did not match URI | During a manifest upload, if the tag in the manifest does not match the uri tag, this error will be returned.
+       `UNAUTHORIZED` | authentication required | The access controller was unable to authenticate the client. Often this will be accompanied by a Www-Authenticate HTTP response header indicating how to authenticate.
+       `DENIED` | requested access to the resource is denied | The access controller denied access for the operation on a resource.
+       `UNSUPPORTED` | The operation is unsupported. | The operation was unsupported due to a missing implementation or invalid set of parameters.
+  ErrorCode:
+    type: string
+    enum:
+    - BLOB_UNKNOWN
+    - BLOB_UPLOAD_INVALID
+    - BLOB_UPLOAD_UNKNOWN
+    - DIGEST_INVALID
+    - MANIFEST_BLOB_UNKNOWN
+    - MANIFEST_INVALID
+    - MANIFEST_UNKNOWN
+    - MANIFEST_UNVERIFIED
+    - NAME_INVALID
+    - NAME_UNKNOWN
+    - SIZE_INVALID
+    - TAG_INVALID
+    - UNAUTHORIZED
+    - DENIED
+    - UNSUPPORTED
+  Errors:
+    properties:
+      errors:
+        type: array
+        items: Error
+    description: List of errors.
+    example: |
+      {
+         "errors": [{
+            "code": "NAME_UNKNOWN",
+            "message": "repository not known to registry",
+            "detail": "i-do-not-exist"
+          }]
+      }
+  Layer:
+    properties:
+      mediaType:
+        type: string
+        enum:
+        - application/vnd.docker.image.rootfs.diff.tar.gzip
+      size:
+        type: integer
+      digest:
+        type: string
+      urls:
+        type: array
+        items: string
+        required: false
+    example: |
+        {
+         "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
+         "size": 1605,
+         "digest": "sha256:c39b7f8739a4278307195461d3f7e9d4751f446c55822356a941d2a15a4008c4"
+        }
+  Manifest:
+    properties:
+      schemaVersion:
+        type: integer
+        minimum: 2
+        maximum: 2
+      mediaType:
+        type: string
+        enum:
+        - application/vnd.docker.distribution.manifest.v2+json
+      config:
+        type: Configuration
+      layers:
+        type: array
+        items: Layer
+    example: |
+      {
+        "schemaVersion": 2,
+        "mediaType": "application/vnd.docker.distribution.manifest.v2+json",
+        "config": {
+          "mediaType": "application/vnd.docker.container.image.v1+json",
+          "size": 7023,
+          "digest": "sha256:b5b2b2c507a0944348e0303114d8d93aaaa081732b86451d9bce1f432a537bc7"
+        },
+        "layers": [
+          {
+            "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
+            "size": 32654,
+            "digest": "sha256:e692418e4cbaf90ca69d05a66403747baa33ee08806650b51fab815ad7fc331f"
+          },
+          {
+            "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
+            "size": 16724,
+            "digest": "sha256:3c3a4604a545cdc127456d94e421cd355bca5b528f4a9c1905b15da2eb4a4c6b"
+          },
+          {
+            "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
+            "size": 73109,
+            "digest": "sha256:ec4b8955958665577945c89419d1af06b5f7636b4ac3da7f12184802ad867736"
+          }
+        ]
+      }
+  Reference:
+    description: Name or digest
+    type: string
+  Repositories:
+    description: List of repositories.
+    properties:
+      repositories:
+        type: array
+        items: string
+  RepositoryName:
+    type: string
+    pattern: "([a-z0-9]+([._-][a-z0-9]+)*)(/([a-z0-9]+([._-][a-z0-9]+)*))*"
+    maxLength: 255
+  Tags:
+    description: List of tags of a given repository
+    properties:
+      name:
+        type: string
+        description: Repository name
+      tags:
+        type: array
+        items: string
+        description: List of tags
