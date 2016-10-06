@@ -28,7 +28,7 @@ import org.trimou.lambda.InputProcessingLambda;
  */
 public class MarkdownLambda extends InputProcessingLambda {
 
-    private PegDownProcessor processor = new PegDownProcessor(Extensions.ALL);
+    private PegDownProcessor processor = new PegDownProcessor(Extensions.TABLES | Extensions.FENCED_CODE_BLOCKS);
 
     @Override
     public String invoke(String text) {
