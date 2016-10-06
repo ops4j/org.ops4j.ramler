@@ -1,3 +1,5 @@
 <h3>{{displayName.value}}</h3>
 
+{{#if this.description}}{{#markdown}}{{description.value}}{{/markdown}}{{/if}}
+
 <p>HTTP {{method}}</p>
