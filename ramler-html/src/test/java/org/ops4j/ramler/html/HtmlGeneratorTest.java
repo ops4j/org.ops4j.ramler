@@ -36,6 +36,15 @@ public class HtmlGeneratorTest {
     }
     
     @Test
+    public void shouldRenderRegistryApi() throws IOException {
+        HtmlConfiguration config = new HtmlConfiguration();
+        config.setSourceFile("../ramler-java/src/test/resources/raml/registry.raml");
+        config.setTargetDir("target/html");
+        HtmlGenerator generator = new HtmlGenerator(config);
+        generator.generate();
+    }
+    
+    @Test
     public void shouldWalkTree() throws IOException {
         Path root = Paths.get("src/main/resources");
         Files.walk(root).forEach(p -> { Path r = root.relativize(p); System.out.println(r);});
