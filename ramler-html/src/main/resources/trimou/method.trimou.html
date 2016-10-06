@@ -5,16 +5,16 @@
 <h4>HTTP Request</h4>
 <p>{{#uppercase}}{{this.method}}{{/uppercase}} {{this.resource.resourcePath}}</p>
 
-{{#if resource.uriParameters}}
+{{#if resource.uriParameters resource.parentResource.uriParameters logic="or"}}
 <h4>Path Parameters</h4>
-{{#resource.uriParameters}}
 <table>
     <thead>
-        <td>Property name</td>
+        <td>Name</td>
         <td>Type</td>
         <td>Description</td>
     </thead>
+{{#each resource.parentResource.uriParameters resource.uriParameters}}
 {{>uriParameter}}
-{{/resource.uriParameters}}
+{{/each}}
 </table>
 {{/if}}
