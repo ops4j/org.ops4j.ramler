@@ -1,0 +1,8 @@
+{{#switch type}}
+{{#case "array" break="true"}}
+<a href="#{{items.type}}">{{items.type}}[]</a>
+{{/case}}
+{{#default}}
+<a href="#{{type}}">{{type}}</a>
+{{/default}}
+{{/switch}}
