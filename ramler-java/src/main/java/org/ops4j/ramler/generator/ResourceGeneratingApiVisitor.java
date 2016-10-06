@@ -174,7 +174,10 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
     }
 
     private void addJavadoc(Method method, JMethod codeMethod) {
-        if (method.displayName() != null) {
+        if (method.description() != null) {
+            codeMethod.javadoc().add(method.description().value());
+        }
+        else if (method.displayName() != null) {
             codeMethod.javadoc().add(method.displayName().value());
         }
     }

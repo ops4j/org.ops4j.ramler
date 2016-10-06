@@ -37,6 +37,9 @@ securedBy: [basic]
   displayName: Catalog
   get:
     displayName: find repositories
+    description: |
+      Returns a list of all existing repositories. A repository
+      is a set of images with the same name and different tags.
     queryParameters:
       n:
         type: integer
