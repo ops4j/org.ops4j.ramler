@@ -76,25 +76,25 @@ securedBy: [basic]
       reference:
         type: Reference
     get:
-      displayName: find manifest
+      displayName: Find Manifest
       responses:
         200:
           body:
             application/vnd.docker.distribution.manifest.v2+json:
               type: Manifest
     put:
-      displayName: update manifest
+      displayName: Update Manifest
     delete:
-      displayName: delete manifest
+      displayName: Delete Manifest
   /blobs/{digest}:
     displayName: Blob
     uriParameters:
       digest:
         type: Digest
     get:
-      displayName: find blob
+      displayName: Find Blob
     delete:
-      displayName: delete blob
+      displayName: Delete Blob
       responses:
         202:
           headers:
@@ -104,19 +104,19 @@ securedBy: [basic]
   /blobs/uploads:
     displayName: Upload
     post:
-      displayName: create upload
+      displayName: Create Upload
   /blobs/uploads/{uuid}:
     uriParameters:
       uuid:
         type: string
     displayName: Upload
     get:
-      displayName: find upload
+      displayName: Find Upload
     #patch:
     put:
-      displayName: update upload
+      displayName: Update Upload
     delete:
-      displayName: delete upload
+      displayName: Delete Upload
 types:
   Configuration:
     properties:

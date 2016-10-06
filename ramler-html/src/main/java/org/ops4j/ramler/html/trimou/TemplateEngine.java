@@ -76,6 +76,7 @@ public class TemplateEngine {
                     .addTemplateLocator(genericLocator)
                     .registerHelper("example", new ExampleHelper())
                     .registerHelper("id", new IdHelper())
+                    .registerHelper("methodid", new MethodIdHelper())
                     .registerHelpers(HelpersBuilder.builtin()
                         .addInclude()
                         .addSet()

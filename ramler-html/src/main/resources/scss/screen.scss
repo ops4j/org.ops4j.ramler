@@ -189,6 +189,12 @@ html, body {
       padding-left: $nav-padding + $nav-indent;
       font-size: 12px;
     }
+    .tocify-subheader {
+      .tocify-item>a {
+        padding-left: $nav-padding + $nav-indent + $nav-indent;
+        font-size: 12px;
+      }
+    }
 
     // for embossed look:
     @include embossed-bg;
