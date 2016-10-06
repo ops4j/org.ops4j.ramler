@@ -14,7 +14,7 @@ securedBy: [basic]
 /v2/:
   displayName: Registry
   get:
-    displayName: find API version
+    displayName: Find API version
     responses:
       200:
         headers:
@@ -36,7 +36,7 @@ securedBy: [basic]
 /v2/_catalog:
   displayName: Catalog
   get:
-    displayName: find repositories
+    displayName: Find Repositories
     description: |
       Returns a list of all existing repositories. A repository
       is a set of images with the same name and different tags.
@@ -66,7 +66,7 @@ securedBy: [basic]
       type: RepositoryName
   /tags/list:
     get:
-      displayName: find tags
+      displayName: Find Tags
       responses:
         200:
           body:
@@ -180,14 +180,11 @@ types:
         type: array
         items: Error
     description: List of errors.
-    example: |
-      {
-         "errors": [{
-            "code": "NAME_UNKNOWN",
-            "message": "repository not known to registry",
-            "detail": "i-do-not-exist"
-          }]
-      }
+    example:
+      errors:
+      - code: "NAME_UNKNOWN"
+        message: "repository not known to registry"
+        detail: "i-do-not-exist"
   Layer:
     properties:
       mediaType:
@@ -202,12 +199,10 @@ types:
         type: array
         items: string
         required: false
-    example: |
-        {
-         "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
-         "size": 1605,
-         "digest": "sha256:c39b7f8739a4278307195461d3f7e9d4751f446c55822356a941d2a15a4008c4"
-        }
+    example:
+      mediaType: "application/vnd.docker.image.rootfs.diff.tar.gzip"
+      size: 1605
+      digest: "sha256:c39b7f8739a4278307195461d3f7e9d4751f446c55822356a941d2a15a4008c4"
   Manifest:
     properties:
       schemaVersion:
@@ -223,33 +218,23 @@ types:
       layers:
         type: array
         items: Layer
-    example: |
-      {
-        "schemaVersion": 2,
-        "mediaType": "application/vnd.docker.distribution.manifest.v2+json",
-        "config": {
-          "mediaType": "application/vnd.docker.container.image.v1+json",
-          "size": 7023,
-          "digest": "sha256:b5b2b2c507a0944348e0303114d8d93aaaa081732b86451d9bce1f432a537bc7"
-        },
-        "layers": [
-          {
-            "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
-            "size": 32654,
-            "digest": "sha256:e692418e4cbaf90ca69d05a66403747baa33ee08806650b51fab815ad7fc331f"
-          },
-          {
-            "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
-            "size": 16724,
-            "digest": "sha256:3c3a4604a545cdc127456d94e421cd355bca5b528f4a9c1905b15da2eb4a4c6b"
-          },
-          {
-            "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
-            "size": 73109,
-            "digest": "sha256:ec4b8955958665577945c89419d1af06b5f7636b4ac3da7f12184802ad867736"
-          }
-        ]
-      }
+    example:
+      schemaVersion: 2
+      mediaType: "application/vnd.docker.distribution.manifest.v2+json"
+      config:
+        mediaType: "application/vnd.docker.container.image.v1+json"
+        size: 7023
+        digest: "sha256:b5b2b2c507a0944348e0303114d8d93aaaa081732b86451d9bce1f432a537bc7"
+      layers:
+      - mediaType: "application/vnd.docker.image.rootfs.diff.tar.gzip"
+        size: 32654
+        digest: "sha256:e692418e4cbaf90ca69d05a66403747baa33ee08806650b51fab815ad7fc331f"
+      - mediaType: "application/vnd.docker.image.rootfs.diff.tar.gzip"
+        size: 16724
+        digest: "sha256:3c3a4604a545cdc127456d94e421cd355bca5b528f4a9c1905b15da2eb4a4c6b"
+      - "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip"
+        "size": 73109
+        "digest": "sha256:ec4b8955958665577945c89419d1af06b5f7636b4ac3da7f12184802ad867736"
   Reference:
     description: Name or digest
     type: string
