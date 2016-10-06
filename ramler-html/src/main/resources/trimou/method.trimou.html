@@ -9,12 +9,26 @@
 <h4>Path Parameters</h4>
 <table>
     <thead>
-        <td>Name</td>
-        <td>Type</td>
-        <td>Description</td>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
     </thead>
 {{#each resource.parentResource.uriParameters resource.uriParameters}}
 {{>uriParameter}}
+{{/each}}
+</table>
+{{/if}}
+
+{{#if queryParameters}}
+<h4>Query Parameters</h4>
+<table>
+    <thead>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+    </thead>
+{{#each queryParameters}}
+{{>queryParameter}}
 {{/each}}
 </table>
 {{/if}}
