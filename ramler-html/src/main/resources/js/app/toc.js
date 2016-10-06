@@ -22,9 +22,7 @@
       highlightOffset: 60,
       scrollTo: -1,
       scrollHistory: true,
-      hashGenerator: function (text, element) {
-        return element.prop('id');
-      }
+      hashGenerator: 'compact'
     }).data('toc-tocify');
 
     $("#nav-button").click(function() {

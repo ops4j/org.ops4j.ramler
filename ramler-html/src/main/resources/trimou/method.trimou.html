@@ -1,6 +1,20 @@
-<h3 id="{{methodid displayName.value}}">{{displayName.value}}</h3>
+<h3>{{displayName.value}}</h3>
 
 {{#if this.description}}{{#markdown}}{{description.value}}{{/markdown}}{{/if}}
 
 <h4>HTTP Request</h4>
 <p>{{#uppercase}}{{this.method}}{{/uppercase}} {{this.resource.resourcePath}}</p>
+
+{{#if resource.uriParameters}}
+<h4>Path Parameters</h4>
+{{#resource.uriParameters}}
+<table>
+    <thead>
+        <td>Property name</td>
+        <td>Type</td>
+        <td>Description</td>
+    </thead>
+{{>uriParameter}}
+{{/resource.uriParameters}}
+</table>
+{{/if}}
