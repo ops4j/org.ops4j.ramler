@@ -2,4 +2,5 @@
 
 {{#if this.description}}{{#markdown}}{{description.value}}{{/markdown}}{{/if}}
 
-<p>HTTP {{method}}</p>
+<h4>HTTP Request</h4>
+<p>{{#uppercase}}{{this.method}}{{/uppercase}} {{this.resource.resourcePath}}</p>

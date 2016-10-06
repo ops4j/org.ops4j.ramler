@@ -81,7 +81,8 @@ public class TemplateEngine {
                         .addSet()
                         .addSwitch()
                         .build())
-                    .addGlobalData("markdown", new MarkdownLambda());
+                    .addGlobalData("markdown", new MarkdownLambda())
+                    .addGlobalData("uppercase", new UpperCaseLambda());
             if (templateDir != null) {
                 builder.addTemplateLocator(new FileSystemTemplateLocator(200, templateDir, TEMPLATE_SUFFIX));
             }
