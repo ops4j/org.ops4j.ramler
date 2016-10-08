@@ -3,7 +3,7 @@
 {{#if this.description}}{{#markdown}}{{description.value}}{{/markdown}}{{/if}}
 
 <h4>HTTP Request</h4>
-<p>{{#uppercase}}{{this.method}}{{/uppercase}} {{this.resource.resourcePath}}</p>
+<p class="request">{{#uppercase}}{{this.method}}{{/uppercase}} {{this.resource.resourcePath}}</p>
 
 {{#if resource.uriParameters resource.parentResource.uriParameters logic="or"}}
 <h4>Path Parameters</h4>
@@ -23,9 +23,11 @@
 <h4>Query Parameters</h4>
 <table>
     <thead>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+        </tr>
     </thead>
 {{#each queryParameters}}
 {{>queryParameter}}
@@ -37,9 +39,11 @@
 <h4>Responses</h4>
 <table>
     <thead>
-        <th>Status</th>
-        <th>Type</th>
-        <th>Description</th>
+        <tr>
+            <th>Status</th>
+            <th>Type</th>
+            <th>Description</th>
+        </tr>
     </thead>
 {{#each responses}}
 {{>response}}

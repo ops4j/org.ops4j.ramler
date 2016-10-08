@@ -481,6 +481,10 @@ html, body {
     padding: 0;
   }
 
+  p.request {
+    @extend %code-font;
+  }
+
   aside {
     padding-top: 1em;
     padding-bottom: 1em;

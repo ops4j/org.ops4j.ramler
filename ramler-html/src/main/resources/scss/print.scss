@@ -75,6 +75,10 @@ body {
     line-height: 1.5;
   }
 
+  p.request {
+    @extend %code-font;
+  }
+
   a {
     text-decoration: none;
     color: #000;
