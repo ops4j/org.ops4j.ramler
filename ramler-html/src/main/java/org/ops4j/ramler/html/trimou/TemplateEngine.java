@@ -81,6 +81,7 @@ public class TemplateEngine {
                         .addInclude()
                         .addSet()
                         .addSwitch()
+                        .addWith()
                         .build())
                     .addGlobalData("markdown", new MarkdownLambda())
                     .addGlobalData("uppercase", new UpperCaseLambda());
