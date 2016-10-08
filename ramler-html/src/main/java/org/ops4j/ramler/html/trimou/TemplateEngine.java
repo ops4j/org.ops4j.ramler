@@ -75,8 +75,6 @@ public class TemplateEngine {
                     .setProperty(EngineConfigurationKey.DEFAULT_FILE_ENCODING, "UTF-8")
                     .addTemplateLocator(genericLocator)
                     .registerHelper("example", new ExampleHelper())
-//                    .registerHelper("id", new IdHelper())
-//                    .registerHelper("methodid", new MethodIdHelper())
                     .registerHelpers(HelpersBuilder.builtin()
                         .addInclude()
                         .addSet()
