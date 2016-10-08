@@ -1,4 +1,8 @@
 <h2>{{displayName.value}}</h2>
+{{#if this.description}}
+{{#markdown}}{{description.value}}{{/markdown}}
+{{/if}}
+
 {{#methods}}
 {{>method}}
 {{/methods}}

@@ -35,6 +35,8 @@ securedBy: [basic]
         description: Endpoint does not implement registry v2 protocol
 /v2/_catalog:
   displayName: Catalog
+  description: |
+    The catalog is a list of all repositories stored in the registry.
   get:
     displayName: Find Repositories
     description: |
@@ -64,6 +66,7 @@ securedBy: [basic]
   uriParameters:
     repository:
       type: RepositoryName
+      description: Repository name
   /tags/list:
     get:
       displayName: Find Tags
@@ -75,13 +78,14 @@ securedBy: [basic]
     uriParameters:
       reference:
         type: Reference
+        description: Manifest reference
     get:
       displayName: Find Manifest
       responses:
         200:
           body:
             application/vnd.docker.distribution.manifest.v2+json:
-              type: Manifest              
+              type: Manifest
     put:
       displayName: Update Manifest
     delete:
