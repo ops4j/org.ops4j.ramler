@@ -38,7 +38,7 @@ import javax.ws.rs.PUT;
  * @author kor
  * @version $Id: $Id
  */
-public abstract class Constants {
+public class Constants {
 
     /** Constant <code>JAVA_KEYWORDS</code> */
     public static final Set<String> JAVA_KEYWORDS = Collections
@@ -55,7 +55,7 @@ public abstract class Constants {
         .asList(DELETE.class, GET.class, HEAD.class, OPTIONS.class, POST.class, PUT.class);
 
     /** Constant <code>DEFAULT_LOCALE</code> */
-    public static Locale DEFAULT_LOCALE = Locale.ENGLISH;
+    public static final Locale DEFAULT_LOCALE = Locale.ENGLISH;
 
     /** Constant <code>RESPONSE_HEADER_WILDCARD_SYMBOL="{?}"</code> */
     public static final String RESPONSE_HEADER_WILDCARD_SYMBOL = "{?}";
