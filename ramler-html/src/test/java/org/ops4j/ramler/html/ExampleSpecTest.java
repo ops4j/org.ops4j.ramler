@@ -28,6 +28,7 @@ import java.util.List;
 import javax.json.JsonValue;
 
 import org.junit.Test;
+import org.ops4j.ramler.html.render.ExampleSpecJsonRenderer;
 import org.ops4j.ramler.model.ApiModel;
 import org.raml.v2.api.RamlModelBuilder;
 import org.raml.v2.api.RamlModelResult;

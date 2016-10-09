@@ -1,4 +1,4 @@
-package org.ops4j.ramler.html;
+package org.ops4j.ramler.html.render;
 
 import java.io.StringWriter;
 import java.util.HashMap;

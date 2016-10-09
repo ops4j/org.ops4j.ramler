@@ -106,7 +106,7 @@ public class Names {
      * @return a {@link java.lang.String} object.
      */
     public static boolean canBeEnumConstantName(final String value) {
-        boolean res = value.length() > 0;
+        boolean res = !value.isEmpty();
         for (int i = 0; i < value.length(); i++) {
             char c = value.charAt(i);
             if (i == 0) {
@@ -128,14 +128,15 @@ public class Names {
      * @return true if this list of strings can be used as names for enum
      */
     public static boolean isValidEnumValues(java.util.List<String> values) {
-        boolean res = values.size() > 0;
+        if (values.isEmpty()) {
+            return false;
+        }
         for (String v : values) {
-            res &= canBeEnumConstantName(v);
-            if (!res) {
-                break;
+            if (!canBeEnumConstantName(v)) {
+                return false;
             }
         }
-        return res;
+        return true;
     }
 
     private Names() {

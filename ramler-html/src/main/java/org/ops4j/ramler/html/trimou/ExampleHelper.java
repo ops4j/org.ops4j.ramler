@@ -1,6 +1,6 @@
 package org.ops4j.ramler.html.trimou;
 
-import org.ops4j.ramler.html.ExampleSpecJsonRenderer;
+import org.ops4j.ramler.html.render.ExampleSpecJsonRenderer;
 import org.raml.v2.api.model.v10.datamodel.ExampleSpec;
 import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
 import org.trimou.handlebars.BasicHelper;
