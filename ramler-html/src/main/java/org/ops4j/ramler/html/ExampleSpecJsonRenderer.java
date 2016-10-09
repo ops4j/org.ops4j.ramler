@@ -23,6 +23,7 @@ import org.raml.v2.api.model.v10.datamodel.TypeInstanceProperty;
 
 /**
  * Produces a JsonValue or a pretty-printed JSON string from a RAML ExampleSpec.
+ * 
  * @author hwellmann
  *
  */
@@ -57,7 +58,8 @@ public class ExampleSpecJsonRenderer {
         if (json instanceof JsonStructure) {
             writer.write((JsonStructure) json);
             return sw.toString();
-        } else {
+        }
+        else {
             return json.toString();
         }
     }
@@ -83,9 +85,11 @@ public class ExampleSpecJsonRenderer {
         for (TypeInstance instance : tip.values()) {
             if (isObject(instance)) {
                 builder.add(createObject(instance));
-            } else if (isArray(instance)) {
+            }
+            else if (isArray(instance)) {
                 builder.add(createArray(instance));
-            } else {
+            }
+            else {
                 addScalarOrNull(builder, instance);
             }
         }
@@ -97,11 +101,14 @@ public class ExampleSpecJsonRenderer {
         Object value = instance.value();
         if (value instanceof Integer) {
             builder.add((Integer) value);
-        } else if (value instanceof String) {
+        }
+        else if (value instanceof String) {
             builder.add((String) value);
-        } else if (value instanceof Boolean) {
+        }
+        else if (value instanceof Boolean) {
             builder.add((Boolean) value);
-        } else if (value == null) {
+        }
+        else if (value == null) {
             builder.addNull();
         }
     }
@@ -111,11 +118,14 @@ public class ExampleSpecJsonRenderer {
         Object value = tip.value().value();
         if (value instanceof Integer) {
             builder.add(name, (Integer) value);
-        } else if (value instanceof String) {
+        }
+        else if (value instanceof String) {
             builder.add(name, (String) value);
-        } else if (value instanceof Boolean) {
+        }
+        else if (value instanceof Boolean) {
             builder.add(name, (Boolean) value);
-        } else if (value == null) {
+        }
+        else if (value == null) {
             builder.addNull(name);
         }
     }
@@ -133,9 +143,11 @@ public class ExampleSpecJsonRenderer {
         for (TypeInstanceProperty tip : instance.properties()) {
             if (isObject(tip)) {
                 builder.add(tip.name(), createObject(tip.value()));
-            } else if (isArray(tip)) {
+            }
+            else if (isArray(tip)) {
                 builder.add(tip.name(), createArray(tip));
-            } else {
+            }
+            else {
                 addScalarOrNull(builder, tip);
             }
         }
@@ -147,9 +159,11 @@ public class ExampleSpecJsonRenderer {
         for (TypeInstanceProperty tip : instance.properties()) {
             if (isObject(tip)) {
                 builder.add(createObject(tip.value()));
-            } else if (isArray(tip)) {
+            }
+            else if (isArray(tip)) {
                 builder.add(createArray(tip));
-            } else {
+            }
+            else {
                 addScalarOrNull(builder, tip.value());
             }
         }

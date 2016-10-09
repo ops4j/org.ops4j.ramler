@@ -45,39 +45,41 @@ import org.raml.v2.api.model.v10.resources.Resource;
 public class ApiModel {
 
     private Api api;
-    
+
     private Map<String, TypeDeclaration> types = new LinkedHashMap<>();
-    
+
     public ApiModel(Api api) {
         this.api = api;
         mapTypes();
     }
-    
+
     public Api api() {
         return api;
     }
 
     private void mapTypes() {
-        api.types().stream().sorted((l, r) -> l.name().compareTo(r.name())).
-            forEach(t -> types.put(t.name(), t));
+        api.types().stream().sorted((l, r) -> l.name().compareTo(r.name()))
+            .forEach(t -> types.put(t.name(), t));
     }
-    
+
     public Collection<TypeDeclaration> getTypes() {
         return types.values();
     }
-    
+
     public String getTitle() {
         return api.title().value();
     }
-    
+
     public Collection<Resource> getResources() {
-        return api.resources().stream().sorted((l, r) -> l.displayName().value().compareTo(r.displayName().value())).collect(toList());
+        return api.resources().stream()
+            .sorted((l, r) -> l.displayName().value().compareTo(r.displayName().value()))
+            .collect(toList());
     }
-    
+
     public TypeDeclaration getDeclaredType(String typeName) {
         return types.get(typeName);
     }
-    
+
     public String getDeclaredName(TypeDeclaration type) {
         TypeDeclaration declaredType = types.get(type.name());
         if (declaredType == null) {
@@ -85,11 +87,11 @@ public class ApiModel {
         }
         return type.name();
     }
-    
+
     public boolean isArray(TypeDeclaration type) {
         return type instanceof ArrayTypeDeclaration;
     }
-    
+
     public String getItemType(TypeDeclaration type) {
         if (!isArray(type)) {
             return null;
@@ -101,9 +103,9 @@ public class ApiModel {
         }
         return item.type().replace("[]", "");
     }
-    
+
     public boolean isPrimitive(TypeDeclaration type) {
-        switch (metatype(type)){
+        switch (metatype(type)) {
             case STRING:
             case INTEGER:
             case NUMBER:
@@ -115,24 +117,24 @@ public class ApiModel {
             case FILE:
             case NULL:
                 return true;
-        
-        default:
-            return false;
-        }
-    }
 
-    public boolean isStructured(TypeDeclaration type) {
-        switch (metatype(type)){
-            case ARRAY:
-            case OBJECT:
-            case UNION:
-                return true;
-            
             default:
                 return false;
         }
     }
-    
+
+    public boolean isStructured(TypeDeclaration type) {
+        switch (metatype(type)) {
+            case ARRAY:
+            case OBJECT:
+            case UNION:
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
     public Metatype metatype(TypeDeclaration type) {
         if (type instanceof ObjectTypeDeclaration) {
             return OBJECT;
@@ -174,15 +176,15 @@ public class ApiModel {
             return UNION;
         }
         if (type instanceof AnyTypeDeclaration) {
-            return ANY; 
+            return ANY;
         }
-        throw new IllegalArgumentException("cannot determine metatype: " + "name=" + type.name() +", type=" + type.type());
+        throw new IllegalArgumentException(
+            "cannot determine metatype: " + "name=" + type.name() + ", type=" + type.type());
     }
-    
+
     public List<String> getStringAnnotations(TypeDeclaration decl, String annotationName) {
-        return decl.annotations().stream()
-                .filter(a -> a.annotation().name().equals(annotationName))
-                .flatMap(a -> findAnnotationValues(a)).collect(toList());
+        return decl.annotations().stream().filter(a -> a.annotation().name().equals(annotationName))
+            .flatMap(a -> findAnnotationValues(a)).collect(toList());
     }
 
     private Stream<String> findAnnotationValues(AnnotationRef ref) {
