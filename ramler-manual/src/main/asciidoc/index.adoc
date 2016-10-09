@@ -30,8 +30,7 @@ Ramler supports a model-first strategy for designing, implementing and documenti
 Given a RAML specification, Ramler generates Java entity classes and resource interfaces compliant 
 with JAX-RS 2.0.
 
-Ramler also generates a static HTML 5 website with hyperlinked and searchable documentation directly
-from a RAML specification. 
+Ramler also generates a link:registry/[static HTML 5 website] with hyperlinked and searchable documentation directly from a RAML specification. 
 
 == Prerequisites
 
