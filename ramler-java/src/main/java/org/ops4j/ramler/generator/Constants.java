@@ -57,9 +57,6 @@ public class Constants {
     /** Constant <code>DEFAULT_LOCALE</code> */
     public static final Locale DEFAULT_LOCALE = Locale.ENGLISH;
 
-    /** Constant <code>RESPONSE_HEADER_WILDCARD_SYMBOL="{?}"</code> */
-    public static final String RESPONSE_HEADER_WILDCARD_SYMBOL = "{?}";
-
     private Constants() {
         throw new UnsupportedOperationException();
     }
