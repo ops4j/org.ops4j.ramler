@@ -42,9 +42,13 @@ import org.sonatype.plexus.build.incremental.BuildContext;
 @Mojo(name = "html", defaultPhase = LifecyclePhase.GENERATE_RESOURCES)
 public class HtmlMojo extends AbstractMojo {
 
+    /** RAML specification file. */
     @Parameter(required = true)
     protected String model;
 
+    /**
+     * Output directory for generated HTML and other web resources.
+     */
     @Parameter(defaultValue = "${project.build.directory}/ramler/html")
     private File outputDir;
     

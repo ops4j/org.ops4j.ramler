@@ -30,16 +30,21 @@ import org.ops4j.ramler.generator.Generator;
 import org.sonatype.plexus.build.incremental.BuildContext;
 
 /**
- * Generates Java test sources from a RAML model.
+ * Generates Java sources from a RAML model.
  * 
  * @author hwellmann
  *
  */
 public abstract class AbstractJavaMojo extends AbstractMojo {
 
+    /** RAML specification file. */
     @Parameter(required = true)
     protected String model;
 
+    /**
+     * Fully qualified package name for generated Java sources. The generated
+     * classes will be located in subpackages {@code model} and {@code api}.
+     */
     @Parameter(name = "package", required = true)
     private String packageName;
 

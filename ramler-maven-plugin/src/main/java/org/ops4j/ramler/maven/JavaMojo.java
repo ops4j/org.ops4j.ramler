@@ -34,6 +34,9 @@ import org.apache.maven.plugins.annotations.Parameter;
 @Mojo(name = "java", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
 public class JavaMojo extends AbstractJavaMojo {
 
+    /**
+     * Output directory for generated sources.
+     */
     @Parameter(defaultValue = "${project.build.directory}/generated-sources/ramler")
     private File outputDir;
 

@@ -3,8 +3,9 @@
     <pluginExecution>
       <pluginExecutionFilter>
         <goals>
-          <goal>generate</goal>
-          <goal>generate-test</goal>
+          <goal>java</goal>
+          <goal>java-test</goal>
+          <goal>html</goal>
         </goals>
       </pluginExecutionFilter>
       <action>
