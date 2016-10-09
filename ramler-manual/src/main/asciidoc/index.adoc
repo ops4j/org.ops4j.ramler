@@ -53,6 +53,8 @@ https://github.com/raml-org/raml-java-parser[`raml-java-parser`].
 Ruby dependencies replaced by Java or JavaScript tools or libraries. 
 HTML templates are based on http://www.trimou.org[Trimou].
 
+* Markdown content is rendered as HTML using https://github.com/sirthias/pegdown[Pegdown].
+
 = Working with Ramler
 
 == Overview
@@ -71,6 +73,72 @@ http://apiworkbench.com/[API Workbench] plugin for this step.
 
 * Generate HTML documentation from the RAML model, either programmatically, or using the 
 `ramler-maven-plugin`. You can use the default templates and styles or provide your own.
+
+== Using the Maven Plugin
+
+Here is an example of using the `raml-maven-plugin` to generate Java code and a static website:
+
+[source,xml]
+----
+    <dependencies>
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+            <version>7.0</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.ops4j.ramler</groupId>
+                <artifactId>ramler-maven-plugin</artifactId>
+                <version>${project.version}</version>
+                <configuration>
+                    <package>org.ops4j.ramler.samples.registry</package>
+                    <model>${basedir}/src/test/resources/raml/registry.raml</model>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>generate</id>
+                        <goals>
+                            <goal>java</goal>
+                            <goal>html</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <doclet>ch.raffael.doclets.pegdown.PegdownDoclet</doclet>
+                    <docletArtifact>
+                        <groupId>ch.raffael.pegdown-doclet</groupId>
+                        <artifactId>pegdown-doclet</artifactId>
+                        <version>1.3</version>
+                    </docletArtifact>
+                    <useStandardDocletOptions>true</useStandardDocletOptions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+----
+
+== Limitations
+
+Please note the following limitations when using Ramler:
+
+* RAML 0.8 is not supported. Ramler requires a RAML 1.0 specification.
+* Only native RAML types are supported. Ramler cannot handle type definitions based on JSON Schema or
+  XML schema.
+* Examples in the RAML specification must use YAML syntax to be rendered in the generated website.
+  Literal JSON is not supported.
+* Ramler supports at most one level of nested subresources. Each top-level resource is turned into a
+JAX-RS resource class. All methods of subresources of the given top-level resource will be turned
+into methods of the same JAX-RS resource class.
+  
+  
 
 // Return to normal title levels 
 :leveloffset: 0
