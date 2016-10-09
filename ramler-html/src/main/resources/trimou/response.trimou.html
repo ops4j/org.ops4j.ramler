@@ -1,5 +1,5 @@
 <tr>
     <td>{{code.value}}</td>
-    <td>{{#with body.0}}{{>propertyType}}{{/with}}</td>
+    <td>{{#if body}}{{#with body.0}}{{>propertyType}}{{/with}}{{/if}}</td>
     <td>{{#if this.description}}{{#markdown}}{{description.value}}{{/markdown}}{{/if}}</td>
 </tr>
