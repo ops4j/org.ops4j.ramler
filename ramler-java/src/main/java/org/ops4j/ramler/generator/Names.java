@@ -49,7 +49,8 @@ public class Names {
      * </p>
      *
      * @param resource
-     *            a {@link org.raml.model.Resource} object.
+     *            a RAML resource
+     * @param config Ramler configuration           
      * @return a {@link java.lang.String} object.
      */
     public static String buildResourceInterfaceName(final Resource resource, Configuration config) {
@@ -100,9 +101,9 @@ public class Names {
     }
 
     /**
-     * get enum field name from value
+     * Get enum field name from value
      * 
-     * @param value
+     * @param value string to be checked
      * @return a {@link java.lang.String} object.
      */
     public static boolean canBeEnumConstantName(final String value) {
@@ -123,8 +124,8 @@ public class Names {
     }
 
     /**
-     *
-     * @param values
+     * Checks if the given strings can be used as enum values.
+     * @param values list of strings to be checked
      * @return true if this list of strings can be used as names for enum
      */
     public static boolean isValidEnumValues(java.util.List<String> values) {

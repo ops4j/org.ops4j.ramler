@@ -283,7 +283,7 @@ public class GeneratorContext {
     }
 
     /**
-     * @param api
+     * @param apiModel
      *            the api to set
      */
     public void setApiModel(ApiModel apiModel) {

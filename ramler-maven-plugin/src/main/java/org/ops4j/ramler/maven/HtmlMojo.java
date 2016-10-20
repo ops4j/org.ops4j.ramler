@@ -71,10 +71,6 @@ public class HtmlMojo extends AbstractMojo {
     @Inject
     private BuildContext buildContext;
 
-    /**
-     * @throws MojoFailureException
-     * @throws IOException
-     */
     protected void generateWebResources() throws MojoFailureException {
         if (buildContext.hasDelta(model)) {
             getLog().info("Generating HTML documentation from " + model);
