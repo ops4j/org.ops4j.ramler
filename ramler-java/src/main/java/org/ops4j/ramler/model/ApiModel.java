@@ -98,10 +98,13 @@ public class ApiModel {
         }
         ArrayTypeDeclaration array = (ArrayTypeDeclaration) type;
         TypeDeclaration item = array.items();
-        if (getDeclaredType(item.name()) != null) {
+        if (item.type() == null) {
+            return item.name().replace("[]", "");
+        }
+        if ("object".equals(item.type()) && item.name() != null) {
             return item.name();
         }
-        return item.type().replace("[]", "");
+        return item.type();
     }
 
     public boolean isPrimitive(TypeDeclaration type) {

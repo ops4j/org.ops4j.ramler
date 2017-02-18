@@ -179,7 +179,7 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
 
     private void generateListFieldAndAccessors(JDefinedClass klass, ArrayTypeDeclaration property) {
         String fieldName = property.name();
-        JType elementType = context.getJavaType(property.items().type());
+        JType elementType = context.getJavaType(context.getApiModel().getItemType(property));
         JClass listType = codeModel.ref(List.class).narrow(elementType);
         JFieldVar field = klass.field(JMod.PRIVATE, listType, fieldName);
 
