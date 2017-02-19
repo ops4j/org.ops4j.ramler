@@ -17,7 +17,6 @@
  */
 package org.ops4j.ramler.generator;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.UnaryOperator;
@@ -184,8 +183,6 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         JFieldVar field = klass.field(JMod.PRIVATE, listType, fieldName);
 
         JMethod getter = klass.method(JMod.PUBLIC, listType, getGetterName(fieldName));
-        getter.body()._if(field.eq(JExpr._null()))._then().assign(field,
-            JExpr._new(codeModel.ref(ArrayList.class).narrow(elementType)));
         getter.body()._return(field);
 
         if (property.description() != null) {
