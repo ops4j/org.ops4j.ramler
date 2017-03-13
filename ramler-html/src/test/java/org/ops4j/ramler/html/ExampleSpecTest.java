@@ -105,7 +105,7 @@ public class ExampleSpecTest {
         assertThat(p0.name(), is("value"));
         assertThat(p0.value().isScalar(), is(true));
         Object scalar = p0.value().value();
-        assertThat(scalar, is(37));
+        assertThat(scalar, is(37L));
         ExampleSpecJsonRenderer renderer = new ExampleSpecJsonRenderer();
         JsonValue jsonValue = renderer.toJsonValue(age, exampleSpec);
         
