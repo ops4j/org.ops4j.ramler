@@ -23,7 +23,7 @@ import org.raml.v2.api.model.v10.datamodel.TypeInstanceProperty;
 
 /**
  * Produces a JsonValue or a pretty-printed JSON string from a RAML ExampleSpec.
- * 
+ *
  * @author hwellmann
  *
  */
@@ -39,10 +39,8 @@ public class ExampleSpecJsonRenderer {
         if (isArray(type)) {
             return jsonObject.entrySet().iterator().next().getValue();
         }
-        if (!isObject(type)) {
-            if (jsonObject.containsKey("value")) {
-                return jsonObject.get("value");
-            }
+        if (!isObject(type) && jsonObject.containsKey("value")) {
+            return jsonObject.get("value");
         }
         return jsonObject;
     }

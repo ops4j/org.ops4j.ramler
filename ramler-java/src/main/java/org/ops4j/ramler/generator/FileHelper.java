@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 OPS4J Contributors
+ * Copyright 2017 OPS4J Contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,25 +15,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ops4j.ramler.html.trimou;
+package org.ops4j.ramler.generator;
 
-import org.pegdown.Extensions;
-import org.pegdown.PegDownProcessor;
-import org.trimou.lambda.InputProcessingLambda;
+import java.io.File;
+import java.io.IOException;
 
-/**
- * Converts markdown text to HTML.
- *
- * @author hwellmann
- *
- */
-public class MarkdownLambda extends InputProcessingLambda {
+public class FileHelper {
 
-    private PegDownProcessor processor = new PegDownProcessor(
-        Extensions.TABLES | Extensions.FENCED_CODE_BLOCKS);
 
-    @Override
-    public String invoke(String text) {
-        return processor.markdownToHtml(text);
+    private FileHelper() {
+        // hidden utility class constructor
+    }
+
+    public static void createDirectoryIfNeeded(File dir) throws IOException {
+        if (!dir.exists()) {
+            boolean created = dir.mkdirs();
+            if (!created) {
+                throw new IOException("could not create " + dir);
+            }
+        }
     }
 }

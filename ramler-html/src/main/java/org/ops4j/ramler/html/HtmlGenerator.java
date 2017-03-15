@@ -28,6 +28,7 @@ import java.nio.file.Path;
 import java.util.stream.Stream;
 
 import org.ops4j.ramler.exc.Exceptions;
+import org.ops4j.ramler.generator.FileHelper;
 import org.ops4j.ramler.html.trimou.TemplateEngine;
 import org.ops4j.ramler.model.ApiModel;
 import org.raml.v2.api.RamlModelBuilder;
@@ -39,7 +40,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Generates HTML documentation from a RAML 1.0 specification.
- * 
+ *
  * @author hwellmann
  *
  */
@@ -53,7 +54,7 @@ public class HtmlGenerator {
 
     /**
      * Creates an HTML generator with the given configuration.
-     * 
+     *
      * @param config code generator configuration
      */
     public HtmlGenerator(HtmlConfiguration config) {
@@ -80,7 +81,7 @@ public class HtmlGenerator {
         String result = engine.renderTemplate("api", apiModel);
 
         File targetDir = new File(config.getTargetDir());
-        targetDir.mkdirs();
+        FileHelper.createDirectoryIfNeeded(targetDir);
         Files.write(targetDir.toPath().resolve("index.html"), result.getBytes(StandardCharsets.UTF_8));
 
         writeWebResources(targetDir);
@@ -122,7 +123,7 @@ public class HtmlGenerator {
             throw Exceptions.unchecked(exc);
         }
     }
-    
+
     private void copyTo(Path sourcePath, Path sourceRoot, Path targetRoot) {
         Path relPath = sourceRoot.relativize(sourcePath);
         Path targetPath = targetRoot.resolve(relPath);

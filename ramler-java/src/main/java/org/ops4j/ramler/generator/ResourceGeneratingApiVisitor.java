@@ -74,7 +74,7 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
     private Resource outerResource;
 
     private Resource innerResource;
-    
+
     private List<String> mediaTypes = Collections.emptyList();
 
     public ResourceGeneratingApiVisitor(GeneratorContext context) {
@@ -84,7 +84,7 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
         httpMethodAnnotations = Constants.JAXRS_HTTP_METHODS.stream()
             .collect(toMap(Class::getSimpleName, Function.identity()));
     }
-    
+
     @Override
     public void visitApiStart(Api api) {
         mediaTypes = api.mediaType().stream().map(m -> m.value()).collect(toList());
@@ -96,14 +96,15 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
             if (outerResource == null) {
                 outerResource = resource;
 
-                createResourceInterface(resource);                
+                createResourceInterface(resource);
                 addMediaTypes();
             }
             else if (innerResource == null) {
                 innerResource = resource;
             }
             else {
-                throw new IllegalStateException("cannot handle resources nested more than two levels");
+                throw new IllegalStateException(
+                    "cannot handle resources nested more than two levels");
             }
         }
         catch (JClassAlreadyExistsException exc) {
@@ -112,16 +113,17 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
     }
 
     private void createResourceInterface(Resource resource) throws JClassAlreadyExistsException {
-        klass = pkg
-            ._interface(Names.buildResourceInterfaceName(resource, context.getConfig()));
+        klass = pkg._interface(Names.buildResourceInterfaceName(resource, context.getConfig()));
         context.annotateAsGenerated(klass);
-        klass.annotate(Path.class).param("value", resource.resourcePath());        
+        klass.annotate(Path.class).param("value", resource.resourcePath());
     }
 
     private void addMediaTypes() {
         if (mediaTypes.size() > 1) {
-            mediaTypes.forEach(m -> klass.annotate(Produces.class).paramArray("value").param(mediaType(m)));
-            mediaTypes.forEach(m -> klass.annotate(Consumes.class).paramArray("value").param(mediaType(m)));
+            mediaTypes.forEach(
+                m -> klass.annotate(Produces.class).paramArray("value").param(mediaType(m)));
+            mediaTypes.forEach(
+                m -> klass.annotate(Consumes.class).paramArray("value").param(mediaType(m)));
         }
         else if (!mediaTypes.isEmpty()) {
             JExpression m = mediaType(mediaTypes.get(0));
@@ -129,26 +131,26 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
             klass.annotate(Consumes.class).param("value", m);
         }
     }
-    
+
     private JExpression mediaType(String mediaType) {
         if (mediaType.equals(MediaType.APPLICATION_JSON)) {
-            JClass klass = (JClass) codeModel._ref(MediaType.class);
-            return klass.staticRef("APPLICATION_JSON");
+            JClass cls = (JClass) codeModel._ref(MediaType.class);
+            return cls.staticRef("APPLICATION_JSON");
         }
         else if (mediaType.equals(MediaType.APPLICATION_XML)) {
-            JClass klass = (JClass) codeModel._ref(MediaType.class);
-            return klass.staticRef("APPLICATION_XML");
+            JClass cls = (JClass) codeModel._ref(MediaType.class);
+            return cls.staticRef("APPLICATION_XML");
         }
         return JExpr.lit(mediaType);
     }
 
     @Override
     public void visitResourceEnd(Resource resource) {
-        if (outerResource == resource) {
+        if (resource.equals(outerResource)) {
             klass = null;
             outerResource = null;
         }
-        if (innerResource == resource) {
+        if (resource.equals(innerResource)) {
             innerResource = null;
         }
     }
@@ -157,14 +159,14 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
     public void visitMethodStart(Method method) {
         String methodName = Names.buildVariableName(method.displayName().value());
         JMethod codeMethod = klass.method(JMod.NONE, klass, methodName);
-        
+
         addJavadoc(method, codeMethod);
         addSubresourcePath(codeMethod);
         addHttpMethodAnnotation(method.method(), codeMethod);
         addBodyParameters(method, codeMethod);
         addPathParameters(method, codeMethod);
         addQueryParameters(method, codeMethod);
-        addReturnType(method, codeMethod);        
+        addReturnType(method, codeMethod);
     }
 
     private void addSubresourcePath(JMethod codeMethod) {
@@ -194,7 +196,7 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
             else {
                 TypeDeclaration body = response.body().get(0);
                 JType resultType = context.getJavaType(body);
-                resultType = addTypeArguments(resultType, body);                
+                resultType = addTypeArguments(resultType, body);
                 codeMethod.type(resultType);
             }
         }
@@ -274,6 +276,6 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
         if (annotationClass == null) {
             throw new IllegalArgumentException("unsupported HTTP method: " + httpMethod);
         }
-        annotatable.annotate((Class<? extends Annotation>) annotationClass);
+        annotatable.annotate(annotationClass);
     }
 }

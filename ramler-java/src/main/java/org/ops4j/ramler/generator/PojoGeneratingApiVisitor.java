@@ -89,7 +89,8 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
 
             List<String> typeArgs = context.getApiModel().getStringAnnotations(type, "typeArgs");
             if (!typeArgs.isEmpty()) {
-                baseClass = baseClass.narrow(typeArgs.stream().map(pkg::_getClass).toArray(JClass[]::new));
+                baseClass = baseClass
+                    .narrow(typeArgs.stream().map(pkg::_getClass).toArray(JClass[]::new));
             }
             klass._extends(baseClass);
         }

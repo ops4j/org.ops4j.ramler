@@ -29,13 +29,13 @@ import org.trimou.engine.locator.FileSystemTemplateLocator;
 import org.trimou.handlebars.HelpersBuilder;
 
 public class TemplateEngine {
-    
+
     public static final String TEMPLATE_SUFFIX = "trimou.html";
 
     private static Logger log = LoggerFactory.getLogger(TemplateEngine.class);
 
     private MustacheEngine engine;
-    
+
     private String templateDir;
 
     /**
@@ -64,27 +64,22 @@ public class TemplateEngine {
     }
 
     /**
-     * Constructs a template engine with some additional helpers and lambdas
-     * for HTML generation.
+     * Constructs a template engine with some additional helpers and lambdas for HTML generation.
      */
     public MustacheEngine getEngine() {
         if (engine == null) {
             ClassPathTemplateLocator genericLocator = new ClassPathTemplateLocator(100, "trimou",
-                    TEMPLATE_SUFFIX);
+                TEMPLATE_SUFFIX);
             MustacheEngineBuilder builder = MustacheEngineBuilder.newBuilder()
-                    .setProperty(EngineConfigurationKey.DEFAULT_FILE_ENCODING, "UTF-8")
-                    .addTemplateLocator(genericLocator)
-                    .registerHelper("example", new ExampleHelper())
-                    .registerHelpers(HelpersBuilder.builtin()
-                        .addInclude()
-                        .addSet()
-                        .addSwitch()
-                        .addWith()
-                        .build())
-                    .addGlobalData("markdown", new MarkdownLambda())
-                    .addGlobalData("uppercase", new UpperCaseLambda());
+                .setProperty(EngineConfigurationKey.DEFAULT_FILE_ENCODING, "UTF-8")
+                .addTemplateLocator(genericLocator).registerHelper("example", new ExampleHelper())
+                .registerHelpers(
+                    HelpersBuilder.builtin().addInclude().addSet().addSwitch().addWith().build())
+                .addGlobalData("markdown", new MarkdownLambda())
+                .addGlobalData("uppercase", new UpperCaseLambda());
             if (templateDir != null) {
-                builder.addTemplateLocator(new FileSystemTemplateLocator(200, templateDir, TEMPLATE_SUFFIX));
+                builder.addTemplateLocator(
+                    new FileSystemTemplateLocator(200, templateDir, TEMPLATE_SUFFIX));
             }
             engine = builder.build();
         }

@@ -36,7 +36,7 @@ import com.sun.codemodel.writer.FileCodeWriter;
  * Generates JAX-RS resource interfaces and POJO model classes for all types defined in a given RAML
  * specification.
  * <p>
- * 
+ *
  * @author Harald Wellmann
  *
  */
@@ -50,7 +50,7 @@ public class Generator {
 
     /**
      * Creates a JAX-RS code generator with the given configuration.
-     * 
+     *
      * @param config
      *            code generator configuration
      */
@@ -58,7 +58,7 @@ public class Generator {
         this.config = config;
         this.context = new GeneratorContext(config);
     }
-    
+
     GeneratorContext getContext() {
         return context;
     }
@@ -95,26 +95,18 @@ public class Generator {
         PojoGeneratingApiVisitor pojoVisitor = new PojoGeneratingApiVisitor(context);
         ResourceGeneratingApiVisitor resourceVisitor = new ResourceGeneratingApiVisitor(context);
         ApiTraverser traverser = new ApiTraverser();
-        Stream.of(pojoCreator, pojoVisitor, resourceVisitor).forEach(v -> traverser.traverse(context.getApiModel().api(), v));
+        Stream.of(pojoCreator, pojoVisitor, resourceVisitor)
+            .forEach(v -> traverser.traverse(context.getApiModel().api(), v));
     }
 
     private void writeCodeModel() {
         try {
             File dir = config.getTargetDir();
-            createDirectoryIfNeeded(dir);
+            FileHelper.createDirectoryIfNeeded(dir);
             context.getCodeModel().build(new FileCodeWriter(dir));
         }
         catch (IOException exc) {
             throw Exceptions.unchecked(exc);
-        }
-    }
-
-    private void createDirectoryIfNeeded(File dir) throws IOException {
-        if (!dir.exists()) {
-            boolean created = dir.mkdirs();
-            if (!created) {
-                throw new IOException("could not create " + dir);
-            }
         }
     }
 }
