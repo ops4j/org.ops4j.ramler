@@ -16,7 +16,10 @@ import static org.ops4j.ramler.model.Metatype.STRING;
 import static org.ops4j.ramler.model.Metatype.TIME_ONLY;
 import static org.ops4j.ramler.model.Metatype.UNION;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,10 +50,12 @@ public class ApiModel {
     private Api api;
 
     private Map<String, TypeDeclaration> types = new LinkedHashMap<>();
+    private Map<String, List<String>> derivedTypes = new HashMap<>();
 
     public ApiModel(Api api) {
         this.api = api;
         mapTypes();
+        mapDerivedTypes();
     }
 
     public Api api() {
@@ -60,6 +65,26 @@ public class ApiModel {
     private void mapTypes() {
         api.types().stream().sorted((l, r) -> l.name().compareTo(r.name()))
             .forEach(t -> types.put(t.name(), t));
+    }
+
+    private void mapDerivedTypes() {
+        for (TypeDeclaration type : api.types()) {
+            if (type instanceof ObjectTypeDeclaration && !type.type().equals("object")) {
+                String baseTypeName = type.type();
+                derivedTypes.merge(baseTypeName, Collections.singletonList(type.name()), this::join);
+            }
+        }
+    }
+
+    private <T> List<T> join(List<T> head, List<T> tail) {
+        List<T> result = new ArrayList<>(head);
+        result.addAll(tail);
+        return result;
+    }
+
+    public List<String> derivedTypes(String typeName) {
+        List<String> derived = derivedTypes.get(typeName);
+        return derived == null ? Collections.emptyList() : derived;
     }
 
     public Collection<TypeDeclaration> getTypes() {

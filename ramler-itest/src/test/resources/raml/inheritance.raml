@@ -1,0 +1,35 @@
+#%RAML 1.0
+title: Type hierarchy
+mediaType: application/json
+types:
+  Address:
+    properties:
+      city: string
+      street: string
+  Age:
+    type: integer
+    format: int16
+    minimum: 0
+    maximum: 120
+  Name:
+    maxLength: 80
+  Person:
+    discriminator: objectType
+    properties:
+      objectType: string
+      firstname:
+        type: string
+      lastname:
+          type: string
+      address:
+          type: Address
+      age:
+          type: Age
+  Employee:
+    type: Person
+    properties:
+      department: string
+  Manager:
+    type: Employee
+    properties:
+      numEmployees: integer

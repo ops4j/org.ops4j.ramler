@@ -36,6 +36,8 @@ import java.util.Set;
 import org.apache.commons.lang.reflect.FieldUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;
+import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
 
 import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JCodeModel;
@@ -74,7 +76,7 @@ public class SimpleObjectTest {
         Set<String> classNames = new HashSet<>();
         modelPackage.classes().forEachRemaining(c -> classNames.add(c.name()));
         assertThat(classNames, containsInAnyOrder("Address", "Colour", "Employee", "FileResponse", 
-            "Integers", "Numbers", "Person", "Temporals", "User", "UserGroup"));
+            "Integers", "Manager", "Numbers", "Person", "Temporals", "User", "UserGroup"));
     }
     
     @SuppressWarnings("unchecked")
@@ -92,6 +94,14 @@ public class SimpleObjectTest {
         assertProperty(klass, "city", "String", "getCity", "setCity");
         assertProperty(klass, "street", "String", "getStreet", "setStreet");
         verifyClass();
+    }
+
+    @Test
+    public void shouldFindDiscriminator() {
+        TypeDeclaration type = generator.getContext().getApiModel().getDeclaredType("Manager");
+        ObjectTypeDeclaration objectType = (ObjectTypeDeclaration) type;
+        objectType.properties().forEach(p -> System.out.println(p.name()));
+        assertThat(objectType.discriminator(), is("objectType"));
     }
 
     private void expectClass(String className) {

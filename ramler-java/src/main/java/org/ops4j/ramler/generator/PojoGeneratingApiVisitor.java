@@ -31,6 +31,13 @@ import org.raml.v2.api.model.v10.datamodel.StringTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
 import org.raml.v2.api.model.v10.declarations.AnnotationRef;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+import com.sun.codemodel.JAnnotationArrayMember;
+import com.sun.codemodel.JAnnotationUse;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JCodeModel;
@@ -64,6 +71,7 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         addTypeParameters(klass, type);
         addBaseClass(klass, type);
         addDiscriminator(klass, type);
+        addJsonTypeInfo(klass, type);
     }
 
     private void addJavadoc(JDefinedClass klass, ObjectTypeDeclaration type) {
@@ -99,6 +107,29 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         JFieldVar field = klass.field(JMod.PUBLIC | JMod.STATIC | JMod.FINAL,
             codeModel._ref(String.class), "DISCRIMINATOR");
         field.init(JExpr.lit(discriminatorValue));
+        generateDiscriminatorGetter(type, klass, type.discriminator());
+    }
+
+    private void addJsonTypeInfo(JDefinedClass klass, ObjectTypeDeclaration type) {
+        if (type.discriminator() == null) {
+            return;
+        }
+        List<String> derivedTypes = context.getApiModel().derivedTypes(type.name());
+        if (derivedTypes.isEmpty()) {
+            return;
+        }
+        JAnnotationUse typeInfo = klass.annotate(JsonTypeInfo.class);
+        typeInfo.param("use", Id.NAME);
+        typeInfo.param("include", As.EXISTING_PROPERTY);
+        typeInfo.param("property", type.discriminator());
+
+        JAnnotationUse subTypes = klass.annotate(JsonSubTypes.class);
+        JAnnotationArrayMember typeArray = subTypes.paramArray("value");
+
+        for (String derivedType : derivedTypes) {
+            JDefinedClass subtype = pkg._getClass(derivedType);
+            typeArray.annotate(Type.class).param("value", subtype);
+        }
     }
 
     private void addTypeParameters(JDefinedClass klass, ObjectTypeDeclaration type) {
@@ -110,9 +141,9 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
     public void visitObjectTypeProperty(ObjectTypeDeclaration type, TypeDeclaration property) {
         JDefinedClass klass = pkg._getClass(type.name());
         if (property.name().equals(type.discriminator())) {
-            generateDiscriminatorAccessors(klass, property);
+            return;
         }
-        else if (!isInherited(type, property)) {
+        if (!isInherited(type, property)) {
             generateFieldAndAccessors(klass, property);
         }
     }
@@ -168,12 +199,6 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
 
         generateGetter(property, klass, field, this::getGetterName);
         generateSetter(klass, jtype, fieldName);
-    }
-
-    private void generateDiscriminatorAccessors(JDefinedClass klass, TypeDeclaration property) {
-
-        generateDiscriminatorGetter(property, klass, property.name());
-        generateDiscriminatorSetter(klass, klass, property.name());
     }
 
     private void generateListFieldAndAccessors(JDefinedClass klass, ArrayTypeDeclaration property) {
@@ -279,13 +304,6 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         if (type.description() != null) {
             getter.javadoc().add(type.description().value());
         }
-    }
-
-    private void generateDiscriminatorSetter(JDefinedClass klass, JType fieldType,
-        String fieldName) {
-        JMethod setter = klass.method(JMod.PUBLIC, codeModel.VOID, getSetterName(fieldName));
-        setter.param(fieldType, fieldName);
-        setter.body().directStatement("// empty");
     }
 
     private String getCheckerName(String fieldName) {

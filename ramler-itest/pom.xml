@@ -6,29 +6,11 @@
         <artifactId>ramler</artifactId>
         <version>0.2.0-SNAPSHOT</version>
     </parent>
+    <artifactId>ramler-itest</artifactId>
 
-    <groupId>org.ops4j.ramler</groupId>
-    <artifactId>ramler-java</artifactId>
-
-    <name>OPS4J Ramler Java Code Generator</name>
+    <name>OPS4J Ramler Integration Tests</name>
 
     <dependencies>
-        <dependency>
-            <groupId>com.sun.codemodel</groupId>
-            <artifactId>codemodel</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>javax.ws.rs-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.media</groupId>
-            <artifactId>jersey-media-multipart</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.raml</groupId>
-            <artifactId>raml-parser-2</artifactId>
-        </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
@@ -48,5 +30,28 @@
             <artifactId>logback-classic</artifactId>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.ops4j.ramler</groupId>
+                <artifactId>ramler-maven-plugin</artifactId>
+                <version>${project.version}</version>
+                <configuration>
+                    <package>org.ops4j.ramler.itest</package>
+                    <model>${basedir}/src/test/resources/raml/inheritance.raml</model>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>generate</id>
+                        <goals>
+                            <goal>java-test</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

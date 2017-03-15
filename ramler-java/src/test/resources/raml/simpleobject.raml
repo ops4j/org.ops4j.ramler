@@ -94,7 +94,9 @@ types:
       dt:
         type: datetime
   Person:
+    discriminator: objectType
     properties:
+      objectType: string
       firstname:
         type: string
       lastname:
@@ -105,10 +107,12 @@ types:
           type: Age
   Employee:
     type: Person
-    discriminator: objectType
     properties:
       department: string
-      objectType: string
+  Manager:
+    type: Employee
+    properties:
+      numEmployees: integer
   User:
     properties:
       firstname:

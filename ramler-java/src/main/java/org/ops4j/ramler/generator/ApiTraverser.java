@@ -132,8 +132,25 @@ public class ApiTraverser {
 
     private void traverse(ObjectTypeDeclaration type, ApiVisitor visitor) {
         visitor.visitObjectTypeStart(type);
-        type.properties().forEach(property -> visitor.visitObjectTypeProperty(type, property));
+        type.properties().stream().filter(p -> !isInherited(p, type))
+            .forEach(property -> visitor.visitObjectTypeProperty(type, property));
         visitor.visitObjectTypeEnd(type);
+    }
+
+    private boolean isInherited(TypeDeclaration property, ObjectTypeDeclaration type) {
+        for (TypeDeclaration parent : type.parentTypes()) {
+            if (type instanceof ObjectTypeDeclaration) {
+                if (hasProperty((ObjectTypeDeclaration) parent, property.name())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean hasProperty(ObjectTypeDeclaration parent, String name) {
+        return parent.properties().stream().filter(p -> p.name().equals(name)).findFirst()
+            .isPresent();
     }
 
     private void traverse(Resource resource, ApiVisitor visitor) {
