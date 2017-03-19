@@ -32,6 +32,16 @@ Run Build:
 
     mvn clean install
 
+## Building with Java 9
+
+Run the following command from the workspace root to enable additional VM properties for Java 9 which
+expose some JRE packages to the application:
+
+    ln -s .mvn/jvm.config.java9 .mvn/jvm.config
+
+Note that Ramler itself does not access any private JRE packages. These are currently required by
+third-party dependencies.
+
 ## Releases
 
 Releases go to Maven Central.
