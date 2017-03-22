@@ -160,8 +160,7 @@ public class HtmlGenerator {
             return null;
         }
 
-        Api api = ramlModelResult.getApiV10();
-        return api;
+        return ramlModelResult.getApiV10();
     }
 
 }

@@ -42,14 +42,14 @@ import org.raml.v2.api.model.v10.resources.Resource;
  * visitor implementation.
  * <p>
  * Example:
- * 
+ *
  * <pre>
  * MyVisitor visitor = new MyVisitor();
  * ApiTraverser traverser = new ApiTraverser();
  * traverser.traverse(api, visitor);
  * Object result = visitor.getResult();
  * </pre>
- * 
+ *
  * @author Harald Wellmann
  *
  */
@@ -57,7 +57,7 @@ public class ApiTraverser {
 
     /**
      * Lets the given visitor traverse the API model tree.
-     * 
+     *
      * @param api
      *            RAML 1.0 API model
      * @param visitor
@@ -85,7 +85,7 @@ public class ApiTraverser {
     /**
      * Orders defined types so that base types precede derived types. This avoids forward references
      * for the code generator.
-     * 
+     *
      * @param api
      *            API model
      * @return ordered map of type names to type definitions
@@ -139,8 +139,9 @@ public class ApiTraverser {
 
     private boolean isInherited(TypeDeclaration property, ObjectTypeDeclaration type) {
         for (TypeDeclaration parent : type.parentTypes()) {
-            if (type instanceof ObjectTypeDeclaration) {
-                if (hasProperty((ObjectTypeDeclaration) parent, property.name())) {
+            if (parent instanceof ObjectTypeDeclaration) {
+                ObjectTypeDeclaration parentType = (ObjectTypeDeclaration) parent;
+                if (hasProperty(parentType, property.name())) {
                     return true;
                 }
             }

@@ -115,7 +115,7 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         if (type.discriminator() == null) {
             return;
         }
-        List<String> derivedTypes = context.getApiModel().derivedTypes(type.name());
+        List<String> derivedTypes = context.getApiModel().findDerivedTypes(type.name());
         if (derivedTypes.isEmpty()) {
             return;
         }

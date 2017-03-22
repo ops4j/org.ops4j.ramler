@@ -203,6 +203,7 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
     }
 
     private JType addTypeArguments(JType resultType, TypeDeclaration body) {
+        JType narrowedResultType = resultType;
         List<String> args = context.getApiModel().getStringAnnotations(body, "typeArgs");
         if (!args.isEmpty()) {
             JClass jclass = (JClass) resultType;
@@ -210,9 +211,9 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
                 JType typeArg = context.getModelPackage()._getClass(arg);
                 jclass = jclass.narrow(typeArg);
             }
-            resultType = jclass;
+            narrowedResultType = jclass;
         }
-        return resultType;
+        return narrowedResultType;
     }
 
     private void addQueryParameters(Method method, JMethod codeMethod) {

@@ -43,6 +43,9 @@ public class Names {
     /** Constant <code>EXAMPLE_PREFIX=" e.g. "</code> */
     public static final String EXAMPLE_PREFIX = " e.g. ";
 
+    private Names() {
+        // hidden utility class constructor
+    }
     /**
      * <p>
      * buildResourceInterfaceName.
@@ -50,7 +53,7 @@ public class Names {
      *
      * @param resource
      *            a RAML resource
-     * @param config Ramler configuration           
+     * @param config Ramler configuration
      * @return a {@link java.lang.String} object.
      */
     public static String buildResourceInterfaceName(final Resource resource, Configuration config) {
@@ -102,7 +105,7 @@ public class Names {
 
     /**
      * Get enum field name from value
-     * 
+     *
      * @param value string to be checked
      * @return a {@link java.lang.String} object.
      */
@@ -140,7 +143,4 @@ public class Names {
         return true;
     }
 
-    private Names() {
-        throw new UnsupportedOperationException();
-    }
 }

@@ -64,7 +64,7 @@ public class ParserTest {
 
         ApiTraverser traverser = new ApiTraverser();
         LoggingApiVisitor visitor = new LoggingApiVisitor();
-        traverser.traverse(apiModel.api(), visitor);
+        traverser.traverse(apiModel.getApi(), visitor);
     }
 
     @Test
@@ -94,7 +94,7 @@ public class ParserTest {
         assertThat(favouriteColour.name(), is("favouriteColour"));
         assertThat(favouriteColour.required(), is(false));
 
-        Resource resource = apiModel.api().resources().get(0);
+        Resource resource = apiModel.getApi().resources().get(0);
         assertThat(resource.relativeUri().value(), is("/user"));
         Method getMethod = resource.methods().get(0);
         assertThat(getMethod.method(), is("get"));
@@ -131,7 +131,7 @@ public class ParserTest {
     @Test
     public void shouldParseObject() {
         parse("bracketArray.raml");
-        Api api = apiModel.api();
+        Api api = apiModel.getApi();
         assertMemberTypes(api.types().get(0), "ObjectList", "list", "object[]", ARRAY);
         assertMemberTypes(api.types().get(1), "NameList", "list", "Name[]", ARRAY);
         assertMemberTypes(api.types().get(2), "PersonList", "list", "Person[]", ARRAY);
@@ -155,7 +155,7 @@ public class ParserTest {
     @Test
     public void shouldParseArrays() {
         parse("bracketArray.raml");
-        Api api = apiModel.api();
+        Api api = apiModel.getApi();
         
         assertTypes(api.types().get(0), "ObjectList", "object[]", null, "object", OBJECT);
         assertTypes(api.types().get(1), "NameList", "Name", "string", "Name", STRING);
@@ -182,7 +182,7 @@ public class ParserTest {
     @Test
     public void shouldFindItemTypeWithBrackets() {
         parse("bracketArray.raml");
-        Api api = apiModel.api();
+        Api api = apiModel.getApi();
         
         assertTypes(api.types().get(0), "ObjectList",   "object[]",     null);
         assertTypes(api.types().get(1), "NameList",     "Name",         "string");
@@ -208,7 +208,7 @@ public class ParserTest {
     @Test
     public void shouldFindItemType() {
         parse("array.raml");
-        Api api = apiModel.api();
+        Api api = apiModel.getApi();
         
         assertTypes(api.types().get(0), "ObjectList",   "object",         "object");
         assertTypes(api.types().get(1), "NameList",     "string",         "Name");

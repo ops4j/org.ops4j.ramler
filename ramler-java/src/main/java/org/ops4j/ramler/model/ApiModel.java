@@ -58,7 +58,7 @@ public class ApiModel {
         mapDerivedTypes();
     }
 
-    public Api api() {
+    public Api getApi() {
         return api;
     }
 
@@ -82,7 +82,7 @@ public class ApiModel {
         return result;
     }
 
-    public List<String> derivedTypes(String typeName) {
+    public List<String> findDerivedTypes(String typeName) {
         List<String> derived = derivedTypes.get(typeName);
         return derived == null ? Collections.emptyList() : derived;
     }

@@ -96,7 +96,7 @@ public class Generator {
         ResourceGeneratingApiVisitor resourceVisitor = new ResourceGeneratingApiVisitor(context);
         ApiTraverser traverser = new ApiTraverser();
         Stream.of(pojoCreator, pojoVisitor, resourceVisitor)
-            .forEach(v -> traverser.traverse(context.getApiModel().api(), v));
+            .forEach(v -> traverser.traverse(context.getApiModel().getApi(), v));
     }
 
     private void writeCodeModel() {
