@@ -82,6 +82,11 @@ public class ApiModel {
         return result;
     }
 
+    /**
+     * Finds the types directly derived from the given type.
+     * @param typeName type name
+     * @return list of derived types (never null)
+     */
     public List<String> findDerivedTypes(String typeName) {
         List<String> derived = derivedTypes.get(typeName);
         return derived == null ? Collections.emptyList() : derived;
