@@ -15,6 +15,13 @@ types:
       requestId : string
       text : string
       success : boolean
+  ListResult:
+    (g.typeVars):
+      - T
+    properties:
+      result:
+        (g.typeVar): T
+        type: object[]
   Result:
     (g.typeVars): [T]
     properties:

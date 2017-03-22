@@ -21,7 +21,14 @@ types:
       result:
         (g.typeVar): T
         type: any
-  Response:
+  ListResult:
+    (g.typeVars):
+      - T
+    properties:
+      result:
+        (g.typeVar): T
+        type: object[]
+  Response: 
     (g.typeVars): [T]
     properties:
       data:

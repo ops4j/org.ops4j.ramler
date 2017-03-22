@@ -72,7 +72,7 @@ public class ParameterizedTest {
     public void shouldFindModelClasses() {
         Set<String> classNames = new HashSet<>();
         modelPackage.classes().forEachRemaining(c -> classNames.add(c.name()));
-        assertThat(classNames, containsInAnyOrder("Animal", "AnimalResponse", "Person", 
+        assertThat(classNames, containsInAnyOrder("Animal", "AnimalResponse", "ListResult", "Person", 
             "Response", "Result", "Status"));
     }
     

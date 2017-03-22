@@ -204,7 +204,8 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
 
     private void generateListFieldAndAccessors(JDefinedClass klass, ArrayTypeDeclaration property) {
         String fieldName = property.name();
-        JType elementType = context.getJavaType(context.getApiModel().getItemType(property));
+        String itemTypeName = context.getApiModel().getItemType(property);
+        JType elementType = findTypeVar(klass, property).orElse(context.getJavaType(itemTypeName));
         JClass listType = codeModel.ref(List.class).narrow(elementType);
         JFieldVar field = klass.field(JMod.PRIVATE, listType, fieldName);
 
@@ -218,7 +219,7 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
     }
 
     private void generateObjectFieldAndAccessors(JDefinedClass klass,
-        ObjectTypeDeclaration property) {
+        TypeDeclaration property) {
         String fieldName = property.name();
 
         JType jtype = findTypeVar(klass, property).orElse(context.getJavaType(property));
@@ -237,23 +238,8 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         generateSetter(klass, jtype, fieldName);
     }
 
-    private void generateAnyFieldAndAccessors(JDefinedClass klass, AnyTypeDeclaration property) {
-        String fieldName = property.name();
-
-        JType jtype = findTypeVar(klass, property).orElse(context.getJavaType(property));
-        List<String> args = context.getApiModel().getStringAnnotations(property, "typeArgs");
-        if (!args.isEmpty()) {
-            JClass jclass = (JClass) jtype;
-            for (String arg : args) {
-                JType typeArg = findTypeParam(klass, arg).get();
-                jclass = jclass.narrow(typeArg);
-            }
-            jtype = jclass;
-        }
-        JFieldVar field = klass.field(JMod.PRIVATE, jtype, fieldName);
-
-        generateGetter(property, klass, field, this::getGetterName);
-        generateSetter(klass, jtype, fieldName);
+    private void generateAnyFieldAndAccessors(JDefinedClass klass, TypeDeclaration property) {
+        generateObjectFieldAndAccessors(klass, property);
     }
 
     private Optional<JType> findTypeVar(JDefinedClass klass, TypeDeclaration property) {
