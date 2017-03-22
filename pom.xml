@@ -231,8 +231,10 @@
                 </property>
             </activation>
             <properties>
+                <!-- Import Sonar URL from Jenkins environment -->
+                <sonar.host.url>${env.SONAR_HOST_URL}</sonar.host.url>
                 <sonar.jacoco.reportPath>${user.dir}/target/jacoco.exec</sonar.jacoco.reportPath>
-            </properties>
+             </properties>
             <build>
                 <plugins>
                     <plugin>
