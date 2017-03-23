@@ -9,7 +9,8 @@ import org.trimou.handlebars.Options;
 
 /**
  * Trimou helper for rendering RAML examples as pretty-printed JSON strings.
- * @author hwellmann
+ * 
+ * @author Harald Wellmann
  *
  */
 public class ExampleHelper extends BasicHelper {
@@ -19,12 +20,12 @@ public class ExampleHelper extends BasicHelper {
     private void validateRuntimeParameters(Options options) {
         if (!(options.getParameters().get(0) instanceof TypeDeclaration)) {
             throw HelperValidator.newValidationException("Parameter 0 must be a TypeDeclaration",
-                    ExampleHelper.class, options);
+                ExampleHelper.class, options);
         }
 
         if (!(options.getParameters().get(1) instanceof ExampleSpec)) {
             throw HelperValidator.newValidationException("Parameter 1 must be an ExampleSpec",
-                    ExampleHelper.class, options);
+                ExampleHelper.class, options);
         }
     }
 

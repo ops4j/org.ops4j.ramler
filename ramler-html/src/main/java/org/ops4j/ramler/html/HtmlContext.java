@@ -17,14 +17,31 @@
  */
 package org.ops4j.ramler.html;
 
+/**
+ * Context for the HTML generator.
+ * 
+ * @author Harald Wellmann
+ *
+ */
 public class HtmlContext {
 
     private HtmlConfiguration config;
 
+    /**
+     * Constructs a context for the HTML generator from the given configuration.
+     * 
+     * @param config
+     *            HTML generator configuration
+     */
     public HtmlContext(HtmlConfiguration config) {
         this.config = config;
     }
 
+    /**
+     * Gets the HTML generator configuration.
+     * 
+     * @return generator
+     */
     public HtmlConfiguration getConfig() {
         return config;
     }

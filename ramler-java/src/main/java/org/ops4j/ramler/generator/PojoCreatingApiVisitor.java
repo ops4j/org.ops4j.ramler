@@ -24,6 +24,15 @@ import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JPackage;
 
+/**
+ * API visitor creating an empty POJO class for each defined RAML type.
+ * <p>
+ * The classes are defined without any details in a first pass to allow for references in the
+ * following generator pass.
+ * 
+ * @author Harald Wellmann
+ *
+ */
 public class PojoCreatingApiVisitor implements ApiVisitor {
 
     private GeneratorContext context;

@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Generates HTML documentation from a RAML 1.0 specification.
  *
- * @author hwellmann
+ * @author Harald Wellmann
  *
  */
 public class HtmlGenerator {

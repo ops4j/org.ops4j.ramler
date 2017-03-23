@@ -45,6 +45,14 @@ import org.raml.v2.api.model.v10.datamodel.UnionTypeDeclaration;
 import org.raml.v2.api.model.v10.declarations.AnnotationRef;
 import org.raml.v2.api.model.v10.resources.Resource;
 
+/**
+ * Model of an API defined by a RAML specification.
+ * <p>
+ * This model wraps the basic {@link Api} model created by the RAML parser and adds some convenience
+ * methods, e.g. for directy accessing types by name.
+ * 
+ * @author Harald Wellmann
+ */
 public class ApiModel {
 
     private Api api;
@@ -52,12 +60,23 @@ public class ApiModel {
     private Map<String, TypeDeclaration> types = new LinkedHashMap<>();
     private Map<String, List<String>> derivedTypes = new HashMap<>();
 
+    /**
+     * Creates an enhanced model for the given API.
+     * 
+     * @param api
+     *            API model provided by parser
+     */
     public ApiModel(Api api) {
         this.api = api;
         mapTypes();
         mapDerivedTypes();
     }
 
+    /**
+     * Gets the underlying API model.
+     * 
+     * @return API model provided by parser
+     */
     public Api getApi() {
         return api;
     }
@@ -71,7 +90,8 @@ public class ApiModel {
         for (TypeDeclaration type : api.types()) {
             if (type instanceof ObjectTypeDeclaration && !type.type().equals("object")) {
                 String baseTypeName = type.type();
-                derivedTypes.merge(baseTypeName, Collections.singletonList(type.name()), this::join);
+                derivedTypes.merge(baseTypeName, Collections.singletonList(type.name()),
+                    this::join);
             }
         }
     }
@@ -84,7 +104,9 @@ public class ApiModel {
 
     /**
      * Finds the types directly derived from the given type.
-     * @param typeName type name
+     * 
+     * @param typeName
+     *            type name
      * @return list of derived types (never null)
      */
     public List<String> findDerivedTypes(String typeName) {
@@ -92,20 +114,42 @@ public class ApiModel {
         return derived == null ? Collections.emptyList() : derived;
     }
 
+    /**
+     * Gets all types defined in this API.
+     * 
+     * @return collection of types (never null)
+     */
     public Collection<TypeDeclaration> getTypes() {
         return types.values();
     }
 
+    /**
+     * Returns the title of this API.
+     * 
+     * @return API title
+     */
     public String getTitle() {
         return api.title().value();
     }
 
+    /**
+     * Gets all resources defined in this API, sorted alphabetically.
+     * 
+     * @return collection of resources (never null)
+     */
     public Collection<Resource> getResources() {
         return api.resources().stream()
             .sorted((l, r) -> l.displayName().value().compareTo(r.displayName().value()))
             .collect(toList());
     }
 
+    /**
+     * Returns the type declaration for the given name.
+     * 
+     * @param typeName
+     *            name of an API type
+     * @return type declaration, or null if no such type exists
+     */
     public TypeDeclaration getDeclaredType(String typeName) {
         return types.get(typeName);
     }
@@ -137,6 +181,14 @@ public class ApiModel {
         return item.type();
     }
 
+    /**
+     * Checks if the given type is primitive. A type is primitive if it is not {@code any} and not
+     * structured.
+     * 
+     * @param type
+     *            type declaration
+     * @return true if the type is primitive
+     */
     public boolean isPrimitive(TypeDeclaration type) {
         switch (metatype(type)) {
             case STRING:
@@ -156,6 +208,14 @@ public class ApiModel {
         }
     }
 
+    /**
+     * Checks if the given type is structured. A type is structured if it is an array type, an
+     * object type, or a union type.
+     * 
+     * @param type
+     *            type declaration
+     * @return true if the type is structured
+     */
     public boolean isStructured(TypeDeclaration type) {
         switch (metatype(type)) {
             case ARRAY:
@@ -168,6 +228,13 @@ public class ApiModel {
         }
     }
 
+    /**
+     * Gets the metatype of the given type declaration.
+     * 
+     * @param type
+     *            type declaration
+     * @return metatype
+     */
     public Metatype metatype(TypeDeclaration type) {
         if (type instanceof ObjectTypeDeclaration) {
             return OBJECT;
@@ -215,6 +282,15 @@ public class ApiModel {
             "cannot determine metatype: " + "name=" + type.name() + ", type=" + type.type());
     }
 
+    /**
+     * Gets the value list of a string valued annotation of a given name on the given type.
+     * 
+     * @param decl
+     *            type declaration
+     * @param annotationName
+     *            name of annotation with value type {@code string[]}
+     * @return list of annotation values (never null)
+     */
     public List<String> getStringAnnotations(TypeDeclaration decl, String annotationName) {
         return decl.annotations().stream().filter(a -> a.annotation().name().equals(annotationName))
             .flatMap(a -> findAnnotationValues(a)).collect(toList());

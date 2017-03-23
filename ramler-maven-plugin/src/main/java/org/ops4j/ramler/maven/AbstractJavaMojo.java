@@ -32,7 +32,7 @@ import org.sonatype.plexus.build.incremental.BuildContext;
 /**
  * Generates Java sources from a RAML model.
  * 
- * @author hwellmann
+ * @author Harald Wellmann
  *
  */
 public abstract class AbstractJavaMojo extends AbstractMojo {

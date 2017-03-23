@@ -50,6 +50,12 @@ import com.sun.codemodel.JPackage;
 import com.sun.codemodel.JType;
 import com.sun.codemodel.JVar;
 
+/**
+ * API visitor adding the member to each POJO class created by {@code PojoCreatingApiVisitor}.
+ * 
+ * @author Harald Wellmann
+ *
+ */
 public class PojoGeneratingApiVisitor implements ApiVisitor {
 
     private GeneratorContext context;
@@ -218,8 +224,7 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         generateSetter(klass, listType, fieldName);
     }
 
-    private void generateObjectFieldAndAccessors(JDefinedClass klass,
-        TypeDeclaration property) {
+    private void generateObjectFieldAndAccessors(JDefinedClass klass, TypeDeclaration property) {
         String fieldName = property.name();
 
         JType jtype = findTypeVar(klass, property).orElse(context.getJavaType(property));

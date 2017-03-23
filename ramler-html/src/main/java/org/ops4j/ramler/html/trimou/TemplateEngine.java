@@ -28,6 +28,12 @@ import org.trimou.engine.locator.ClassPathTemplateLocator;
 import org.trimou.engine.locator.FileSystemTemplateLocator;
 import org.trimou.handlebars.HelpersBuilder;
 
+/**
+ * A Trimou template engine configured for HTML generation.
+ * 
+ * @author Harald Wellmann
+ *
+ */
 public class TemplateEngine {
 
     public static final String TEMPLATE_SUFFIX = "trimou.html";
@@ -55,10 +61,18 @@ public class TemplateEngine {
         return result;
     }
 
+    /**
+     * Gets the template directory.
+     * @return template directory
+     */
     public String getTemplateDir() {
         return templateDir;
     }
 
+    /**
+     * Set the template directory.
+     * @param templateDir template directory
+     */
     public void setTemplateDir(String templateDir) {
         this.templateDir = templateDir;
     }

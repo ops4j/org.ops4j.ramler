@@ -31,7 +31,7 @@ package org.ops4j.ramler.exc;
  * }
  * </pre>
  *
- * @author hwellmann
+ * @author Harald Wellmann
  *
  */
 public class Exceptions {

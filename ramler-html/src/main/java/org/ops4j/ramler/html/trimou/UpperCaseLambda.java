@@ -21,7 +21,8 @@ import org.trimou.lambda.InputProcessingLambda;
 
 /**
  * Converts text to upper case.
- * @author hwellmann
+ * 
+ * @author Harald Wellmann
  *
  */
 public class UpperCaseLambda extends InputProcessingLambda {

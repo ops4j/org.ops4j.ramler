@@ -28,7 +28,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 /**
  * Generates test sources from a RAML model.
  * 
- * @author hwellmann
+ * @author Harald Wellmann
  *
  */
 @Mojo(name = "java-test", defaultPhase = LifecyclePhase.GENERATE_TEST_SOURCES)

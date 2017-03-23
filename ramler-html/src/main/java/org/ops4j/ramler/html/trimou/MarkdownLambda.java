@@ -24,7 +24,7 @@ import org.trimou.lambda.InputProcessingLambda;
 /**
  * Converts markdown text to HTML.
  *
- * @author hwellmann
+ * @author Harald Wellmann
  *
  */
 public class MarkdownLambda extends InputProcessingLambda {

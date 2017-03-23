@@ -24,11 +24,20 @@ import org.raml.v2.api.model.v10.datamodel.TypeInstanceProperty;
 /**
  * Produces a JsonValue or a pretty-printed JSON string from a RAML ExampleSpec.
  *
- * @author hwellmann
+ * @author Harald Wellmann
  *
  */
 public class ExampleSpecJsonRenderer {
 
+    /**
+     * Converts an example of the given type to a JSON value.
+     * 
+     * @param type
+     *            RAML type declaration
+     * @param example
+     *            example instance
+     * @return JSON value
+     */
     public JsonValue toJsonValue(TypeDeclaration type, ExampleSpec example) {
         TypeInstance instance = example.structuredValue();
         if (instance == null) {
@@ -45,6 +54,15 @@ public class ExampleSpecJsonRenderer {
         return jsonObject;
     }
 
+    /**
+     * Returns a pretty-printed JSON string for the given example instance of the given RAML type.
+     * 
+     * @param type
+     *            RAML type declaration
+     * @param example
+     *            example instance
+     * @return pretty-printed JSON string
+     */
     public String prettyPrint(TypeDeclaration type, ExampleSpec example) {
         JsonValue json = toJsonValue(type, example);
 

@@ -36,7 +36,7 @@ import org.sonatype.plexus.build.incremental.BuildContext;
 /**
  * Generates HTML documentation from a RAML model.
  * 
- * @author hwellmann
+ * @author Harald Wellmann
  *
  */
 @Mojo(name = "html", defaultPhase = LifecyclePhase.GENERATE_RESOURCES)

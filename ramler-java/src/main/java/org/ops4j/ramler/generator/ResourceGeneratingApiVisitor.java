@@ -59,6 +59,15 @@ import com.sun.codemodel.JPackage;
 import com.sun.codemodel.JType;
 import com.sun.codemodel.JVar;
 
+/**
+ * API visitor generating a JAX-RS annotated Java interface for each RAML resource.
+ * <p>
+ * Since RAML types may be referenced by the resources, the correponding POJO generating visitors
+ * must be run before this resource generating visitor.
+ * 
+ * @author Harald Wellmann
+ *
+ */
 public class ResourceGeneratingApiVisitor implements ApiVisitor {
 
     private GeneratorContext context;

@@ -28,7 +28,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 /** 
  * Generates Java sources from a RAML model.
  * 
- * @author hwellmann
+ * @author Harald Wellmann
  *
  */
 @Mojo(name = "java", defaultPhase = LifecyclePhase.GENERATE_SOURCES)

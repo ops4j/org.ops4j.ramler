@@ -17,44 +17,94 @@
  */
 package org.ops4j.ramler.html;
 
+/**
+ * Configuration of HTML generator.
+ * 
+ * @author Harald Wellmann
+ *
+ */
 public class HtmlConfiguration {
 
     private String sourceFile;
 
     private String targetDir;
-    
+
     private String templateDir;
-    
+
     private String webResourceDir;
 
+    /**
+     * Gets the top-level RAML source file.
+     * 
+     * @return source file
+     */
     public String getSourceFile() {
         return sourceFile;
     }
 
+    /**
+     * Sets the top-level RAML source file.
+     * 
+     * @param sourceFile
+     *            RAML source file
+     */
     public void setSourceFile(String sourceFile) {
         this.sourceFile = sourceFile;
     }
 
+    /**
+     * Gets the target directory for generated HTML.
+     * 
+     * @return target directory
+     */
     public String getTargetDir() {
         return targetDir;
     }
 
+    /**
+     * Sets the target directory.
+     * 
+     * @param targetDir
+     *            target directory
+     */
     public void setTargetDir(String targetDir) {
         this.targetDir = targetDir;
     }
 
+    /**
+     * Gets the directory with Trimou templates for the HTML generator.
+     * 
+     * @return
+     */
     public String getTemplateDir() {
         return templateDir;
     }
 
+    /**
+     * Sets the template directory.
+     * 
+     * @param templateDir
+     *            template directory
+     */
     public void setTemplateDir(String templateDir) {
         this.templateDir = templateDir;
     }
 
+    /**
+     * Gets the directory with additional web resources for the HTML generator.
+     * 
+     * @return
+     */
     public String getWebResourceDir() {
         return webResourceDir;
     }
 
+    /**
+     * Sets the web resource directory.
+     * 
+     * @param webResourceDir
+     *            web resource directory
+     */
     public void setWebResourceDir(String webResourceDir) {
         this.webResourceDir = webResourceDir;
     }
