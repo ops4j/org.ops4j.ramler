@@ -138,7 +138,48 @@ Please note the following limitations when using Ramler:
 JAX-RS resource class. All methods of subresources of the given top-level resource will be turned
 into methods of the same JAX-RS resource class.
   
-  
+= Java Code Generator
+
+== Overview
+
+Given a RAML specification, the Java code generator creates plain old Java objects (POJO) with getters
+and setters for each structured type and a Java interface for each resource, with methods corresponding
+to the HTTP methods defined in RAML.
+
+RAML descriptions are converted to Javadoc comments.
+
+== Maven Plugin
+
+=== java Goal
+
+[options="header"]
+|=======================
+| Parameter     | Type          | Meaning
+| model         | String        | RAML specification file
+
+| packageName   | String        | Fully qualified package name for generated Java sources. 
+The generated classes will be located in subpackages `model` and `api`
+
+| outputDir     | File          | Output directory for generated code. 
+Default: `${project.build.directory}/generated-sources/ramler`
+
+|=======================
+
+
+
+=== java-test Goal  
+
+[options="header"]
+|=======================
+| Parameter     | Type          | Meaning
+| model         | String        | RAML specification file
+| packageName   | String        | Fully qualified package name for generated Java sources. 
+The generated classes will be located in subpackages `model` and `api`
+
+| outputDir     | File          | Output directory for generated code. 
+Default: `${project.build.directory}/generated-test-sources/ramler`
+|=======================
+
 
 // Return to normal title levels 
 :leveloffset: 0
