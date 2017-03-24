@@ -52,7 +52,7 @@ import com.sun.codemodel.JVar;
 
 /**
  * API visitor adding the member to each POJO class created by {@code PojoCreatingApiVisitor}.
- * 
+ *
  * @author Harald Wellmann
  *
  */
@@ -64,6 +64,10 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
 
     private JPackage pkg;
 
+    /**
+     * Creates a visitor for the given generator context.
+     * @param context generator context
+     */
     public PojoGeneratingApiVisitor(GeneratorContext context) {
         this.context = context;
         this.codeModel = context.getCodeModel();
@@ -183,7 +187,7 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
 
     private void generateFieldAndAccessors(JDefinedClass klass, TypeDeclaration property) {
         if (property instanceof ObjectTypeDeclaration) {
-            generateObjectFieldAndAccessors(klass, (ObjectTypeDeclaration) property);
+            generateObjectFieldAndAccessors(klass, property);
         }
         else if (property instanceof ArrayTypeDeclaration) {
             generateListFieldAndAccessors(klass, (ArrayTypeDeclaration) property);
@@ -192,7 +196,7 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
             generateBooleanFieldAndAccessors(klass, (BooleanTypeDeclaration) property);
         }
         else if (property instanceof AnyTypeDeclaration) {
-            generateAnyFieldAndAccessors(klass, (AnyTypeDeclaration) property);
+            generateAnyFieldAndAccessors(klass, property);
         }
         else {
             generateSimpleFieldAndAccessor(klass, property);

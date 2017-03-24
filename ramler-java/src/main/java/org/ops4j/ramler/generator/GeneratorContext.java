@@ -51,7 +51,7 @@ import com.sun.codemodel.JType;
 
 /**
  * Stores the configuration and other intermediate information for a code generator run.
- * 
+ *
  * @author Harald Wellmann
  *
  */
@@ -71,7 +71,7 @@ public class GeneratorContext {
 
     /**
      * Creates a generator context for the given configuration.
-     * 
+     *
      * @param config
      *            code generator configuration
      */
@@ -86,17 +86,22 @@ public class GeneratorContext {
 
     /**
      * Stores the Java type for a given RAML type.
-     * @param typeName RAML type name
-     * @param type corresponding Java type
+     *
+     * @param typeName
+     *            RAML type name
+     * @param type
+     *            corresponding Java type
      */
     public void addType(String typeName, JType type) {
         typeMap.put(typeName, type);
     }
 
     /**
-     * Finds the Java type for a given RAML type. 
-     * Prerequisite: The type has been stored with {@link #addType(String, JType)}.
-     * @param typeName RAML type name
+     * Finds the Java type for a given RAML type. Prerequisite: The type has been stored with
+     * {@link #addType(String, JType)}.
+     *
+     * @param typeName
+     *            RAML type name
      * @return corresponding Java type
      */
     public JType findType(String typeName) {
@@ -211,6 +216,13 @@ public class GeneratorContext {
         }
     }
 
+    /**
+     * Gets the Java type for the given RAML type declaration.
+     *
+     * @param decl
+     *            type declaration
+     * @return corresponding Java type
+     */
     public JType getJavaType(TypeDeclaration decl) {
         if (decl instanceof ObjectTypeDeclaration) {
             if (decl.type().equals("object")) {
@@ -223,6 +235,13 @@ public class GeneratorContext {
         }
     }
 
+    /**
+     * Gets the Java type for the RAML type with the given name.
+     *
+     * @param type
+     *            RAML type name
+     * @return corresponding Java type
+     */
     public JType getJavaType(String type) {
         if (type.equals("object")) {
             return codeModel.ref(Object.class);
@@ -238,14 +257,21 @@ public class GeneratorContext {
         }
         return getReferencedJavaType(apiModel.getDeclaredType(type));
     }
-    
+
+    /**
+     * Adds the {@code @Generated} annotation to the given class.
+     *
+     * @param klass
+     *            generated Java class
+     */
     public void annotateAsGenerated(JDefinedClass klass) {
-        klass.annotate(Generated.class).
-        param("value", "org.ops4j.ramler").
-        param("date", LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).toString());        
+        klass.annotate(Generated.class).param("value", "org.ops4j.ramler").param("date",
+            LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).toString());
     }
 
     /**
+     * Gets the configuration of this generator.
+     *
      * @return the config
      */
     public Configuration getConfig() {
@@ -253,6 +279,8 @@ public class GeneratorContext {
     }
 
     /**
+     * Sets the configuration of this generator.
+     *
      * @param config
      *            the config to set
      */
@@ -261,6 +289,8 @@ public class GeneratorContext {
     }
 
     /**
+     * Gets the Java code model produced by this generator.
+     *
      * @return the codeModel
      */
     public JCodeModel getCodeModel() {
@@ -268,6 +298,8 @@ public class GeneratorContext {
     }
 
     /**
+     * Sets the Java code model produced by this generator.
+     *
      * @param codeModel
      *            the codeModel to set
      */
@@ -276,6 +308,8 @@ public class GeneratorContext {
     }
 
     /**
+     * Gets the RAML API model this generator is working on.
+     *
      * @return the api
      */
     public ApiModel getApiModel() {
@@ -283,6 +317,8 @@ public class GeneratorContext {
     }
 
     /**
+     * Sets the RAML API model this generator is working on.
+     *
      * @param apiModel
      *            the api to set
      */
@@ -291,17 +327,20 @@ public class GeneratorContext {
     }
 
     /**
-     * @return the modelPackage
+     * Gets the Java package for the generated model (POJO) classes.
+     *
+     * @return the model package
      */
     public JPackage getModelPackage() {
         return modelPackage;
     }
 
     /**
-     * @return the apiPackage
+     * Gets the Java package for the generated resource Java interfaces.
+     *
+     * @return the API package
      */
     public JPackage getApiPackage() {
         return apiPackage;
     }
-
 }

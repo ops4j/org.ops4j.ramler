@@ -30,11 +30,11 @@ import org.raml.v2.api.model.v10.methods.Method;
 import org.raml.v2.api.model.v10.resources.Resource;
 
 /**
- * Visits nodes of a RAML 1.0 API model. Implementations of this interface can be used to
- * create code or documentation generators.
+ * Visits nodes of a RAML 1.0 API model. Implementations of this interface can be used to create
+ * code or documentation generators.
  * <p>
- * All methods of this interface have an empty default implementation. Thus, implementation
- * classes only need to implement the methods they actually need.
+ * All methods of this interface have an empty default implementation. Thus, implementation classes
+ * only need to implement the methods they actually need.
  *
  * @author Harald Wellmann
  *
@@ -45,75 +45,185 @@ public interface ApiVisitor {
         // empty
     }
 
+    /**
+     * Called before traversing the first node of this API.
+     *
+     * @param api
+     *            RAML API
+     */
     default void visitApiStart(Api api) {
         // empty
     }
 
+    /**
+     * Called after traversing the last node of this API.
+     *
+     * @param api
+     *            RAML API
+     */
     default void visitApiEnd(Api api) {
         // empty
     }
 
+    /**
+     * Called for each array type declaration.
+     *
+     * @param type
+     *            array type
+     */
     default void visitArrayType(ArrayTypeDeclaration type) {
         // empty
     }
 
+    /**
+     * Called for each Boolean type declaration.
+     *
+     * @param type
+     *            boolean type
+     */
     default void visitBooleanType(BooleanTypeDeclaration type) {
         // empty
     }
 
+    /**
+     * Called for each number type declaration.
+     *
+     * @param type
+     *            boolean type
+     */
     default void visitNumberType(NumberTypeDeclaration type) {
         // empty
     }
 
+    /**
+     * Called for each object type declaration.
+     *
+     * @param type
+     *            boolean type
+     */
     default void visitObjectType(ObjectTypeDeclaration type) {
         // empty
     }
 
+    /**
+     * Called for each string type declaration.
+     *
+     * @param type
+     *            boolean type
+     */
     default void visitStringType(StringTypeDeclaration type) {
         // empty
     }
 
+    /**
+     * Called for each object type declaration before visiting the first property.
+     *
+     * @param type
+     *            object type
+     */
     default void visitObjectTypeStart(ObjectTypeDeclaration type) {
         // empty
     }
 
+    /**
+     * Called for each object type declaration after visiting the last property.
+     *
+     * @param type
+     *            object type
+     */
     default void visitObjectTypeEnd(ObjectTypeDeclaration type) {
         // empty
     }
 
+    /**
+     * Called for each property of an object type.
+     *
+     * @param type
+     *            object type
+     * @param propert
+     *            property of the given object type
+     */
     default void visitObjectTypeProperty(ObjectTypeDeclaration type, TypeDeclaration property) {
         // empty
     }
 
+    /**
+     * Called for each resource before visiting the first method.
+     *
+     * @param resource
+     *            RAML resource
+     */
     default void visitResourceStart(Resource resource) {
         // empty
     }
 
+    /**
+     * Called for each resource after visiting the last method.
+     *
+     * @param resource
+     *            RAML resource
+     */
     default void visitResourceEnd(Resource resource) {
         // empty
     }
 
+    /**
+     * Called for each method before visiting its headers and parameters.
+     *
+     * @param method
+     *            RAML method
+     */
     default void visitMethodStart(Method method) {
         // empty
     }
 
+    /**
+     * Called for each method after visiting its headers and parameters.
+     *
+     * @param method
+     *            RAML method
+     */
     default void visitMethodEnd(Method method) {
         // empty
     }
 
+    /**
+     * Called for each request header.
+     *
+     * @param header
+     *            request header
+     */
     default void visitHeader(TypeDeclaration header) {
         // empty
     }
 
+    /**
+     * Called for each query parameter.
+     *
+     * @param param
+     *            query parameter
+     */
     default void visitQueryParameter(TypeDeclaration param) {
         // empty
     }
 
+    /**
+     * Called for each library before visiting its declarations.
+     *
+     * @param library
+     *            RAML library
+     */
     default void visitLibraryStart(Library library) {
-        // empty        
+        // empty
     }
 
+    /**
+     * Called for each library after visiting its declarations.
+     *
+     * @param library
+     *            RAML library
+     */
     default void visitLibraryEnd(Library library) {
-        // empty        
+        // empty
     }
 }

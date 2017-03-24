@@ -64,7 +64,7 @@ import com.sun.codemodel.JVar;
  * <p>
  * Since RAML types may be referenced by the resources, the correponding POJO generating visitors
  * must be run before this resource generating visitor.
- * 
+ *
  * @author Harald Wellmann
  *
  */
@@ -86,6 +86,12 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
 
     private List<String> mediaTypes = Collections.emptyList();
 
+    /**
+     * Creates a visitor for the given generator context.
+     *
+     * @param context
+     *            generator context
+     */
     public ResourceGeneratingApiVisitor(GeneratorContext context) {
         this.context = context;
         this.codeModel = context.getCodeModel();

@@ -29,7 +29,7 @@ import com.sun.codemodel.JPackage;
  * <p>
  * The classes are defined without any details in a first pass to allow for references in the
  * following generator pass.
- * 
+ *
  * @author Harald Wellmann
  *
  */
@@ -39,6 +39,12 @@ public class PojoCreatingApiVisitor implements ApiVisitor {
 
     private JPackage pkg;
 
+    /**
+     * Creates a visitor for the given generator context.
+     *
+     * @param context
+     *            generator context
+     */
     public PojoCreatingApiVisitor(GeneratorContext context) {
         this.context = context;
         this.pkg = context.getModelPackage();
