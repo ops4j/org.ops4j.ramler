@@ -57,6 +57,11 @@ public class Constants {
     /** Constant <code>DEFAULT_LOCALE</code> */
     public static final Locale DEFAULT_LOCALE = Locale.ENGLISH;
 
+    /**
+     * Name of value property of annotation types.
+     */
+    public static final String VALUE = "value";
+
     private Constants() {
         throw new UnsupportedOperationException();
     }

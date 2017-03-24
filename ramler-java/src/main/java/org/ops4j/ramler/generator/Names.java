@@ -79,7 +79,7 @@ public class Names {
     public static String buildVariableName(final String source) {
         final String name = uncapitalize(buildJavaFriendlyName(source));
 
-        return Constants.JAVA_KEYWORDS.contains(name) ? "$" + name : name;
+        return Constants.JAVA_KEYWORDS.contains(name) ? ("$" + name) : name;
     }
 
     /**

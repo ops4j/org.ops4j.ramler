@@ -41,6 +41,12 @@ import org.raml.v2.api.model.v10.resources.Resource;
  */
 public interface ApiVisitor {
 
+    /**
+     * Called for each {@code any} type declaration.
+     *
+     * @param type
+     *            any type
+     */
     default void visitAnyType(AnyTypeDeclaration type) {
         // empty
     }
@@ -140,7 +146,7 @@ public interface ApiVisitor {
      *
      * @param type
      *            object type
-     * @param propert
+     * @param property
      *            property of the given object type
      */
     default void visitObjectTypeProperty(ObjectTypeDeclaration type, TypeDeclaration property) {

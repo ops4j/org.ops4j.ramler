@@ -19,6 +19,7 @@ package org.ops4j.ramler.generator;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
+import static org.ops4j.ramler.generator.Constants.VALUE;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -130,20 +131,20 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
     private void createResourceInterface(Resource resource) throws JClassAlreadyExistsException {
         klass = pkg._interface(Names.buildResourceInterfaceName(resource, context.getConfig()));
         context.annotateAsGenerated(klass);
-        klass.annotate(Path.class).param("value", resource.resourcePath());
+        klass.annotate(Path.class).param(VALUE, resource.resourcePath());
     }
 
     private void addMediaTypes() {
         if (mediaTypes.size() > 1) {
             mediaTypes.forEach(
-                m -> klass.annotate(Produces.class).paramArray("value").param(mediaType(m)));
+                m -> klass.annotate(Produces.class).paramArray(VALUE).param(mediaType(m)));
             mediaTypes.forEach(
-                m -> klass.annotate(Consumes.class).paramArray("value").param(mediaType(m)));
+                m -> klass.annotate(Consumes.class).paramArray(VALUE).param(mediaType(m)));
         }
         else if (!mediaTypes.isEmpty()) {
             JExpression m = mediaType(mediaTypes.get(0));
-            klass.annotate(Produces.class).param("value", m);
-            klass.annotate(Consumes.class).param("value", m);
+            klass.annotate(Produces.class).param(VALUE, m);
+            klass.annotate(Consumes.class).param(VALUE, m);
         }
     }
 
@@ -186,7 +187,7 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
 
     private void addSubresourcePath(JMethod codeMethod) {
         if (innerResource != null) {
-            codeMethod.annotate(Path.class).param("value", innerResource.relativeUri().value());
+            codeMethod.annotate(Path.class).param(VALUE, innerResource.relativeUri().value());
         }
     }
 
@@ -235,9 +236,9 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
         for (TypeDeclaration queryParam : method.queryParameters()) {
             JVar param = codeMethod.param(context.getJavaType(queryParam),
                 Names.buildVariableName(queryParam.name()));
-            param.annotate(QueryParam.class).param("value", queryParam.name());
+            param.annotate(QueryParam.class).param(VALUE, queryParam.name());
             if (queryParam.defaultValue() != null) {
-                param.annotate(DefaultValue.class).param("value", queryParam.defaultValue());
+                param.annotate(DefaultValue.class).param(VALUE, queryParam.defaultValue());
             }
         }
     }
@@ -251,7 +252,7 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
         for (TypeDeclaration pathParam : pathParams) {
             JVar param = codeMethod.param(context.getJavaType(pathParam),
                 Names.buildVariableName(pathParam.name()));
-            param.annotate(PathParam.class).param("value", pathParam.name());
+            param.annotate(PathParam.class).param(VALUE, pathParam.name());
         }
     }
 
@@ -277,12 +278,12 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
     private void addFormParameter(JMethod codeMethod, TypeDeclaration formParam) {
         JVar param = codeMethod.param(context.getJavaType(formParam),
             Names.buildVariableName(formParam.name()));
-        param.annotate(FormDataParam.class).param("value", formParam.name());
+        param.annotate(FormDataParam.class).param(VALUE, formParam.name());
 
         if (formParam instanceof FileTypeDeclaration) {
             JVar detail = codeMethod.param(codeModel._ref(FormDataContentDisposition.class),
                 Names.buildVariableName(formParam.name()) + "Detail");
-            detail.annotate(FormDataParam.class).param("value", formParam.name());
+            detail.annotate(FormDataParam.class).param(VALUE, formParam.name());
         }
     }
 

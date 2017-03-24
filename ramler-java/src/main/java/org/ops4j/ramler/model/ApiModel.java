@@ -50,7 +50,7 @@ import org.raml.v2.api.model.v10.resources.Resource;
  * <p>
  * This model wraps the basic {@link Api} model created by the RAML parser and adds some convenience
  * methods, e.g. for directy accessing types by name.
- * 
+ *
  * @author Harald Wellmann
  */
 public class ApiModel {
@@ -62,7 +62,7 @@ public class ApiModel {
 
     /**
      * Creates an enhanced model for the given API.
-     * 
+     *
      * @param api
      *            API model provided by parser
      */
@@ -74,7 +74,7 @@ public class ApiModel {
 
     /**
      * Gets the underlying API model.
-     * 
+     *
      * @return API model provided by parser
      */
     public Api getApi() {
@@ -104,7 +104,7 @@ public class ApiModel {
 
     /**
      * Finds the types directly derived from the given type.
-     * 
+     *
      * @param typeName
      *            type name
      * @return list of derived types (never null)
@@ -116,7 +116,7 @@ public class ApiModel {
 
     /**
      * Gets all types defined in this API.
-     * 
+     *
      * @return collection of types (never null)
      */
     public Collection<TypeDeclaration> getTypes() {
@@ -125,7 +125,7 @@ public class ApiModel {
 
     /**
      * Returns the title of this API.
-     * 
+     *
      * @return API title
      */
     public String getTitle() {
@@ -134,7 +134,7 @@ public class ApiModel {
 
     /**
      * Gets all resources defined in this API, sorted alphabetically.
-     * 
+     *
      * @return collection of resources (never null)
      */
     public Collection<Resource> getResources() {
@@ -145,7 +145,7 @@ public class ApiModel {
 
     /**
      * Returns the type declaration for the given name.
-     * 
+     *
      * @param typeName
      *            name of an API type
      * @return type declaration, or null if no such type exists
@@ -154,6 +154,16 @@ public class ApiModel {
         return types.get(typeName);
     }
 
+    /**
+     * Gets the name of the given type, if the type is a declared type.
+     * <p>
+     * A built-in type like {@code string} does not have a declared name. An inline type like
+     * {@code Foo[]} does not have a declared name.
+     *
+     * @param type
+     *            type declaration
+     * @return type name, or null
+     */
     public String getDeclaredName(TypeDeclaration type) {
         TypeDeclaration declaredType = types.get(type.name());
         if (declaredType == null) {
@@ -162,10 +172,22 @@ public class ApiModel {
         return type.name();
     }
 
+    /**
+     * Checks if the given type is an array type.
+     *
+     * @param type
+     *            type declaration
+     * @return true if type is an array type
+     */
     public boolean isArray(TypeDeclaration type) {
         return type instanceof ArrayTypeDeclaration;
     }
 
+    /**
+     * Gets the item type name of the given array type.
+     * @param type type declaration
+     * @return item type, or null if type is not an array type
+     */
     public String getItemType(TypeDeclaration type) {
         if (!isArray(type)) {
             return null;
@@ -184,7 +206,7 @@ public class ApiModel {
     /**
      * Checks if the given type is primitive. A type is primitive if it is not {@code any} and not
      * structured.
-     * 
+     *
      * @param type
      *            type declaration
      * @return true if the type is primitive
@@ -211,7 +233,7 @@ public class ApiModel {
     /**
      * Checks if the given type is structured. A type is structured if it is an array type, an
      * object type, or a union type.
-     * 
+     *
      * @param type
      *            type declaration
      * @return true if the type is structured
@@ -230,7 +252,7 @@ public class ApiModel {
 
     /**
      * Gets the metatype of the given type declaration.
-     * 
+     *
      * @param type
      *            type declaration
      * @return metatype
@@ -284,7 +306,7 @@ public class ApiModel {
 
     /**
      * Gets the value list of a string valued annotation of a given name on the given type.
-     * 
+     *
      * @param decl
      *            type declaration
      * @param annotationName
