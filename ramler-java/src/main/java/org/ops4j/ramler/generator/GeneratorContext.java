@@ -126,7 +126,9 @@ public class GeneratorContext {
             jtype = getBooleanType((BooleanTypeDeclaration) decl);
         }
         else if (decl instanceof ObjectTypeDeclaration) {
-            jtype = getModelPackage()._getClass(decl.name());
+            // special case for nested arrays
+            String ref = (decl.name().equals("object")) ? decl.type() : decl.name();
+            jtype = getModelPackage()._getClass(ref);
         }
         else if (decl instanceof ArrayTypeDeclaration) {
             ArrayTypeDeclaration array = (ArrayTypeDeclaration) decl;

@@ -50,12 +50,12 @@ import org.raml.v2.api.model.v10.resources.Resource;
 public class ParserTest {
 
     private ApiModel apiModel;
-    
+
     private void parse(String simpleName) {
         RamlModelResult ramlModelResult = new RamlModelBuilder().buildApi("raml/" + simpleName);
         assertFalse(ramlModelResult.hasErrors());
         Api api = ramlModelResult.getApiV10();
-        apiModel = new ApiModel(api);        
+        apiModel = new ApiModel(api);
     }
 
     @Test
@@ -79,7 +79,7 @@ public class ParserTest {
         ObjectTypeDeclaration address = (ObjectTypeDeclaration) userType.properties().get(3);
         assertThat(address.name(), is("address"));
         assertThat(address.type(), is("Address"));
-        
+
         List<TypeDeclaration> props = userType.properties();
         assertMemberType(props.get(0), "firstname", "string", "string");
         assertMemberType(props.get(1), "lastname", "Name", "string");
@@ -89,7 +89,7 @@ public class ParserTest {
         assertMemberType(props.get(5), "registered", "boolean", "boolean");
         assertMemberType(props.get(6), "dateOfBirth", "date-only", "date_only");
         assertMemberType(props.get(7), "registrationDate", "datetime", "datetime");
-        
+
         TypeDeclaration favouriteColour = userType.properties().get(4);
         assertThat(favouriteColour.name(), is("favouriteColour"));
         assertThat(favouriteColour.required(), is(false));
@@ -101,15 +101,15 @@ public class ParserTest {
         StringTypeDeclaration sortParam = (StringTypeDeclaration) getMethod.queryParameters().get(1);
         assertThat(sortParam.name(), is("sort"));
         assertThat(sortParam.required(), is(false));
-        
+
     }
-    
+
     private void assertMemberType(TypeDeclaration type, String memberName, String typeName, String baseType) {
         assertThat(type.name(), is(memberName));
         assertThat(type.type(), is(typeName));
         assertThat(apiModel.metatype(type).toString().toLowerCase(), is(baseType.toLowerCase()));
     }
-    
+
     @Test
     public void shouldParseAnnotations() {
         parse("generic.raml");
@@ -139,24 +139,24 @@ public class ParserTest {
         assertMemberTypes(api.types().get(4), "BooleanList", "list", "BooleanArray", ARRAY);
         assertMemberTypes(api.types().get(5), "DigitList", "list", "DigitArray", ARRAY);
     }
-    
+
     private void assertMemberTypes(TypeDeclaration type, String typeName, String memberName, String memberType, Metatype metatype) {
         ObjectTypeDeclaration objectType = (ObjectTypeDeclaration) type;
         assertThat(objectType.name(), is(typeName));
         TypeDeclaration member = objectType.properties().get(0);
         assertThat(member, instanceOf(ArrayTypeDeclaration.class));
         assertThat(member.name(), is(memberName));
-        assertThat(member.type(), is(memberType));        
+        assertThat(member.type(), is(memberType));
         assertThat(apiModel.metatype(member), is(metatype));
     }
-    
-    
-    
+
+
+
     @Test
     public void shouldParseArrays() {
         parse("bracketArray.raml");
         Api api = apiModel.getApi();
-        
+
         assertTypes(api.types().get(0), "ObjectList", "object[]", null, "object", OBJECT);
         assertTypes(api.types().get(1), "NameList", "Name", "string", "Name", STRING);
         assertTypes(api.types().get(2), "PersonList", "Person", "object", "Person", OBJECT);
@@ -164,7 +164,7 @@ public class ParserTest {
         assertTypes(api.types().get(4), "BooleanList", "boolean[]", null, "boolean", BOOLEAN);
         assertTypes(api.types().get(5), "DigitList", "Digit", "integer", "integer", INTEGER);
     }
-    
+
     private void assertTypes(TypeDeclaration type, String typeName, String itemName, String itemType, String realItemType, Metatype metatype) {
         ObjectTypeDeclaration objectType = (ObjectTypeDeclaration) type;
         //assertThat(objectType.name(), is(typeName));
@@ -174,16 +174,16 @@ public class ParserTest {
         TypeDeclaration item = arrayType.items();
         System.out.println(String.format("%s, %s, %s, %s, %s", objectType.name(), item.name(), item.type(), apiModel.getItemType(member), apiModel.metatype(item)));
 //        assertThat(item.name(), is(itemName));
-//        assertThat(item.type(), is(itemType));        
+//        assertThat(item.type(), is(itemType));
 //        assertThat(apiModel.getItemType(member), is(realItemType));
 //        assertThat(apiModel.metatype(item), is(metatype));
     }
-    
+
     @Test
     public void shouldFindItemTypeWithBrackets() {
         parse("bracketArray.raml");
         Api api = apiModel.getApi();
-        
+
         assertTypes(api.types().get(0), "ObjectList",   "object[]",     null);
         assertTypes(api.types().get(1), "NameList",     "Name",         "string");
         assertTypes(api.types().get(2), "PersonList",   "Person",       "object");
@@ -191,7 +191,7 @@ public class ParserTest {
         assertTypes(api.types().get(4), "BooleanList",  "boolean[]",    null);
         assertTypes(api.types().get(5), "DigitList",    "Digit",        "integer");
     }
-    
+
     private void assertTypes(TypeDeclaration type, String typeName, String itemName, String itemType) {
         ObjectTypeDeclaration objectType = (ObjectTypeDeclaration) type;
         assertThat(objectType.name(), is(typeName));
@@ -200,21 +200,30 @@ public class ParserTest {
         ArrayTypeDeclaration arrayType = (ArrayTypeDeclaration) member;
         TypeDeclaration item = arrayType.items();
         assertThat(item.name(), is(itemName));
-        assertThat(item.type(), is(itemType));        
+        assertThat(item.type(), is(itemType));
         System.out.println(String.format("%s, %s, %s, %s, %s", objectType.name(), arrayType.name(), arrayType.type(), item.name(), item.type()));
     }
-    
-    
+
+
     @Test
     public void shouldFindItemType() {
         parse("array.raml");
         Api api = apiModel.getApi();
-        
+
         assertTypes(api.types().get(0), "ObjectList",   "object",         "object");
         assertTypes(api.types().get(1), "NameList",     "string",         "Name");
         assertTypes(api.types().get(2), "PersonList",   "object",         "Person");
         assertTypes(api.types().get(3), "StringList",   "string",         "string");
         assertTypes(api.types().get(4), "BooleanList",  "boolean",         "boolean");
         assertTypes(api.types().get(5), "DigitList",    "integer",         "Digit");
-    }   
+    }
+
+    @Test
+    public void shouldFindNestedItemType() {
+        parse("nestedArray.raml");
+        Api api = apiModel.getApi();
+
+        assertTypes(api.types().get(0), "PersonList",       "object",   "Person");
+        assertTypes(api.types().get(1), "PersonArrayList",  "array",    "PersonArray");
+    }
 }
