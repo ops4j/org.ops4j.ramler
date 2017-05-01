@@ -158,25 +158,34 @@ public class ParserTest {
         Api api = apiModel.getApi();
 
         assertTypes(api.types().get(0), "ObjectList", "object[]", null, "object", OBJECT);
-        assertTypes(api.types().get(1), "NameList", "Name", "string", "Name", STRING);
+        assertTypes(api.types().get(1), "NameList", "Name", "string", "string", STRING);
         assertTypes(api.types().get(2), "PersonList", "Person", "object", "Person", OBJECT);
         assertTypes(api.types().get(3), "StringList", "string[]", null, "string", STRING);
         assertTypes(api.types().get(4), "BooleanList", "boolean[]", null, "boolean", BOOLEAN);
         assertTypes(api.types().get(5), "DigitList", "Digit", "integer", "integer", INTEGER);
     }
 
+    @Test
+    public void shouldParseNestedArrays() {
+        parse("nestedBracketArray.raml");
+        Api api = apiModel.getApi();
+
+        assertTypes(api.types().get(0), "PersonList", "Person", "object", "Person", OBJECT);
+        assertTypes(api.types().get(1), "PersonArrayList", "Person[][]", null, "Person[]", ARRAY);
+    }
+
     private void assertTypes(TypeDeclaration type, String typeName, String itemName, String itemType, String realItemType, Metatype metatype) {
         ObjectTypeDeclaration objectType = (ObjectTypeDeclaration) type;
-        //assertThat(objectType.name(), is(typeName));
+        assertThat(objectType.name(), is(typeName));
         TypeDeclaration member = objectType.properties().get(0);
-        //assertThat(member, instanceOf(ArrayTypeDeclaration.class));
+        assertThat(member, instanceOf(ArrayTypeDeclaration.class));
         ArrayTypeDeclaration arrayType = (ArrayTypeDeclaration) member;
         TypeDeclaration item = arrayType.items();
-        System.out.println(String.format("%s, %s, %s, %s, %s", objectType.name(), item.name(), item.type(), apiModel.getItemType(member), apiModel.metatype(item)));
-//        assertThat(item.name(), is(itemName));
-//        assertThat(item.type(), is(itemType));
-//        assertThat(apiModel.getItemType(member), is(realItemType));
-//        assertThat(apiModel.metatype(item), is(metatype));
+        // System.out.println(String.format("%s, %s, %s, %s, %s", objectType.name(), item.name(), item.type(), apiModel.getItemType(member), apiModel.metatype(item)));
+        assertThat(item.name(), is(itemName));
+        assertThat(item.type(), is(itemType));
+        assertThat(apiModel.getItemType(member), is(realItemType));
+        assertThat(apiModel.metatype(item), is(metatype));
     }
 
     @Test
@@ -201,7 +210,7 @@ public class ParserTest {
         TypeDeclaration item = arrayType.items();
         assertThat(item.name(), is(itemName));
         assertThat(item.type(), is(itemType));
-        System.out.println(String.format("%s, %s, %s, %s, %s", objectType.name(), arrayType.name(), arrayType.type(), item.name(), item.type()));
+        // System.out.println(String.format("%s, %s, %s, %s, %s", objectType.name(), arrayType.name(), arrayType.type(), item.name(), item.type()));
     }
 
 

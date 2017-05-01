@@ -1,0 +1,19 @@
+#%RAML 1.0
+title: API with nested array type
+types:
+  PersonList:
+    properties:
+      list: Person[]
+  PersonArrayList:
+    properties:
+      list: PersonArray[] 
+  PersonArrayList2:
+    properties:
+      list: Person[][] 
+  PersonArray:
+    type: array
+    items: Person
+  Person:
+    properties:
+      firstName: string
+      lastName: string

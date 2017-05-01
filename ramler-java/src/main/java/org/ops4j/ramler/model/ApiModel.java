@@ -195,9 +195,12 @@ public class ApiModel {
         ArrayTypeDeclaration array = (ArrayTypeDeclaration) type;
         TypeDeclaration item = array.items();
         if (item.type() == null) {
-            return item.name().replace("[]", "");
+            return item.name().replaceFirst("\\[\\]", "");
         }
         if ("object".equals(item.type()) && item.name() != null) {
+            return item.name();
+        }
+        if ("array".equals(item.type()) && item.name() != null) {
             return item.name();
         }
         return item.type();

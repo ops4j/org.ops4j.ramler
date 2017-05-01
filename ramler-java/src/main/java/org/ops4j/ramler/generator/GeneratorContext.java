@@ -257,6 +257,11 @@ public class GeneratorContext {
         if (type.equals("boolean")) {
             return codeModel.ref(Boolean.class);
         }
+        if (type.endsWith("[]")) {
+            String itemTypeName = type.substring(0, type.length() - 2);
+            JType itemType = getJavaType(itemTypeName);
+            return codeModel.ref(List.class).narrow(itemType);
+        }
         return getReferencedJavaType(apiModel.getDeclaredType(type));
     }
 
