@@ -22,6 +22,9 @@ import static org.apache.commons.lang.StringUtils.uncapitalize;
 import static org.apache.commons.lang.WordUtils.capitalize;
 import static org.apache.commons.lang.math.NumberUtils.isDigits;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.raml.v2.api.model.v10.resources.Resource;
 
 /**
@@ -42,6 +45,9 @@ public class Names {
 
     /** Constant <code>EXAMPLE_PREFIX=" e.g. "</code> */
     public static final String EXAMPLE_PREFIX = " e.g. ";
+
+    private static final Pattern CAMEL_CASE_PATTERN = Pattern.compile("(?<=[a-z])[A-Z]");
+
 
     private Names() {
         // hidden utility class constructor
@@ -95,6 +101,24 @@ public class Names {
         final String baseName = source.replaceAll("[\\W_]", " ");
 
         String friendlyName = capitalize(baseName).replaceAll("[\\W_]", "");
+
+        if (isDigits(left(friendlyName, 1))) {
+            friendlyName = "_" + friendlyName;
+        }
+
+        return friendlyName;
+    }
+
+    public static String buildConstantName(final String source) {
+        Matcher m = CAMEL_CASE_PATTERN.matcher(source);
+
+        StringBuffer sb = new StringBuffer();
+        while (m.find()) {
+            m.appendReplacement(sb, "_" + m.group());
+        }
+        m.appendTail(sb);
+
+        String friendlyName = sb.toString().toUpperCase();
 
         if (isDigits(left(friendlyName, 1))) {
             friendlyName = "_" + friendlyName;

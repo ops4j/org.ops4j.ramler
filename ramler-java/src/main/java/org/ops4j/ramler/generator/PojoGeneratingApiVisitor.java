@@ -38,12 +38,14 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.sun.codemodel.JAnnotationArrayMember;
 import com.sun.codemodel.JAnnotationUse;
+import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JFieldVar;
+import com.sun.codemodel.JForEach;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JPackage;
@@ -51,7 +53,7 @@ import com.sun.codemodel.JType;
 import com.sun.codemodel.JVar;
 
 /**
- * API visitor adding the member to each POJO class created by {@code PojoCreatingApiVisitor}.
+ * API visitor adding the members to each POJO class created by {@code PojoCreatingApiVisitor}.
  *
  * @author Harald Wellmann
  *
@@ -173,19 +175,61 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
             return;
         }
 
+        generateEnumClass(type);
+    }
+
+    private void generateEnumClass(StringTypeDeclaration type) {
+        JDefinedClass klass = createEnumClass(type);
+        generateEnumConstants(klass, type);
+        JFieldVar valueField = klass.field(JMod.PRIVATE | JMod.FINAL, String.class, "value");
+
+        generateEnumConstructor(klass, valueField);
+        generateEnumValueMethod(klass, valueField);
+        generateEnumFromValueMethod(klass, valueField);
+    }
+
+    private JDefinedClass createEnumClass(StringTypeDeclaration type) {
         try {
             JDefinedClass klass = pkg._enum(type.name());
             context.addType(type.name(), klass);
-            for (String enumValue : type.enumValues()) {
-                klass.enumConstant(enumValue.toUpperCase());
-            }
+            context.annotateAsGenerated(klass);
+            return klass;
         }
         catch (JClassAlreadyExistsException exc) {
             throw Exceptions.unchecked(exc);
         }
     }
 
-    private void generateFieldAndAccessors(JDefinedClass klass, TypeDeclaration property) {
+    private void generateEnumConstants(JDefinedClass klass, StringTypeDeclaration type) {
+        for (String enumValue : type.enumValues()) {
+            klass.enumConstant(Names.buildConstantName(enumValue))
+                .arg(JExpr.lit(enumValue));
+        }
+    }
+
+    private void generateEnumConstructor(JDefinedClass klass, JFieldVar valueField) {
+        JMethod constructor = klass.constructor(JMod.PRIVATE);
+        JVar p1 = constructor.param(String.class, "value");
+        constructor.body().assign(JExpr._this().ref(valueField), p1);
+    }
+
+    private void generateEnumValueMethod(JDefinedClass klass, JFieldVar valueField) {
+        JMethod getter = klass.method(JMod.PUBLIC, codeModel._ref(String.class), "value");
+        getter.body()._return(valueField);
+    }
+
+    private void generateEnumFromValueMethod(JDefinedClass klass, JFieldVar valueField) {
+        JMethod converter = klass.method(JMod.PUBLIC | JMod.STATIC, klass, "fromValue");
+        JVar param = converter.param(String.class, "value");
+        JBlock body = converter.body();
+        JForEach forEach = body.forEach(klass, "v", klass.staticInvoke("values"));
+        JBlock loopBlock = forEach.body();
+        loopBlock._if(forEach.var().ref(valueField).invoke("equals").arg(param))
+            ._then()._return(forEach.var());
+        body._throw(JExpr._new(codeModel._ref(IllegalArgumentException.class)).arg(param));
+    }
+
+   private void generateFieldAndAccessors(JDefinedClass klass, TypeDeclaration property) {
         if (property instanceof ObjectTypeDeclaration) {
             generateObjectFieldAndAccessors(klass, property);
         }

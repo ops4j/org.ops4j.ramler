@@ -70,24 +70,24 @@ public class SimpleObjectTest {
         codeModel = generator.getContext().getCodeModel();
         modelPackage = codeModel._package("org.ops4j.raml.demo.model");
     }
-    
+
     @Test
     public void shouldFindModelClasses() {
         Set<String> classNames = new HashSet<>();
         modelPackage.classes().forEachRemaining(c -> classNames.add(c.name()));
-        assertThat(classNames, containsInAnyOrder("Address", "Colour", "Employee", "FileResponse", 
+        assertThat(classNames, containsInAnyOrder("Address", "Colour", "Employee", "FileResponse",
             "Integers", "Manager", "Numbers", "Person", "Temporals", "User", "UserGroup"));
     }
-    
+
     @SuppressWarnings("unchecked")
     @Test
     public void shouldFindEnumValues() throws IllegalAccessException {
         klass = modelPackage._getClass("Colour");
         assertThat(klass.getClassType(), is(ClassType.ENUM));
         Map<String,JEnumConstant> enums = (Map<String, JEnumConstant>) FieldUtils.readField(klass, "enumConstantsByName", true);
-        assertThat(enums.keySet(), contains("RED", "YELLOW", "GREEN"));
+        assertThat(enums.keySet(), contains("LIGHT_BLUE", "RED", "YELLOW", "GREEN"));
     }
-    
+
     @Test
     public void shouldFindAddressMembers() {
         expectClass("Address");
@@ -108,9 +108,9 @@ public class SimpleObjectTest {
         klass = modelPackage._getClass(className);
         fieldNames = new HashSet<>(klass.fields().keySet());
         methodNames = klass.methods().stream().map(m -> m.name()).collect(toSet());
-        
+
     }
-    
+
     private void verifyClass() {
         assertThat(fieldNames, is(empty()));
         assertThat(methodNames, is(empty()));
@@ -164,7 +164,7 @@ public class SimpleObjectTest {
         assertProperty(klass, "firstname", "String", "getFirstname", "setFirstname");
         assertProperty(klass, "lastname", "String", "getLastname", "setLastname");
         assertProperty(klass, "registered", "boolean", "isRegistered", "setRegistered");
-        assertProperty(klass, "registrationDate", "ZonedDateTime", "getRegistrationDate", "setRegistrationDate");        
+        assertProperty(klass, "registrationDate", "ZonedDateTime", "getRegistrationDate", "setRegistrationDate");
         verifyClass();
     }
 
@@ -173,7 +173,7 @@ public class SimpleObjectTest {
         expectClass("Employee");
         assertThat(klass._extends().name(), is("Person"));
         assertProperty(klass, "department", "String", "getDepartment", "setDepartment");
-        
+
         fieldNames.remove("DISCRIMINATOR");
         methodNames.remove("getObjectType");
         methodNames.remove("setObjectType");
@@ -185,22 +185,21 @@ public class SimpleObjectTest {
         JFieldVar field = klass.fields().get(memberName);
         assertThat(field, is(notNullValue()));
         assertThat(field.type().name(), is(typeName));
-        
+
         List<JMethod> getters = klass.methods().stream().filter(m -> m.name().equals(getterName)).collect(toList());
         assertThat(getters, hasSize(1));
         JMethod getter = getters.get(0);
         assertThat(getter.type().name(), is(typeName));
         assertThat(getter.hasSignature(new JType[0]), is(true));
-        
+
         List<JMethod> setters = klass.methods().stream().filter(m -> m.name().equals(setterName)).collect(toList());
         assertThat(setters, hasSize(1));
         JMethod setter = setters.get(0);
         assertThat(setter.type(), is(codeModel.VOID));
         assertThat(setter.hasSignature(new JType[]{field.type()}), is(true));
-        
+
         fieldNames.remove(memberName);
         methodNames.remove(getterName);
         methodNames.remove(setterName);
-        
     }
 }
