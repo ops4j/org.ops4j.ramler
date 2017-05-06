@@ -31,7 +31,7 @@ public class ExampleSpecJsonRenderer {
 
     /**
      * Converts an example of the given type to a JSON value.
-     * 
+     *
      * @param type
      *            RAML type declaration
      * @param example
@@ -56,7 +56,7 @@ public class ExampleSpecJsonRenderer {
 
     /**
      * Returns a pretty-printed JSON string for the given example instance of the given RAML type.
-     * 
+     *
      * @param type
      *            RAML type declaration
      * @param example
@@ -134,6 +134,9 @@ public class ExampleSpecJsonRenderer {
         Object value = tip.value().value();
         if (value instanceof Integer) {
             builder.add(name, (Integer) value);
+        }
+        else if (value instanceof Long) {
+            builder.add(name, (Long) value);
         }
         else if (value instanceof String) {
             builder.add(name, (String) value);
