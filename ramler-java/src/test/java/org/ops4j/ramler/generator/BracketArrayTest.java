@@ -63,15 +63,15 @@ public class BracketArrayTest {
         codeModel = generator.getContext().getCodeModel();
         modelPackage = codeModel._package("org.ops4j.raml.bracketarray.model");
     }
-    
+
     @Test
     public void shouldFindModelClasses() {
         Set<String> classNames = new HashSet<>();
         modelPackage.classes().forEachRemaining(c -> classNames.add(c.name()));
-        assertThat(classNames, containsInAnyOrder("BooleanList", "DigitList", "NameList", 
-            "ObjectList", "Person", "PersonList", "StringList"));
+        assertThat(classNames, containsInAnyOrder("BooleanList", "DigitList", "NameList",
+            "ObjectList", "Person", "PersonList", "StringList", "Employee", "EmployeeList"));
     }
-    
+
     @Test
     public void shouldFindBooleanListMembers() {
         expectClass("BooleanList");
@@ -108,6 +108,13 @@ public class BracketArrayTest {
     }
 
     @Test
+    public void shouldFindEmployeeListMembers() {
+        expectClass("EmployeeList");
+        assertProperty(klass, "list", "List<Employee>", "getList", "setList");
+        verifyClass();
+    }
+
+    @Test
     public void shouldFindStringListMembers() {
         expectClass("StringList");
         assertProperty(klass, "list", "List<String>", "getList", "setList");
@@ -118,9 +125,9 @@ public class BracketArrayTest {
         klass = modelPackage._getClass(className);
         fieldNames = new HashSet<>(klass.fields().keySet());
         methodNames = klass.methods().stream().map(m -> m.name()).collect(toSet());
-        
+
     }
-    
+
     private void verifyClass() {
         assertThat(fieldNames, is(empty()));
         assertThat(methodNames, is(empty()));
@@ -130,22 +137,22 @@ public class BracketArrayTest {
         JFieldVar field = klass.fields().get(memberName);
         assertThat(field, is(notNullValue()));
         assertThat(field.type().name(), is(typeName));
-        
+
         List<JMethod> getters = klass.methods().stream().filter(m -> m.name().equals(getterName)).collect(toList());
         assertThat(getters, hasSize(1));
         JMethod getter = getters.get(0);
         assertThat(getter.type().name(), is(typeName));
         assertThat(getter.hasSignature(new JType[0]), is(true));
-        
+
         List<JMethod> setters = klass.methods().stream().filter(m -> m.name().equals(setterName)).collect(toList());
         assertThat(setters, hasSize(1));
         JMethod setter = setters.get(0);
         assertThat(setter.type(), is(codeModel.VOID));
         assertThat(setter.hasSignature(new JType[]{field.type()}), is(true));
-        
+
         fieldNames.remove(memberName);
         methodNames.remove(getterName);
         methodNames.remove(setterName);
-        
+
     }
 }

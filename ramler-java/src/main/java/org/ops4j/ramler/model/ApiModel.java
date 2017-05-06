@@ -218,10 +218,7 @@ public class ApiModel {
         if (item.type() == null) {
             return item.name().replaceFirst("\\[\\]", "");
         }
-        if ("object".equals(item.type()) && item.name() != null) {
-            return item.name();
-        }
-        if ("array".equals(item.type()) && item.name() != null) {
+        if (getDeclaredType(item.name()) != null) {
             return item.name();
         }
         return item.type();

@@ -19,6 +19,9 @@ types:
   DigitList:
     properties:
       list: DigitArray
+  EmployeeList:
+    properties:
+      list: Employee[]
   BooleanArray:
     type: boolean[]      
   DigitArray:
@@ -31,4 +34,7 @@ types:
     properties:
       firstName: string
       lastName: string
-      
+  Employee:
+    type: Person
+    properties:
+      department: string

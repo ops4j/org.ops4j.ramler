@@ -163,11 +163,11 @@ public class ParserTest {
         Api api = apiModel.getApi();
 
         assertTypes(api.types().get(0), "ObjectList", "object[]", null, "object", OBJECT);
-        assertTypes(api.types().get(1), "NameList", "Name", "string", "string", STRING);
+        assertTypes(api.types().get(1), "NameList", "Name", "string", "Name", STRING);
         assertTypes(api.types().get(2), "PersonList", "Person", "object", "Person", OBJECT);
         assertTypes(api.types().get(3), "StringList", "string[]", null, "string", STRING);
         assertTypes(api.types().get(4), "BooleanList", "boolean[]", null, "boolean", BOOLEAN);
-        assertTypes(api.types().get(5), "DigitList", "Digit", "integer", "integer", INTEGER);
+        assertTypes(api.types().get(5), "DigitList", "Digit", "integer", "Digit", INTEGER);
     }
 
     @Test
@@ -205,6 +205,7 @@ public class ParserTest {
         assertTypes(api.types().get(3), "StringList",   "string[]",     null);
         assertTypes(api.types().get(4), "BooleanList",  "boolean[]",    null);
         assertTypes(api.types().get(5), "DigitList",    "Digit",        "integer");
+        assertTypes(api.types().get(6), "EmployeeList", "Employee",     "Person");
     }
 
     private void assertTypes(TypeDeclaration type, String typeName, String itemName, String itemType) {
