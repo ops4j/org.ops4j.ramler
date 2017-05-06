@@ -17,6 +17,8 @@
  */
 package org.ops4j.ramler.html.trimou;
 
+import java.nio.charset.StandardCharsets;
+
 import org.ops4j.ramler.model.ApiModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,16 +29,22 @@ import org.trimou.engine.config.EngineConfigurationKey;
 import org.trimou.engine.locator.ClassPathTemplateLocator;
 import org.trimou.engine.locator.FileSystemTemplateLocator;
 import org.trimou.handlebars.HelpersBuilder;
+import org.trimou.util.ImmutableMap;
 
 /**
  * A Trimou template engine configured for HTML generation.
- * 
+ *
  * @author Harald Wellmann
  *
  */
 public class TemplateEngine {
 
     public static final String TEMPLATE_SUFFIX = "trimou.html";
+
+    public static final String TEMPLATE_PATH = "trimou";
+
+    private static final int PRIO_CLASS_PATH = 100;
+    private static final int PRIO_FILE_SYSTEM = 200;
 
     private static Logger log = LoggerFactory.getLogger(TemplateEngine.class);
 
@@ -56,13 +64,14 @@ public class TemplateEngine {
      */
     public String renderTemplate(String templateName, ApiModel api) {
         Mustache mustache = getEngine().getMustache(templateName);
-        String result = mustache.render(api);
+        String result = mustache.render(ImmutableMap.of("apiModel", api));
         log.debug(result);
         return result;
     }
 
     /**
      * Gets the template directory.
+     *
      * @return template directory
      */
     public String getTemplateDir() {
@@ -71,7 +80,9 @@ public class TemplateEngine {
 
     /**
      * Set the template directory.
-     * @param templateDir template directory
+     *
+     * @param templateDir
+     *            template directory
      */
     public void setTemplateDir(String templateDir) {
         this.templateDir = templateDir;
@@ -82,18 +93,20 @@ public class TemplateEngine {
      */
     public MustacheEngine getEngine() {
         if (engine == null) {
-            ClassPathTemplateLocator genericLocator = new ClassPathTemplateLocator(100, "trimou",
-                TEMPLATE_SUFFIX);
+            ClassPathTemplateLocator genericLocator = new ClassPathTemplateLocator(PRIO_CLASS_PATH,
+                TEMPLATE_PATH, TEMPLATE_SUFFIX);
             MustacheEngineBuilder builder = MustacheEngineBuilder.newBuilder()
-                .setProperty(EngineConfigurationKey.DEFAULT_FILE_ENCODING, "UTF-8")
-                .addTemplateLocator(genericLocator).registerHelper("example", new ExampleHelper())
-                .registerHelpers(
-                    HelpersBuilder.builtin().addInclude().addSet().addSwitch().addWith().build())
-                .addGlobalData("markdown", new MarkdownLambda())
-                .addGlobalData("uppercase", new UpperCaseLambda());
+                .setProperty(EngineConfigurationKey.DEFAULT_FILE_ENCODING,
+                    StandardCharsets.UTF_8.name())
+                .addTemplateLocator(genericLocator)
+                .registerHelper(ExampleHelper.NAME, new ExampleHelper())
+                .registerHelpers(HelpersBuilder.builtin().addInclude().addInvoke().addSet()
+                    .addSwitch().addWith().build())
+                .addGlobalData(MarkdownLambda.NAME, new MarkdownLambda())
+                .addGlobalData(UpperCaseLambda.NAME, new UpperCaseLambda());
             if (templateDir != null) {
                 builder.addTemplateLocator(
-                    new FileSystemTemplateLocator(200, templateDir, TEMPLATE_SUFFIX));
+                    new FileSystemTemplateLocator(PRIO_FILE_SYSTEM, templateDir, TEMPLATE_SUFFIX));
             }
             engine = builder.build();
         }

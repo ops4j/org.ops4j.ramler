@@ -9,11 +9,13 @@ import org.trimou.handlebars.Options;
 
 /**
  * Trimou helper for rendering RAML examples as pretty-printed JSON strings.
- * 
+ *
  * @author Harald Wellmann
  *
  */
 public class ExampleHelper extends BasicHelper {
+
+    public static final String NAME = "example";
 
     private ExampleSpecJsonRenderer renderer = new ExampleSpecJsonRenderer();
 

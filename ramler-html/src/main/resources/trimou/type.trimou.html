@@ -18,10 +18,32 @@
             <th>Property name</th>
             <th>Type</th>
             <th>Description</th>
-        </tr>        
+        </tr>
     </thead>
+    <tbody>
 {{#properties}}
 {{>property}}    
-{{/properties}}    
+{{/properties}}
+    </tbody>
 </table>
 {{/if}}
+{{#invoke on=apiModel m="findEnumValues" name}}
+{{#if this}}
+<table>
+    <thead>
+        <tr>
+            <th>Value</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+{{#each this}}
+    <tbody>
+        <tr>
+            <td>{{name}}</td>
+            <td>{{description}}</td>
+        </tr>
+    </tbody>
+{{/each}}
+</table>
+{{/if}}
+{{/invoke}}

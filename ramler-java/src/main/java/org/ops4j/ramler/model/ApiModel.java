@@ -337,10 +337,10 @@ public class ApiModel {
      */
     public List<String> getStringAnnotations(TypeDeclaration decl, String annotationName) {
         return decl.annotations().stream().filter(a -> a.annotation().name().equals(annotationName))
-            .flatMap(a -> findAnnotationValues(a)).collect(toList());
+            .flatMap(a -> findStringAnnotationValues(a)).collect(toList());
     }
 
-    private Stream<String> findAnnotationValues(AnnotationRef ref) {
+    private Stream<String> findStringAnnotationValues(AnnotationRef ref) {
         TypeInstanceProperty tip = ref.structuredValue().properties().get(0);
         return tip.values().stream().map(ti -> ti.value()).map(String.class::cast);
     }
@@ -372,6 +372,14 @@ public class ApiModel {
         else {
             return ((StringTypeDeclaration) decl).enumValues().stream().map(e -> new EnumValue(e, null)).collect(toList());
         }
+    }
+
+    public List<EnumValue> findEnumValues(String typeName) {
+        TypeDeclaration decl = getDeclaredType(typeName);
+        if (decl instanceof StringTypeDeclaration) {
+            return getEnumValues(decl);
+        }
+        return null;
     }
 
     private EnumValue toEnumValue(TypeInstance ti) {

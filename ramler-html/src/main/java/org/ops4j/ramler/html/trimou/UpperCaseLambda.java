@@ -21,11 +21,13 @@ import org.trimou.lambda.InputProcessingLambda;
 
 /**
  * Converts text to upper case.
- * 
+ *
  * @author Harald Wellmann
  *
  */
 public class UpperCaseLambda extends InputProcessingLambda {
+
+    public static final String NAME = "uppercase";
 
     @Override
     public String invoke(String text) {
