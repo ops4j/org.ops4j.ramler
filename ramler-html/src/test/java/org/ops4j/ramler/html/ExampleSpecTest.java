@@ -22,7 +22,6 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 
-import java.io.IOException;
 import java.util.List;
 
 import javax.json.JsonValue;
@@ -39,25 +38,22 @@ import org.raml.v2.api.model.v10.datamodel.TypeInstance;
 import org.raml.v2.api.model.v10.datamodel.TypeInstanceProperty;
 
 public class ExampleSpecTest {
-    
+
     private ApiModel apiModel;
-
-
 
     private void parse(String simpleName) {
         RamlModelResult ramlModelResult = new RamlModelBuilder().buildApi("raml/" + simpleName);
         assertFalse(ramlModelResult.hasErrors());
         Api api = ramlModelResult.getApiV10();
-        apiModel = new ApiModel(api);        
+        apiModel = new ApiModel(api);
     }
 
     private ExampleSpec getExample(TypeDeclaration type) {
         return type.examples().isEmpty() ? type.example() : type.examples().get(0);
     }
-    
 
     @Test
-    public void shouldParseObjectExample() throws IOException {
+    public void shouldParseObjectExample() {
         parse("simpleobject.raml");
         TypeDeclaration userGroup = apiModel.getDeclaredType("UserGroup");
         assertThat(userGroup, is(notNullValue()));
@@ -72,12 +68,17 @@ public class ExampleSpecTest {
 
         ExampleSpecJsonRenderer renderer = new ExampleSpecJsonRenderer();
         JsonValue jsonValue = renderer.toJsonValue(userGroup, exampleSpec);
-        
-        System.out.println(jsonValue);
+
+        assertThat(jsonValue.toString(),
+            is("{\"name\":\"Editors\",\"users\":["
+                + "{\"firstname\":\"Anna\",\"lastname\":\"Walter\",\"age\":32,"
+                + "\"address\":{\"city\":\"Hamburg\",\"street\":\"Colonnaden\"},"
+                + "\"registered\":true,\"dateOfBirth\":\"1985-04-30\","
+                + "\"registrationDate\":\"2016-02-28T16:41:41.090Z\"}]}"));
     }
-    
+
     @Test
-    public void shouldParseListExample() throws IOException {
+    public void shouldParseListExample() {
         parse("simpleobject.raml");
         TypeDeclaration nameList = apiModel.getDeclaredType("NameList");
         assertThat(nameList, is(notNullValue()));
@@ -85,16 +86,15 @@ public class ExampleSpecTest {
         List<TypeInstanceProperty> props = exampleSpec.structuredValue().properties();
         TypeInstanceProperty p0 = props.get(0);
         assertThat(p0.isArray(), is(true));
-        //assertThat(p0.name(), is("value"));
-        
+
         ExampleSpecJsonRenderer renderer = new ExampleSpecJsonRenderer();
         JsonValue jsonValue = renderer.toJsonValue(nameList, exampleSpec);
-        
-        System.out.println(jsonValue);
+
+        assertThat(jsonValue.toString(), is("[\"foo\",\"bar\"]"));
     }
-    
+
     @Test
-    public void shouldParseNumberExample() throws IOException {
+    public void shouldParseNumberExample() {
         parse("simpleobject.raml");
         TypeDeclaration age = apiModel.getDeclaredType("Age");
         assertThat(age, is(notNullValue()));
@@ -106,10 +106,9 @@ public class ExampleSpecTest {
         assertThat(p0.value().isScalar(), is(true));
         Object scalar = p0.value().value();
         assertThat(scalar, is(37L));
+
         ExampleSpecJsonRenderer renderer = new ExampleSpecJsonRenderer();
         JsonValue jsonValue = renderer.toJsonValue(age, exampleSpec);
-        
-        System.out.println(jsonValue);
+        assertThat(jsonValue.toString(), is("37"));
     }
-    
 }
