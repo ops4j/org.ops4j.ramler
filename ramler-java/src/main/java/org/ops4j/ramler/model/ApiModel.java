@@ -401,7 +401,7 @@ public class ApiModel {
     /**
      * Returns the list of enumeration values of type with the given name.
      *
-     * @param type
+     * @param typeName
      *            type name
      * @return enumeration values, or null if no such type exists
      */

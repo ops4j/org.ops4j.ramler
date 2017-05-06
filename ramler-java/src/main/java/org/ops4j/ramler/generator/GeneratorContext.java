@@ -127,7 +127,7 @@ public class GeneratorContext {
         }
         else if (decl instanceof ObjectTypeDeclaration) {
             // special case for nested arrays
-            String ref = (decl.name().equals("object")) ? decl.type() : decl.name();
+            String ref = decl.name().equals("object") ? decl.type() : decl.name();
             jtype = getModelPackage()._getClass(ref);
         }
         else if (decl instanceof ArrayTypeDeclaration) {
