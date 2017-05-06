@@ -35,7 +35,7 @@ import org.sonatype.plexus.build.incremental.BuildContext;
 
 /**
  * Generates HTML documentation from a RAML model.
- * 
+ *
  * @author Harald Wellmann
  *
  */
@@ -51,13 +51,13 @@ public class HtmlMojo extends AbstractMojo {
      */
     @Parameter(defaultValue = "${project.build.directory}/ramler/html")
     private File outputDir;
-    
+
     /**
      * Directory with web resources to be used instead of the built-in resources.
      */
     @Parameter
     private File webResourceDir;
-    
+
     /**
      * Directory with Trimou templates which take precedence over the built-in templates.
      * The entry template is named {@code api.trimou.html}.
@@ -71,7 +71,7 @@ public class HtmlMojo extends AbstractMojo {
     @Inject
     private BuildContext buildContext;
 
-    protected void generateWebResources() throws MojoFailureException {
+    protected void generateWebResources() {
         if (buildContext.hasDelta(model)) {
             getLog().info("Generating HTML documentation from " + model);
 

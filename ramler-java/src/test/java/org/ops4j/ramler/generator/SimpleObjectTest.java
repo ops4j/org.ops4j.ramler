@@ -63,6 +63,7 @@ public class SimpleObjectTest {
         config.setSourceFile("raml/simpleobject.raml");
         config.setBasePackage("org.ops4j.raml.demo");
         config.setTargetDir(new File("target/generated/raml"));
+        config.setDiscriminatorMutable(true);
 
         generator = new Generator(config);
         generator.generate();

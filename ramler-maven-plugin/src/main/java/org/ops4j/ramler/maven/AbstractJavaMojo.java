@@ -31,7 +31,7 @@ import org.sonatype.plexus.build.incremental.BuildContext;
 
 /**
  * Generates Java sources from a RAML model.
- * 
+ *
  * @author Harald Wellmann
  *
  */
@@ -47,6 +47,12 @@ public abstract class AbstractJavaMojo extends AbstractMojo {
      */
     @Parameter(name = "package", required = true)
     private String packageName;
+
+    @Parameter(defaultValue = "false")
+    private boolean discriminatorMutable;
+
+    @Parameter(defaultValue = "Resource")
+    private String interfaceNameSuffix;
 
     @Parameter(readonly = true, defaultValue = "${project}")
     protected MavenProject project;
@@ -65,6 +71,8 @@ public abstract class AbstractJavaMojo extends AbstractMojo {
             config.setSourceFile(model);
             config.setBasePackage(packageName);
             config.setTargetDir(getOutputDir());
+            config.setDiscriminatorMutable(discriminatorMutable);
+            config.setInterfaceNameSuffix(interfaceNameSuffix);
 
             Generator generator = new Generator(config);
             generator.generate();

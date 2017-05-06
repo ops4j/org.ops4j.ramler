@@ -70,7 +70,9 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
 
     /**
      * Creates a visitor for the given generator context.
-     * @param context generator context
+     *
+     * @param context
+     *            generator context
      */
     public PojoGeneratingApiVisitor(GeneratorContext context) {
         this.context = context;
@@ -122,7 +124,14 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         JFieldVar field = klass.field(JMod.PUBLIC | JMod.STATIC | JMod.FINAL,
             codeModel._ref(String.class), "DISCRIMINATOR");
         field.init(JExpr.lit(discriminatorValue));
-        generateDiscriminatorGetter(type, klass, type.discriminator());
+
+        if (context.getConfig().isDiscriminatorMutable()) {
+            klass.constructor(JMod.PUBLIC).body().invoke(getSetterName(type.discriminator()))
+                .arg(field);
+        }
+        else {
+            generateDiscriminatorGetter(type, klass, type.discriminator());
+        }
     }
 
     private void addJsonTypeInfo(JDefinedClass klass, ObjectTypeDeclaration type) {
@@ -155,7 +164,8 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
     @Override
     public void visitObjectTypeProperty(ObjectTypeDeclaration type, TypeDeclaration property) {
         JDefinedClass klass = pkg._getClass(type.name());
-        if (property.name().equals(type.discriminator())) {
+        if (!context.getConfig().isDiscriminatorMutable()
+            && property.name().equals(type.discriminator())) {
             return;
         }
         if (!isInherited(type, property)) {
@@ -203,7 +213,8 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
     }
 
     private void generateEnumConstants(JDefinedClass klass, StringTypeDeclaration type) {
-        context.getApiModel().getEnumValues(type).stream().forEach(e -> generateEnumConstant(klass, e));
+        context.getApiModel().getEnumValues(type).stream()
+            .forEach(e -> generateEnumConstant(klass, e));
     }
 
     private void generateEnumConstant(JDefinedClass klass, EnumValue enumValue) {
@@ -232,8 +243,8 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         JBlock body = converter.body();
         JForEach forEach = body.forEach(klass, "v", klass.staticInvoke("values"));
         JBlock loopBlock = forEach.body();
-        loopBlock._if(forEach.var().ref(valueField).invoke("equals").arg(param))
-            ._then()._return(forEach.var());
+        loopBlock._if(forEach.var().ref(valueField).invoke("equals").arg(param))._then()
+            ._return(forEach.var());
         body._throw(JExpr._new(codeModel._ref(IllegalArgumentException.class)).arg(param));
     }
 

@@ -22,7 +22,7 @@ import java.util.Optional;
 
 /**
  * Configuration of the RAML Java code generator.
- * 
+ *
  * @author Harald Wellmann
  *
  */
@@ -40,9 +40,11 @@ public class Configuration {
 
     private String interfaceNameSuffix;
 
+    private boolean discriminatorMutable;
+
     /**
      * Gets the name of the base package for all subpackages created by the code generator.
-     * 
+     *
      * @return the base package (e.g. com.example.myapi)
      */
     public String getBasePackage() {
@@ -51,7 +53,7 @@ public class Configuration {
 
     /**
      * Sets the base package name.
-     * 
+     *
      * @param basePackage
      *            base package name
      */
@@ -65,7 +67,7 @@ public class Configuration {
      * Example: Given the base package {@code com.example.myapi} and the model package
      * {@code gen.model}, the model classes will be generated in package
      * {@code com.example.myapi.gen.model}.
-     * 
+     *
      * @return the model package, defaulting to {@code model}.
      */
     public String getModelPackage() {
@@ -74,7 +76,7 @@ public class Configuration {
 
     /**
      * Gets the name of the subpackage with POJO model classes generated from type definitions.
-     * 
+     *
      * @param modelPackage
      *            name of model subpackage
      */
@@ -89,7 +91,7 @@ public class Configuration {
      * Example: Given the base package {@code com.example.myapi} and the API package
      * {@code gen.api}, the resource interfaces will be generated in package
      * {@code com.example.myapi.gen.api}.
-     * 
+     *
      * @return the resource package, defaulting to {@code api}.
      */
     public String getApiPackage() {
@@ -98,7 +100,7 @@ public class Configuration {
 
     /**
      * Gets the name of the subpackage with JAX-RS interfaces generated from resource definitions.
-     * 
+     *
      * @param apiPackage
      *            name of API subpackage
      */
@@ -108,7 +110,7 @@ public class Configuration {
 
     /**
      * Gets the top-level RAML source file.
-     * 
+     *
      * @return the source file
      */
     public String getSourceFile() {
@@ -117,7 +119,7 @@ public class Configuration {
 
     /**
      * Sets the top-level RAML source file.
-     * 
+     *
      * @param sourceFile
      *            top-level RAML source file
      */
@@ -129,7 +131,7 @@ public class Configuration {
      * Gets the target directory for generated code. Generated classes will be located in
      * subdirectories according to the package structure. Any parent directories will be created if
      * needed.
-     * 
+     *
      * @return the target directory
      */
     public File getTargetDir() {
@@ -138,7 +140,7 @@ public class Configuration {
 
     /**
      * Sets the target directory for generated code.
-     * 
+     *
      * @param targetDir
      *            the target directory to set
      */
@@ -152,7 +154,7 @@ public class Configuration {
      * <p>
      * Example: For a resource named {@code /shoppingCart}, the corresponding interface will be
      * named {@code ShoppingCartResource}.
-     * 
+     *
      * @return the interfaceNameSuffix
      */
     public String getInterfaceNameSuffix() {
@@ -161,7 +163,7 @@ public class Configuration {
 
     /**
      * Sets the interface name suffix for JAX-RS resource interfaces.
-     * 
+     *
      * @param interfaceNameSuffix
      *            the interfaceNameSuffix to set
      */
@@ -169,4 +171,13 @@ public class Configuration {
         this.interfaceNameSuffix = interfaceNameSuffix;
     }
 
+
+    public boolean isDiscriminatorMutable() {
+        return discriminatorMutable;
+    }
+
+
+    public void setDiscriminatorMutable(boolean discriminatorMutable) {
+        this.discriminatorMutable = discriminatorMutable;
+    }
 }
