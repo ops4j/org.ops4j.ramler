@@ -19,7 +19,7 @@ package org.ops4j.ramler.html;
 
 /**
  * Configuration of HTML generator.
- * 
+ *
  * @author Harald Wellmann
  *
  */
@@ -35,7 +35,7 @@ public class HtmlConfiguration {
 
     /**
      * Gets the top-level RAML source file.
-     * 
+     *
      * @return source file
      */
     public String getSourceFile() {
@@ -44,7 +44,7 @@ public class HtmlConfiguration {
 
     /**
      * Sets the top-level RAML source file.
-     * 
+     *
      * @param sourceFile
      *            RAML source file
      */
@@ -54,7 +54,7 @@ public class HtmlConfiguration {
 
     /**
      * Gets the target directory for generated HTML.
-     * 
+     *
      * @return target directory
      */
     public String getTargetDir() {
@@ -63,7 +63,7 @@ public class HtmlConfiguration {
 
     /**
      * Sets the target directory.
-     * 
+     *
      * @param targetDir
      *            target directory
      */
@@ -73,8 +73,8 @@ public class HtmlConfiguration {
 
     /**
      * Gets the directory with Trimou templates for the HTML generator.
-     * 
-     * @return
+     *
+     * @return template directory
      */
     public String getTemplateDir() {
         return templateDir;
@@ -82,7 +82,7 @@ public class HtmlConfiguration {
 
     /**
      * Sets the template directory.
-     * 
+     *
      * @param templateDir
      *            template directory
      */
@@ -92,8 +92,8 @@ public class HtmlConfiguration {
 
     /**
      * Gets the directory with additional web resources for the HTML generator.
-     * 
-     * @return
+     *
+     * @return web resource directory
      */
     public String getWebResourceDir() {
         return webResourceDir;
@@ -101,7 +101,7 @@ public class HtmlConfiguration {
 
     /**
      * Sets the web resource directory.
-     * 
+     *
      * @param webResourceDir
      *            web resource directory
      */

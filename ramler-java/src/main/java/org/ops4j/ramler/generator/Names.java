@@ -109,7 +109,13 @@ public class Names {
         return friendlyName;
     }
 
-    public static String buildConstantName(final String source) {
+    /**
+     * Builds a name for a constant, converting camel case to upper snake case.
+     * Example: {@code httpMethod -> HTTP_METHOD}.
+     * @param source any name
+     * @return upper case string with underscores as word separators
+     */
+    public static String buildConstantName(String source) {
         Matcher m = CAMEL_CASE_PATTERN.matcher(source);
 
         StringBuffer sb = new StringBuffer();

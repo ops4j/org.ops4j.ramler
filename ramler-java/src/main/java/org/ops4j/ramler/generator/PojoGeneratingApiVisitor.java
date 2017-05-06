@@ -237,7 +237,7 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         body._throw(JExpr._new(codeModel._ref(IllegalArgumentException.class)).arg(param));
     }
 
-   private void generateFieldAndAccessors(JDefinedClass klass, TypeDeclaration property) {
+    private void generateFieldAndAccessors(JDefinedClass klass, TypeDeclaration property) {
         if (property instanceof ObjectTypeDeclaration) {
             generateObjectFieldAndAccessors(klass, property);
         }

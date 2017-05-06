@@ -18,7 +18,8 @@
 package org.ops4j.ramler.model;
 
 /**
- * Model of complex enum annotation, used by Ramler to enrich and replace the simple enum facet of RAML.
+ * Model of complex {@code (enum)} annotation, used by Ramler to enrich and replace the simple
+ * {@code enum} facet of RAML.
  *
  * @author Harald Wellmann
  *
@@ -28,16 +29,33 @@ public class EnumValue {
     private String name;
     private String description;
 
-
+    /**
+     * Creates an enumeration value with the given name and the given description.
+     *
+     * @param name
+     *            value name
+     * @param description
+     *            textual description
+     */
     public EnumValue(String name, String description) {
         this.name = name;
         this.description = description;
     }
 
+    /**
+     * Gets the name of this value.
+     *
+     * @return name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Gets the description of this value.
+     *
+     * @return
+     */
     public String getDescription() {
         return description;
     }

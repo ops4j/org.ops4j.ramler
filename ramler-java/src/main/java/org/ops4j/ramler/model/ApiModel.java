@@ -204,7 +204,9 @@ public class ApiModel {
 
     /**
      * Gets the item type name of the given array type.
-     * @param type type declaration
+     *
+     * @param type
+     *            type declaration
      * @return item type, or null if type is not an array type
      */
     public String getItemType(TypeDeclaration type) {
@@ -345,6 +347,15 @@ public class ApiModel {
         return tip.values().stream().map(ti -> ti.value()).map(String.class::cast);
     }
 
+    /**
+     * Checks if the given type is an enumeration type. This is true if it has an {@code (enum)}
+     * annotation, or an {@code enum} facet. Note that the latter is specified by RAML, while the
+     * former is a Ramler extension.
+     *
+     * @param decl
+     *            type declaration
+     * @return true is type is an enumeration type
+     */
     public boolean isEnum(TypeDeclaration decl) {
         if (findEnumAnnotation(decl).isPresent()) {
             return true;
@@ -359,9 +370,17 @@ public class ApiModel {
     }
 
     private Optional<AnnotationRef> findEnumAnnotation(TypeDeclaration decl) {
-        return decl.annotations().stream().filter(a -> a.annotation().name().equals("enum")).findFirst();
+        return decl.annotations().stream().filter(a -> a.annotation().name().equals("enum"))
+            .findFirst();
     }
 
+    /**
+     * Returns the list of enumeration values of the given type declaration.
+     *
+     * @param decl
+     *            type declaration
+     * @return enumeration values
+     */
     public List<EnumValue> getEnumValues(TypeDeclaration decl) {
         Optional<AnnotationRef> annotationRef = findEnumAnnotation(decl);
         if (annotationRef.isPresent()) {
@@ -370,16 +389,28 @@ public class ApiModel {
             return valuesProperty.values().stream().map(this::toEnumValue).collect(toList());
         }
         else {
-            return ((StringTypeDeclaration) decl).enumValues().stream().map(e -> new EnumValue(e, null)).collect(toList());
+            if (decl instanceof StringTypeDeclaration) {
+                StringTypeDeclaration type = (StringTypeDeclaration) decl;
+                return type.enumValues().stream().map(e -> new EnumValue(e, null))
+                    .collect(toList());
+            }
+            return Collections.emptyList();
         }
     }
 
+    /**
+     * Returns the list of enumeration values of type with the given name.
+     *
+     * @param type
+     *            type name
+     * @return enumeration values, or null if no such type exists
+     */
     public List<EnumValue> findEnumValues(String typeName) {
         TypeDeclaration decl = getDeclaredType(typeName);
         if (decl instanceof StringTypeDeclaration) {
             return getEnumValues(decl);
         }
-        return null;
+        return Collections.emptyList();
     }
 
     private EnumValue toEnumValue(TypeInstance ti) {
@@ -390,7 +421,8 @@ public class ApiModel {
     }
 
     private Object getPropertyValue(TypeInstance ti, String propertyName) {
-        Optional<TypeInstanceProperty> tip = ti.properties().stream().filter(p -> p.name().equals(propertyName)).findFirst();
+        Optional<TypeInstanceProperty> tip = ti.properties().stream()
+            .filter(p -> p.name().equals(propertyName)).findFirst();
         if (tip.isPresent()) {
             return tip.get().value().value();
         }

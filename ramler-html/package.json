@@ -1,8 +1,8 @@
 {
     "name": "org.ops4j.ramler.html",
-    "version": "0.1.0",
+    "version": "0.4.0",
     "description": "Generates HTML documentation from RAML 1.0 specifications",
-    "repository": "https://github.com/hwellmann/org.ops4j.ramler",
+    "repository": "https://github.com/ops4j/org.ops4j.ramler",
     "license": "Apache-2.0",
     "devDependencies": {
         "grunt": "1.0.1",
