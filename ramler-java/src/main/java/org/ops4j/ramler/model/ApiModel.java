@@ -1,3 +1,20 @@
+/*
+ * Copyright 2016 OPS4J Contributors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied.
+ *
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.ops4j.ramler.model;
 
 import static java.util.stream.Collectors.toList;
@@ -23,6 +40,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.raml.v2.api.model.v08.parameters.NumberTypeDeclaration;
@@ -40,6 +58,7 @@ import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.StringTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.TimeOnlyTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
+import org.raml.v2.api.model.v10.datamodel.TypeInstance;
 import org.raml.v2.api.model.v10.datamodel.TypeInstanceProperty;
 import org.raml.v2.api.model.v10.datamodel.UnionTypeDeclaration;
 import org.raml.v2.api.model.v10.declarations.AnnotationRef;
@@ -324,5 +343,49 @@ public class ApiModel {
     private Stream<String> findAnnotationValues(AnnotationRef ref) {
         TypeInstanceProperty tip = ref.structuredValue().properties().get(0);
         return tip.values().stream().map(ti -> ti.value()).map(String.class::cast);
+    }
+
+    public boolean isEnum(TypeDeclaration decl) {
+        if (findEnumAnnotation(decl).isPresent()) {
+            return true;
+        }
+
+        if (decl instanceof StringTypeDeclaration) {
+            StringTypeDeclaration stringType = (StringTypeDeclaration) decl;
+            return !stringType.enumValues().isEmpty();
+        }
+
+        return false;
+    }
+
+    private Optional<AnnotationRef> findEnumAnnotation(TypeDeclaration decl) {
+        return decl.annotations().stream().filter(a -> a.annotation().name().equals("enum")).findFirst();
+    }
+
+    public List<EnumValue> getEnumValues(TypeDeclaration decl) {
+        Optional<AnnotationRef> annotationRef = findEnumAnnotation(decl);
+        if (annotationRef.isPresent()) {
+            TypeInstance annotationValue = annotationRef.get().structuredValue();
+            TypeInstanceProperty valuesProperty = annotationValue.properties().get(0);
+            return valuesProperty.values().stream().map(this::toEnumValue).collect(toList());
+        }
+        else {
+            return ((StringTypeDeclaration) decl).enumValues().stream().map(e -> new EnumValue(e, null)).collect(toList());
+        }
+    }
+
+    private EnumValue toEnumValue(TypeInstance ti) {
+        Object name = getPropertyValue(ti, "name");
+        Object description = getPropertyValue(ti, "description");
+
+        return new EnumValue((String) name, (String) description);
+    }
+
+    private Object getPropertyValue(TypeInstance ti, String propertyName) {
+        Optional<TypeInstanceProperty> tip = ti.properties().stream().filter(p -> p.name().equals(propertyName)).findFirst();
+        if (tip.isPresent()) {
+            return tip.get().value().value();
+        }
+        return null;
     }
 }

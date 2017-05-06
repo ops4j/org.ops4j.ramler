@@ -18,9 +18,10 @@
 package org.ops4j.ramler.generator;
 
 import static java.util.stream.Collectors.toList;
-import static org.hamcrest.CoreMatchers.hasItems;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.ops4j.ramler.model.Metatype.ARRAY;
@@ -33,6 +34,7 @@ import java.util.List;
 
 import org.junit.Test;
 import org.ops4j.ramler.model.ApiModel;
+import org.ops4j.ramler.model.EnumValue;
 import org.ops4j.ramler.model.Metatype;
 import org.raml.v2.api.RamlModelBuilder;
 import org.raml.v2.api.RamlModelResult;
@@ -53,6 +55,9 @@ public class ParserTest {
 
     private void parse(String simpleName) {
         RamlModelResult ramlModelResult = new RamlModelBuilder().buildApi("raml/" + simpleName);
+        if (ramlModelResult.hasErrors()) {
+            System.out.println(ramlModelResult.getValidationResults());
+        }
         assertFalse(ramlModelResult.hasErrors());
         Api api = ramlModelResult.getApiV10();
         apiModel = new ApiModel(api);
@@ -235,5 +240,39 @@ public class ParserTest {
 
         assertTypes(api.types().get(0), "PersonList",       "object",   "Person");
         assertTypes(api.types().get(1), "PersonArrayList",  "array",    "PersonArray");
+    }
+
+    @Test
+    public void shouldParseEnums() {
+        parse("enum.raml");
+
+        TypeDeclaration decl = apiModel.getDeclaredType("Colour");
+
+        AnnotationRef annotationRef = decl.annotations().stream().filter(a -> a.annotation().name().equals("enum")).findFirst().get();
+        TypeInstance typeInstance = annotationRef.structuredValue();
+        TypeInstanceProperty tip = typeInstance.properties().get(0);
+        assertThat(tip.values(), hasSize(2));
+        TypeInstance ti0 = tip.values().get(0);
+        assertThat(ti0.properties().size(), is(2));
+        assertThat(ti0.properties().get(0).name(), is("name"));
+        assertThat(ti0.properties().get(0).value().value(), is("lightBlue"));
+        assertThat(ti0.properties().get(1).name(), is("description"));
+        assertThat(ti0.properties().get(1).value().value(), is("Colour of the sky"));
+    }
+
+    @Test
+    public void shouldGetEnumValues() {
+        parse("enum.raml");
+
+        TypeDeclaration decl = apiModel.getDeclaredType("Colour");
+        assertThat(apiModel.isEnum(decl), is(true));
+
+        List<EnumValue> enumValues = apiModel.getEnumValues(decl);
+        assertThat(enumValues, hasSize(2));
+
+        assertThat(enumValues.get(0).getName(), is("lightBlue"));
+        assertThat(enumValues.get(0).getDescription(), is("Colour of the sky"));
+        assertThat(enumValues.get(1).getName(), is("red"));
+        assertThat(enumValues.get(1).getDescription(), is("Colour of tomatos"));
     }
 }

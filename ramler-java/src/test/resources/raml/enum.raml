@@ -1,0 +1,20 @@
+#%RAML 1.0
+title: API with Types
+mediaType: application/json
+annotationTypes:
+  enum:
+    properties:
+      values: _EnumValue[]
+types:
+  _EnumValue:
+    properties:
+      name: string
+      description: string
+  Colour:
+    type: string
+    (enum):
+      values:
+        - name: lightBlue
+          description: Colour of the sky
+        - name: red
+          description: Colour of tomatos

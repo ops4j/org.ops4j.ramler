@@ -23,6 +23,7 @@ import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 import org.ops4j.ramler.exc.Exceptions;
+import org.ops4j.ramler.model.EnumValue;
 import org.raml.v2.api.model.v10.datamodel.AnyTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.ArrayTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.BooleanTypeDeclaration;
@@ -43,6 +44,7 @@ import com.sun.codemodel.JClass;
 import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JEnumConstant;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JForEach;
@@ -171,7 +173,7 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
 
     @Override
     public void visitStringType(StringTypeDeclaration type) {
-        if (type.enumValues().isEmpty()) {
+        if (!context.getApiModel().isEnum(type)) {
             return;
         }
 
@@ -201,9 +203,15 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
     }
 
     private void generateEnumConstants(JDefinedClass klass, StringTypeDeclaration type) {
-        for (String enumValue : type.enumValues()) {
-            klass.enumConstant(Names.buildConstantName(enumValue))
-                .arg(JExpr.lit(enumValue));
+        context.getApiModel().getEnumValues(type).stream().forEach(e -> generateEnumConstant(klass, e));
+    }
+
+    private void generateEnumConstant(JDefinedClass klass, EnumValue enumValue) {
+        JEnumConstant constant = klass.enumConstant(Names.buildConstantName(enumValue.getName()))
+            .arg(JExpr.lit(enumValue.getName()));
+
+        if (enumValue.getDescription() != null) {
+            constant.javadoc().add(enumValue.getDescription());
         }
     }
 
