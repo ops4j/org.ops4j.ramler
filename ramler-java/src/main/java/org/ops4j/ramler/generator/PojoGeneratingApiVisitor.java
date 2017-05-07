@@ -17,6 +17,8 @@
  */
 package org.ops4j.ramler.generator;
 
+import static org.ops4j.ramler.generator.Constants.*;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.function.UnaryOperator;
@@ -100,10 +102,10 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
     }
 
     private void addBaseClass(JDefinedClass klass, ObjectTypeDeclaration type) {
-        if (!type.type().equals("object")) {
+        if (!type.type().equals(OBJECT)) {
             JClass baseClass = pkg._getClass(type.type());
 
-            List<String> typeArgs = context.getApiModel().getStringAnnotations(type, "typeArgs");
+            List<String> typeArgs = context.getApiModel().getStringAnnotations(type, TYPE_ARGS);
             if (!typeArgs.isEmpty()) {
                 baseClass = baseClass
                     .narrow(typeArgs.stream().map(pkg::_getClass).toArray(JClass[]::new));
@@ -122,7 +124,7 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         }
 
         JFieldVar field = klass.field(JMod.PUBLIC | JMod.STATIC | JMod.FINAL,
-            codeModel._ref(String.class), "DISCRIMINATOR");
+            codeModel._ref(String.class), DISCRIMINATOR);
         field.init(JExpr.lit(discriminatorValue));
 
         if (context.getConfig().isDiscriminatorMutable()) {
@@ -151,16 +153,16 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         typeInfo.param("property", type.discriminator());
 
         JAnnotationUse subTypes = klass.annotate(JsonSubTypes.class);
-        JAnnotationArrayMember typeArray = subTypes.paramArray("value");
+        JAnnotationArrayMember typeArray = subTypes.paramArray(VALUE);
 
         for (String derivedType : derivedTypes) {
             JDefinedClass subtype = pkg._getClass(derivedType);
-            typeArray.annotate(Type.class).param("value", subtype);
+            typeArray.annotate(Type.class).param(VALUE, subtype);
         }
     }
 
     private void addTypeParameters(JDefinedClass klass, ObjectTypeDeclaration type) {
-        List<String> typeVars = context.getApiModel().getStringAnnotations(type, "typeVars");
+        List<String> typeVars = context.getApiModel().getStringAnnotations(type, TYPE_VARS);
         typeVars.forEach(klass::generify);
     }
 
@@ -180,7 +182,7 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
     }
 
     private boolean isInherited(ObjectTypeDeclaration type, TypeDeclaration property) {
-        if (type.type().equals("object")) {
+        if (type.type().equals(OBJECT)) {
             return false;
         }
         JDefinedClass baseClass = pkg._getClass(type.type());
@@ -243,7 +245,7 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         String fieldName = property.name();
 
         JType jtype = findTypeVar(klass, property).orElse(context.getJavaType(property));
-        List<String> args = context.getApiModel().getStringAnnotations(property, "typeArgs");
+        List<String> args = context.getApiModel().getStringAnnotations(property, TYPE_ARGS);
         if (!args.isEmpty()) {
             JClass jclass = (JClass) jtype;
             for (String arg : args) {
@@ -307,7 +309,7 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         String property) {
         JMethod getter = klass.method(JMod.PUBLIC, codeModel._ref(String.class),
             getGetterName(property));
-        getter.body()._return(klass.staticRef("DISCRIMINATOR"));
+        getter.body()._return(klass.staticRef(DISCRIMINATOR));
         if (type.description() != null) {
             getter.javadoc().add(type.description().value());
         }

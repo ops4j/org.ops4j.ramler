@@ -20,7 +20,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 
 import javax.ws.rs.DELETE;
@@ -54,13 +53,36 @@ public class Constants {
     public static final List<Class<? extends Annotation>> JAXRS_HTTP_METHODS = Arrays
         .asList(DELETE.class, GET.class, HEAD.class, OPTIONS.class, POST.class, PUT.class);
 
-    /** Constant <code>DEFAULT_LOCALE</code> */
-    public static final Locale DEFAULT_LOCALE = Locale.ENGLISH;
-
     /**
      * Name of value property of annotation types.
      */
     public static final String VALUE = "value";
+
+    /**
+     * Name of Ramler {@code typeArgs} annotation.
+     */
+    public static final String TYPE_ARGS = "typeArgs";
+
+    /**
+     * Name of Ramler {@code typeVar} annotation.
+     */
+    public static final String TYPE_VAR = "typeVar";
+
+    /**
+     * Name of Ramler {@code typeVars} annotation.
+     */
+    public static final String TYPE_VARS = "typeVars";
+
+    /**
+     * Name of discriminator field in generated POJOs.
+     */
+    public static final String DISCRIMINATOR = "DISCRIMINATOR";
+
+
+    /**
+     * Name of built-in RAML object type.
+     */
+    public static final String OBJECT = "object";
 
     private Constants() {
         throw new UnsupportedOperationException();
