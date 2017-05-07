@@ -35,7 +35,7 @@ import static org.ops4j.ramler.model.Metatype.UNION;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import static java.util.Collections.*;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -109,8 +109,7 @@ public class ApiModel {
         for (TypeDeclaration type : api.types()) {
             if (type instanceof ObjectTypeDeclaration && !type.type().equals("object")) {
                 String baseTypeName = type.type();
-                derivedTypes.merge(baseTypeName, Collections.singletonList(type.name()),
-                    this::join);
+                derivedTypes.merge(baseTypeName, singletonList(type.name()), this::join);
             }
         }
     }
@@ -130,7 +129,7 @@ public class ApiModel {
      */
     public List<String> findDerivedTypes(String typeName) {
         List<String> derived = derivedTypes.get(typeName);
-        return derived == null ? Collections.emptyList() : derived;
+        return derived == null ? emptyList() : derived;
     }
 
     /**
@@ -330,13 +329,13 @@ public class ApiModel {
      *
      * @param decl
      *            type declaration
-     * @param annotationName
+     * @param name
      *            name of annotation with value type {@code string[]}
      * @return list of annotation values (never null)
      */
-    public List<String> getStringAnnotations(TypeDeclaration decl, String annotationName) {
-        return decl.annotations().stream().filter(a -> a.annotation().name().equals(annotationName))
-            .flatMap(a -> findStringAnnotationValues(a)).collect(toList());
+    public List<String> getStringAnnotations(TypeDeclaration decl, String name) {
+        return annotationsByName(decl, name).flatMap(a -> findStringAnnotationValues(a))
+            .collect(toList());
     }
 
     private Stream<String> findStringAnnotationValues(AnnotationRef ref) {
@@ -367,8 +366,11 @@ public class ApiModel {
     }
 
     private Optional<AnnotationRef> findEnumAnnotation(TypeDeclaration decl) {
-        return decl.annotations().stream().filter(a -> a.annotation().name().equals("enum"))
-            .findFirst();
+        return annotationsByName(decl, "enum").findFirst();
+    }
+
+    private Stream<AnnotationRef> annotationsByName(TypeDeclaration decl, String name) {
+        return decl.annotations().stream().filter(a -> a.annotation().name().equals(name));
     }
 
     /**
@@ -391,7 +393,7 @@ public class ApiModel {
                 return type.enumValues().stream().map(e -> new EnumValue(e, null))
                     .collect(toList());
             }
-            return Collections.emptyList();
+            return emptyList();
         }
     }
 
@@ -407,7 +409,7 @@ public class ApiModel {
         if (decl instanceof StringTypeDeclaration) {
             return getEnumValues(decl);
         }
-        return Collections.emptyList();
+        return emptyList();
     }
 
     private EnumValue toEnumValue(TypeInstance ti) {
@@ -418,11 +420,7 @@ public class ApiModel {
     }
 
     private Object getPropertyValue(TypeInstance ti, String propertyName) {
-        Optional<TypeInstanceProperty> tip = ti.properties().stream()
-            .filter(p -> p.name().equals(propertyName)).findFirst();
-        if (tip.isPresent()) {
-            return tip.get().value().value();
-        }
-        return null;
+        return ti.properties().stream().filter(p -> p.name().equals(propertyName))
+            .map(t -> t.value().value()).findFirst().orElse(null);
     }
 }
