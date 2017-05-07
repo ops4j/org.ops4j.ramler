@@ -17,7 +17,11 @@
  */
 package org.ops4j.ramler.generator;
 
-import static org.ops4j.ramler.generator.Constants.*;
+import static org.ops4j.ramler.generator.Constants.DISCRIMINATOR;
+import static org.ops4j.ramler.generator.Constants.OBJECT;
+import static org.ops4j.ramler.generator.Constants.TYPE_ARGS;
+import static org.ops4j.ramler.generator.Constants.TYPE_VARS;
+import static org.ops4j.ramler.generator.Constants.VALUE;
 
 import java.util.List;
 import java.util.Optional;

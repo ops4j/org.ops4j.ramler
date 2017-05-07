@@ -17,6 +17,8 @@
  */
 package org.ops4j.ramler.generator;
 
+import static org.ops4j.ramler.generator.Constants.VALUE;
+
 import org.ops4j.ramler.exc.Exceptions;
 import org.ops4j.ramler.model.EnumValue;
 import org.raml.v2.api.model.v10.datamodel.StringTypeDeclaration;
@@ -60,10 +62,14 @@ public class EnumGenerator {
         this.pkg = context.getModelPackage();
     }
 
+    /**
+     * Genererates an enum class for the given type.
+     * @param type enumeration type declaration
+     */
     public void generateEnumClass(StringTypeDeclaration type) {
         JDefinedClass klass = createEnumClass(type);
         generateEnumConstants(klass, type);
-        JFieldVar valueField = klass.field(JMod.PRIVATE | JMod.FINAL, String.class, "value");
+        JFieldVar valueField = klass.field(JMod.PRIVATE | JMod.FINAL, String.class, VALUE);
 
         generateEnumConstructor(klass, valueField);
         generateEnumValueMethod(klass, valueField);
@@ -98,18 +104,18 @@ public class EnumGenerator {
 
     private void generateEnumConstructor(JDefinedClass klass, JFieldVar valueField) {
         JMethod constructor = klass.constructor(JMod.PRIVATE);
-        JVar p1 = constructor.param(String.class, "value");
+        JVar p1 = constructor.param(String.class, VALUE);
         constructor.body().assign(JExpr._this().ref(valueField), p1);
     }
 
     private void generateEnumValueMethod(JDefinedClass klass, JFieldVar valueField) {
-        JMethod getter = klass.method(JMod.PUBLIC, codeModel._ref(String.class), "value");
+        JMethod getter = klass.method(JMod.PUBLIC, codeModel._ref(String.class), VALUE);
         getter.body()._return(valueField);
     }
 
     private void generateEnumFromValueMethod(JDefinedClass klass, JFieldVar valueField) {
         JMethod converter = klass.method(JMod.PUBLIC | JMod.STATIC, klass, "fromValue");
-        JVar param = converter.param(String.class, "value");
+        JVar param = converter.param(String.class, VALUE);
         JBlock body = converter.body();
         JForEach forEach = body.forEach(klass, "v", klass.staticInvoke("values"));
         JBlock loopBlock = forEach.body();

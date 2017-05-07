@@ -17,6 +17,8 @@
  */
 package org.ops4j.ramler.model;
 
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.ops4j.ramler.model.Metatype.ANY;
 import static org.ops4j.ramler.model.Metatype.ARRAY;
@@ -35,7 +37,6 @@ import static org.ops4j.ramler.model.Metatype.UNION;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import static java.util.Collections.*;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -43,6 +44,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import org.ops4j.ramler.generator.Constants;
 import org.raml.v2.api.model.v08.parameters.NumberTypeDeclaration;
 import org.raml.v2.api.model.v10.api.Api;
 import org.raml.v2.api.model.v10.datamodel.AnyTypeDeclaration;
@@ -107,7 +109,7 @@ public class ApiModel {
 
     private void mapDerivedTypes() {
         for (TypeDeclaration type : api.types()) {
-            if (type instanceof ObjectTypeDeclaration && !type.type().equals(OBJECT)) {
+            if (type instanceof ObjectTypeDeclaration && !type.type().equals(Constants.OBJECT)) {
                 String baseTypeName = type.type();
                 derivedTypes.merge(baseTypeName, singletonList(type.name()), this::join);
             }
