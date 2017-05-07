@@ -100,6 +100,7 @@ public class TemplateEngine {
                     StandardCharsets.UTF_8.name())
                 .addTemplateLocator(genericLocator)
                 .registerHelper(ExampleHelper.NAME, new ExampleHelper())
+                .registerHelper(TypeLinkHelper.NAME, new TypeLinkHelper())
                 .registerHelpers(HelpersBuilder.builtin().addInclude().addInvoke().addSet()
                     .addSwitch().addWith().build())
                 .addGlobalData(MarkdownLambda.NAME, new MarkdownLambda())
