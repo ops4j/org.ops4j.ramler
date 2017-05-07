@@ -54,6 +54,9 @@ public abstract class AbstractJavaMojo extends AbstractMojo {
     @Parameter(defaultValue = "Resource")
     private String interfaceNameSuffix;
 
+    @Parameter(defaultValue = "false")
+    private boolean jacksonTypeInfo;
+
     @Parameter(readonly = true, defaultValue = "${project}")
     protected MavenProject project;
 
@@ -73,6 +76,7 @@ public abstract class AbstractJavaMojo extends AbstractMojo {
             config.setTargetDir(getOutputDir());
             config.setDiscriminatorMutable(discriminatorMutable);
             config.setInterfaceNameSuffix(interfaceNameSuffix);
+            config.setJacksonTypeInfo(jacksonTypeInfo);
 
             Generator generator = new Generator(config);
             generator.generate();

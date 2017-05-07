@@ -135,6 +135,9 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
     }
 
     private void addJsonTypeInfo(JDefinedClass klass, ObjectTypeDeclaration type) {
+        if (!context.getConfig().isJacksonTypeInfo()) {
+            return;
+        }
         if (type.discriminator() == null) {
             return;
         }

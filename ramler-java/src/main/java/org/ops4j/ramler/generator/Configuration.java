@@ -42,6 +42,8 @@ public class Configuration {
 
     private boolean discriminatorMutable;
 
+    private boolean jacksonTypeInfo;
+
     /**
      * Gets the name of the base package for all subpackages created by the code generator.
      *
@@ -179,5 +181,15 @@ public class Configuration {
 
     public void setDiscriminatorMutable(boolean discriminatorMutable) {
         this.discriminatorMutable = discriminatorMutable;
+    }
+
+
+    public boolean isJacksonTypeInfo() {
+        return jacksonTypeInfo;
+    }
+
+
+    public void setJacksonTypeInfo(boolean jacksonTypeInfo) {
+        this.jacksonTypeInfo = jacksonTypeInfo;
     }
 }
