@@ -41,6 +41,7 @@
                 <configuration>
                     <package>org.ops4j.ramler.itest</package>
                     <model>${basedir}/src/test/resources/raml/inheritance.raml</model>
+                    <jacksonTypeInfo>true</jacksonTypeInfo>
                 </configuration>
                 <executions>
                     <execution>

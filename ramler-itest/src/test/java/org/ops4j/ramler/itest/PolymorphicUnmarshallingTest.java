@@ -49,7 +49,6 @@ public class PolymorphicUnmarshallingTest {
         ObjectMapper mapper = new ObjectMapper();
         mapper.writer().writeValue(sw, person);
         String json = sw.toString();
-        System.out.println(json);
 
         Person p = mapper.readerFor(Person.class).readValue(json);
         assertThat(p, instanceOf(Person.class));
@@ -71,7 +70,6 @@ public class PolymorphicUnmarshallingTest {
         ObjectMapper mapper = new ObjectMapper();
         mapper.writer().writeValue(sw, person);
         String json = sw.toString();
-        System.out.println(json);
 
         Person p = mapper.readValue(json, Person.class);
         assertThat(p, instanceOf(Employee.class));
@@ -96,7 +94,6 @@ public class PolymorphicUnmarshallingTest {
         ObjectMapper mapper = new ObjectMapper();
         mapper.writer().writeValue(sw, person);
         String json = sw.toString();
-        System.out.println(json);
 
         Person p = mapper.readValue(json, Person.class);
         assertThat(p, instanceOf(Manager.class));
