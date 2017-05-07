@@ -1,18 +1,12 @@
 #%RAML 1.0
 title: API with Types
 mediaType: application/json
-annotationTypes:
-  enum:
-    properties:
-      values: _EnumValue[]
+uses:
+  g: ../ramler.raml
 types:
-  _EnumValue:
-    properties:
-      name: string
-      description: string
   Colour:
     type: string
-    (enum):
+    (g.enum):
       values:
         - name: lightBlue
           description: Colour of the sky

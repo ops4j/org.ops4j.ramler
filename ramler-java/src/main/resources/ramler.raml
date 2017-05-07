@@ -3,6 +3,16 @@ usage: |
   Annotations for Java code generators to create Java generics from
   annotated RAML types.
 annotationTypes:
+  enum:
+    properties:
+      values: _EnumValue[]
+  internal:
+    type: nil
+    displayName: Internal type
+    allowedTargets: TypeDeclaration
+    description: |
+      Denotes a type reserved for internal use by Ramler. No code or documentation
+      will be generated from internal types.
   typeVar:
     displayName: Type variable
     type: string
@@ -57,3 +67,9 @@ annotationTypes:
 
          }
       ```
+types:
+  _EnumValue:
+    (internal):
+    properties:
+      name: string
+      description: string

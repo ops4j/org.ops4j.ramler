@@ -82,6 +82,9 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
 
     @Override
     public void visitObjectTypeStart(ObjectTypeDeclaration type) {
+        if (context.getApiModel().isInternal(type)) {
+            return;
+        }
         JDefinedClass klass = pkg._getClass(type.name());
         addJavadoc(klass, type);
         addTypeParameters(klass, type);
@@ -163,6 +166,9 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
 
     @Override
     public void visitObjectTypeProperty(ObjectTypeDeclaration type, TypeDeclaration property) {
+        if (context.getApiModel().isInternal(type)) {
+            return;
+        }
         JDefinedClass klass = pkg._getClass(type.name());
         if (!context.getConfig().isDiscriminatorMutable()
             && property.name().equals(type.discriminator())) {

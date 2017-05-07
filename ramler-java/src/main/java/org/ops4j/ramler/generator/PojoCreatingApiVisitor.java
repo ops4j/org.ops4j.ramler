@@ -52,6 +52,9 @@ public class PojoCreatingApiVisitor implements ApiVisitor {
 
     @Override
     public void visitObjectTypeStart(ObjectTypeDeclaration type) {
+        if (context.getApiModel().isInternal(type)) {
+            return;
+        }
         try {
             JDefinedClass klass = pkg._class(type.name());
             context.addType(type.type(), klass);

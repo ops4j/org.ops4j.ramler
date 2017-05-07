@@ -18,7 +18,6 @@
 package org.ops4j.ramler.generator;
 
 import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
@@ -52,7 +51,7 @@ public class EnumTest {
     @BeforeClass
     public static void shouldGenerateArrays() {
         Configuration config = new Configuration();
-        config.setSourceFile("src/test/resources/raml/enum.raml");
+        config.setSourceFile("raml/enum.raml");
         config.setBasePackage("org.ops4j.raml.enums");
         config.setTargetDir(new File("target/generated/raml"));
 
@@ -67,7 +66,7 @@ public class EnumTest {
     public void shouldFindModelClasses() {
         Set<String> classNames = new HashSet<>();
         modelPackage.classes().forEachRemaining(c -> classNames.add(c.name()));
-        assertThat(classNames, containsInAnyOrder("_EnumValue", "Colour"));
+        assertThat(classNames, contains("Colour"));
     }
 
     @SuppressWarnings("unchecked")

@@ -423,4 +423,16 @@ public class ApiModel {
         return ti.properties().stream().filter(p -> p.name().equals(propertyName))
             .map(t -> t.value().value()).findFirst().orElse(null);
     }
+
+    /**
+     * Checks if the given type is annotated with {@code (internal)}. No code or documentation will
+     * be generated for internal types.
+     *
+     * @param type
+     *            type declaration
+     * @return true if type is internal
+     */
+    public boolean isInternal(ObjectTypeDeclaration type) {
+        return annotationsByName(type, "internal").findFirst().isPresent();
+    }
 }
