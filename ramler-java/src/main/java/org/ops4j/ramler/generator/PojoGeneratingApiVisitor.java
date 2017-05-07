@@ -22,8 +22,6 @@ import java.util.Optional;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
-import org.ops4j.ramler.exc.Exceptions;
-import org.ops4j.ramler.model.EnumValue;
 import org.raml.v2.api.model.v10.datamodel.AnyTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.ArrayTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.BooleanTypeDeclaration;
@@ -39,15 +37,11 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.sun.codemodel.JAnnotationArrayMember;
 import com.sun.codemodel.JAnnotationUse;
-import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
-import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JEnumConstant;
 import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JForEach;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JPackage;
@@ -68,6 +62,8 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
 
     private JPackage pkg;
 
+    private EnumGenerator enumGenerator;
+
     /**
      * Creates a visitor for the given generator context.
      *
@@ -78,6 +74,7 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         this.context = context;
         this.codeModel = context.getCodeModel();
         this.pkg = context.getModelPackage();
+        this.enumGenerator = new EnumGenerator(context);
     }
 
     @Override
@@ -193,65 +190,7 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
             return;
         }
 
-        generateEnumClass(type);
-    }
-
-    private void generateEnumClass(StringTypeDeclaration type) {
-        JDefinedClass klass = createEnumClass(type);
-        generateEnumConstants(klass, type);
-        JFieldVar valueField = klass.field(JMod.PRIVATE | JMod.FINAL, String.class, "value");
-
-        generateEnumConstructor(klass, valueField);
-        generateEnumValueMethod(klass, valueField);
-        generateEnumFromValueMethod(klass, valueField);
-    }
-
-    private JDefinedClass createEnumClass(StringTypeDeclaration type) {
-        try {
-            JDefinedClass klass = pkg._enum(type.name());
-            context.addType(type.name(), klass);
-            context.annotateAsGenerated(klass);
-            return klass;
-        }
-        catch (JClassAlreadyExistsException exc) {
-            throw Exceptions.unchecked(exc);
-        }
-    }
-
-    private void generateEnumConstants(JDefinedClass klass, StringTypeDeclaration type) {
-        context.getApiModel().getEnumValues(type).stream()
-            .forEach(e -> generateEnumConstant(klass, e));
-    }
-
-    private void generateEnumConstant(JDefinedClass klass, EnumValue enumValue) {
-        JEnumConstant constant = klass.enumConstant(Names.buildConstantName(enumValue.getName()))
-            .arg(JExpr.lit(enumValue.getName()));
-
-        if (enumValue.getDescription() != null) {
-            constant.javadoc().add(enumValue.getDescription());
-        }
-    }
-
-    private void generateEnumConstructor(JDefinedClass klass, JFieldVar valueField) {
-        JMethod constructor = klass.constructor(JMod.PRIVATE);
-        JVar p1 = constructor.param(String.class, "value");
-        constructor.body().assign(JExpr._this().ref(valueField), p1);
-    }
-
-    private void generateEnumValueMethod(JDefinedClass klass, JFieldVar valueField) {
-        JMethod getter = klass.method(JMod.PUBLIC, codeModel._ref(String.class), "value");
-        getter.body()._return(valueField);
-    }
-
-    private void generateEnumFromValueMethod(JDefinedClass klass, JFieldVar valueField) {
-        JMethod converter = klass.method(JMod.PUBLIC | JMod.STATIC, klass, "fromValue");
-        JVar param = converter.param(String.class, "value");
-        JBlock body = converter.body();
-        JForEach forEach = body.forEach(klass, "v", klass.staticInvoke("values"));
-        JBlock loopBlock = forEach.body();
-        loopBlock._if(forEach.var().ref(valueField).invoke("equals").arg(param))._then()
-            ._return(forEach.var());
-        body._throw(JExpr._new(codeModel._ref(IllegalArgumentException.class)).arg(param));
+        enumGenerator.generateEnumClass(type);
     }
 
     private void generateFieldAndAccessors(JDefinedClass klass, TypeDeclaration property) {
