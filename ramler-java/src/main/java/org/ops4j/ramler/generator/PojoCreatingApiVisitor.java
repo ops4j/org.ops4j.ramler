@@ -19,6 +19,7 @@ package org.ops4j.ramler.generator;
 
 import org.ops4j.ramler.exc.Exceptions;
 import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;
+import org.raml.v2.api.model.v10.datamodel.StringTypeDeclaration;
 
 import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JDefinedClass;
@@ -39,6 +40,8 @@ public class PojoCreatingApiVisitor implements ApiVisitor {
 
     private JPackage pkg;
 
+    private EnumGenerator enumGenerator;
+
     /**
      * Creates a visitor for the given generator context.
      *
@@ -48,6 +51,7 @@ public class PojoCreatingApiVisitor implements ApiVisitor {
     public PojoCreatingApiVisitor(GeneratorContext context) {
         this.context = context;
         this.pkg = context.getModelPackage();
+        this.enumGenerator = new EnumGenerator(context);
     }
 
     @Override
@@ -63,5 +67,10 @@ public class PojoCreatingApiVisitor implements ApiVisitor {
         catch (JClassAlreadyExistsException exc) {
             throw Exceptions.unchecked(exc);
         }
+    }
+
+    @Override
+    public void visitStringType(StringTypeDeclaration type) {
+        enumGenerator.createEnumClass(type);
     }
 }

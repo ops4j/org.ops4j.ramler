@@ -67,7 +67,7 @@ public class EnumGenerator {
      * @param type enumeration type declaration
      */
     public void generateEnumClass(StringTypeDeclaration type) {
-        JDefinedClass klass = createEnumClass(type);
+        JDefinedClass klass = pkg._getClass(type.name());
         generateEnumConstants(klass, type);
         JFieldVar valueField = klass.field(JMod.PRIVATE | JMod.FINAL, String.class, VALUE);
 
@@ -76,7 +76,7 @@ public class EnumGenerator {
         generateEnumFromValueMethod(klass, valueField);
     }
 
-    private JDefinedClass createEnumClass(StringTypeDeclaration type) {
+    public JDefinedClass createEnumClass(StringTypeDeclaration type) {
         try {
             JDefinedClass klass = pkg._enum(type.name());
             context.addType(type.name(), klass);
