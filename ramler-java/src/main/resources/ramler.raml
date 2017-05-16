@@ -3,6 +3,13 @@ usage: |
   Annotations for Java code generators to create Java generics from
   annotated RAML types.
 annotationTypes:
+  codeName:
+    displayName: Code name
+    type: string
+    description: |
+      Defines the name for a method or resource to be used in generated code. This name may
+      differ from the display name, which is intended for the human reader and for generated
+      documentation.
   enum:
     properties:
       values: _EnumValue[]

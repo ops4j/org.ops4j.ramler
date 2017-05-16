@@ -134,6 +134,19 @@ public class ParserTest {
     }
 
     @Test
+    public void shouldParseSimpleAnnotation() {
+        parse("generic.raml");
+
+        ObjectTypeDeclaration animal = (ObjectTypeDeclaration) apiModel.getDeclaredType("Animal");
+        assertThat(animal.annotations().size(), is(1));
+        AnnotationRef note = animal.annotations().get(0);
+        assertThat(note.annotation().name(), is("note"));
+        TypeInstance sv = note.structuredValue();
+        assertThat(sv.isScalar(), is(true));
+        assertThat(sv.value(), is("This is a note"));
+    }
+
+    @Test
     public void shouldParseObject() {
         parse("bracketArray.raml");
         Api api = apiModel.getApi();

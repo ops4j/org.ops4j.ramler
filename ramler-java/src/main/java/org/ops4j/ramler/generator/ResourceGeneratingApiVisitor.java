@@ -39,6 +39,7 @@ import javax.ws.rs.core.MediaType;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.ops4j.ramler.exc.Exceptions;
+import org.ops4j.ramler.model.Annotations;
 import org.raml.v2.api.model.v10.api.Api;
 import org.raml.v2.api.model.v10.bodies.Response;
 import org.raml.v2.api.model.v10.datamodel.FileTypeDeclaration;
@@ -173,7 +174,7 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
 
     @Override
     public void visitMethodStart(Method method) {
-        String methodName = Names.buildVariableName(method.displayName().value());
+        String methodName = buildMethodName(method);
         JMethod codeMethod = klass.method(JMod.NONE, klass, methodName);
 
         addJavadoc(method, codeMethod);
@@ -183,6 +184,17 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
         addPathParameters(method, codeMethod);
         addQueryParameters(method, codeMethod);
         addReturnType(method, codeMethod);
+    }
+
+    private String buildMethodName(Method method) {
+        String name = Annotations.findCodeName(method);
+        if (name == null) {
+            name = method.displayName().value();
+        }
+        if (name == null) {
+            name = method.method();
+        }
+        return Names.buildVariableName(name);
     }
 
     private void addSubresourcePath(JMethod codeMethod) {
@@ -220,7 +232,7 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
 
     private JType addTypeArguments(JType resultType, TypeDeclaration body) {
         JType narrowedResultType = resultType;
-        List<String> args = context.getApiModel().getStringAnnotations(body, "typeArgs");
+        List<String> args = Annotations.getStringAnnotations(body, "typeArgs");
         if (!args.isEmpty()) {
             JClass jclass = (JClass) resultType;
             for (String arg : args) {

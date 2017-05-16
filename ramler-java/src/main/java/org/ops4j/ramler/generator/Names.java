@@ -25,6 +25,7 @@ import static org.apache.commons.lang.math.NumberUtils.isDigits;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.ops4j.ramler.model.Annotations;
 import org.raml.v2.api.model.v10.resources.Resource;
 
 /**
@@ -63,7 +64,7 @@ public class Names {
      * @return a {@link java.lang.String} object.
      */
     public static String buildResourceInterfaceName(final Resource resource, Configuration config) {
-        String rawName = defaultIfBlank(resource.displayName().value(),
+        String rawName = defaultIfBlank(Annotations.findCodeName(resource),
             resource.relativeUri().value());
         String resourceInterfaceName = buildJavaFriendlyName(rawName);
 

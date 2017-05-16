@@ -28,6 +28,7 @@ import java.util.Optional;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
+import org.ops4j.ramler.model.Annotations;
 import org.raml.v2.api.model.v10.datamodel.AnyTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.ArrayTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.BooleanTypeDeclaration;
@@ -109,13 +110,21 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         if (!type.type().equals(OBJECT)) {
             JClass baseClass = pkg._getClass(type.type());
 
-            List<String> typeArgs = context.getApiModel().getStringAnnotations(type, TYPE_ARGS);
+            List<String> typeArgs = Annotations.getStringAnnotations(type, TYPE_ARGS);
             if (!typeArgs.isEmpty()) {
                 baseClass = baseClass
-                    .narrow(typeArgs.stream().map(pkg::_getClass).toArray(JClass[]::new));
+                    .narrow(typeArgs.stream().map(this::toJavaClass).toArray(JClass[]::new));
             }
             klass._extends(baseClass);
         }
+    }
+
+    private JClass toJavaClass(String typeName) {
+        JType javaType = context.getJavaType(typeName);
+        if (javaType instanceof JClass) {
+            return (JClass) javaType;
+        }
+        throw new IllegalArgumentException("no class for " + typeName);
     }
 
     private void addDiscriminator(JDefinedClass klass, ObjectTypeDeclaration type) {
@@ -166,7 +175,7 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
     }
 
     private void addTypeParameters(JDefinedClass klass, ObjectTypeDeclaration type) {
-        List<String> typeVars = context.getApiModel().getStringAnnotations(type, TYPE_VARS);
+        List<String> typeVars = Annotations.getStringAnnotations(type, TYPE_VARS);
         typeVars.forEach(klass::generify);
     }
 
@@ -247,7 +256,7 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         String fieldName = property.name();
 
         JType jtype = findTypeVar(klass, property).orElse(context.getJavaType(property));
-        List<String> args = context.getApiModel().getStringAnnotations(property, TYPE_ARGS);
+        List<String> args = Annotations.getStringAnnotations(property, TYPE_ARGS);
         if (!args.isEmpty()) {
             JClass jclass = (JClass) jtype;
             for (String arg : args) {

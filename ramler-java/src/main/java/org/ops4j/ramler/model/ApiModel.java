@@ -42,7 +42,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import org.ops4j.ramler.generator.Constants;
 import org.raml.v2.api.model.v08.parameters.NumberTypeDeclaration;
@@ -327,25 +326,6 @@ public class ApiModel {
     }
 
     /**
-     * Gets the value list of a string valued annotation of a given name on the given type.
-     *
-     * @param decl
-     *            type declaration
-     * @param name
-     *            name of annotation with value type {@code string[]}
-     * @return list of annotation values (never null)
-     */
-    public List<String> getStringAnnotations(TypeDeclaration decl, String name) {
-        return annotationsByName(decl, name).flatMap(a -> findStringAnnotationValues(a))
-            .collect(toList());
-    }
-
-    private Stream<String> findStringAnnotationValues(AnnotationRef ref) {
-        TypeInstanceProperty tip = ref.structuredValue().properties().get(0);
-        return tip.values().stream().map(ti -> ti.value()).map(String.class::cast);
-    }
-
-    /**
      * Checks if the given type is an enumeration type. This is true if it has an {@code (enum)}
      * annotation, or an {@code enum} facet. Note that the latter is specified by RAML, while the
      * former is a Ramler extension.
@@ -368,11 +348,7 @@ public class ApiModel {
     }
 
     private Optional<AnnotationRef> findEnumAnnotation(TypeDeclaration decl) {
-        return annotationsByName(decl, "enum").findFirst();
-    }
-
-    private Stream<AnnotationRef> annotationsByName(TypeDeclaration decl, String name) {
-        return decl.annotations().stream().filter(a -> a.annotation().name().equals(name));
+        return Annotations.annotationsByName(decl, "enum").findFirst();
     }
 
     /**
@@ -413,7 +389,6 @@ public class ApiModel {
         }
         return emptyList();
     }
-
     private EnumValue toEnumValue(TypeInstance ti) {
         Object name = getPropertyValue(ti, "name");
         Object description = getPropertyValue(ti, "description");
@@ -435,6 +410,6 @@ public class ApiModel {
      * @return true if type is internal
      */
     public boolean isInternal(ObjectTypeDeclaration type) {
-        return annotationsByName(type, "internal").findFirst().isPresent();
+        return Annotations.annotationsByName(type, "internal").findFirst().isPresent();
     }
 }

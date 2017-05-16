@@ -7,6 +7,7 @@ uses:
   g: ../ramler.raml
 annotationTypes:
   notes:  string[]
+  note: string
 types:
   Status:
     properties:
@@ -38,6 +39,7 @@ types:
       status: Status
       success: boolean
   Animal:
+    (note): This is a note
     properties:
       species: string
       numLegs: integer
@@ -61,4 +63,3 @@ types:
     properties:
       result:
         type: Animal
-       

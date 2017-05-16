@@ -55,7 +55,7 @@ public class ParameterizedTest {
     @BeforeClass
     public static void shouldGenerateArrays() {
         String input = "raml/parameterized.raml";
-        
+
         Configuration config = new Configuration();
         config.setSourceFile(input);
         config.setBasePackage("org.ops4j.raml.generic");
@@ -67,15 +67,15 @@ public class ParameterizedTest {
         codeModel = generator.getContext().getCodeModel();
         modelPackage = codeModel._package("org.ops4j.raml.generic.model");
     }
-    
+
     @Test
     public void shouldFindModelClasses() {
         Set<String> classNames = new HashSet<>();
         modelPackage.classes().forEachRemaining(c -> classNames.add(c.name()));
-        assertThat(classNames, containsInAnyOrder("Animal", "AnimalResponse", "ListResult", "Person", 
-            "Response", "Result", "Status"));
+        assertThat(classNames, containsInAnyOrder("Animal", "AnimalResponse", "IntegerResponse", "ListResult", "Person",
+            "Response", "Result", "Status", "StringResponse"));
     }
-    
+
     @Test
     public void shouldFindResultMembers() {
         expectClass("Result", "T");
@@ -103,9 +103,9 @@ public class ParameterizedTest {
     private void expectClass(String className) {
         klass = modelPackage._getClass(className);
         fieldNames = new HashSet<>(klass.fields().keySet());
-        methodNames = klass.methods().stream().map(m -> m.name()).collect(toSet());        
+        methodNames = klass.methods().stream().map(m -> m.name()).collect(toSet());
     }
-    
+
     private void expectClass(String className, String... typeParams) {
         expectClass(className);
         JTypeVar[] typeVars = klass.typeParams();
@@ -114,12 +114,12 @@ public class ParameterizedTest {
             assertThat(typeVars[i].name(), is(typeParams[i]));
         }
     }
-    
+
     private void expectBaseclass(String className) {
         JClass baseclass = klass._extends();
         assertThat(baseclass.name(), is(className));
     }
-    
+
     private void verifyClass() {
         assertThat(fieldNames, is(empty()));
         assertThat(methodNames, is(empty()));
@@ -129,21 +129,21 @@ public class ParameterizedTest {
         JFieldVar field = klass.fields().get(memberName);
         assertThat(field, is(notNullValue()));
         assertThat(field.type().name(), is(typeName));
-        
+
         List<JMethod> getters = klass.methods().stream().filter(m -> m.name().equals(getterName)).collect(toList());
         assertThat(getters, hasSize(1));
         JMethod getter = getters.get(0);
         assertThat(getter.type().name(), is(typeName));
         assertThat(getter.hasSignature(new JType[0]), is(true));
-        
+
         List<JMethod> setters = klass.methods().stream().filter(m -> m.name().equals(setterName)).collect(toList());
         assertThat(setters, hasSize(1));
         JMethod setter = setters.get(0);
         assertThat(setter.type(), is(codeModel.VOID));
         assertThat(setter.hasSignature(new JType[]{field.type()}), is(true));
-        
+
         fieldNames.remove(memberName);
         methodNames.remove(getterName);
-        methodNames.remove(setterName);       
+        methodNames.remove(setterName);
     }
 }
