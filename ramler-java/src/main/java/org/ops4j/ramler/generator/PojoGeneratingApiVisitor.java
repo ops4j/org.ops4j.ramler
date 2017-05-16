@@ -195,11 +195,9 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
 
     @Override
     public void visitStringType(StringTypeDeclaration type) {
-        if (!context.getApiModel().isEnum(type)) {
-            return;
+        if (context.getApiModel().isEnum(type)) {
+            enumGenerator.generateEnumClass(type);
         }
-
-        enumGenerator.generateEnumClass(type);
     }
 
     private void generateFieldAndAccessors(JDefinedClass klass, TypeDeclaration property) {

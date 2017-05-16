@@ -71,6 +71,8 @@ public class PojoCreatingApiVisitor implements ApiVisitor {
 
     @Override
     public void visitStringType(StringTypeDeclaration type) {
-        enumGenerator.createEnumClass(type);
+        if (context.getApiModel().isEnum(type)) {
+            enumGenerator.createEnumClass(type);
+        }
     }
 }
