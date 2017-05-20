@@ -25,6 +25,7 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
+import org.ops4j.ramler.exc.RamlerException;
 import org.ops4j.ramler.generator.Configuration;
 import org.ops4j.ramler.generator.Generator;
 import org.sonatype.plexus.build.incremental.BuildContext;
@@ -42,18 +43,29 @@ public abstract class AbstractJavaMojo extends AbstractMojo {
     protected String model;
 
     /**
-     * Fully qualified package name for generated Java sources. The generated
-     * classes will be located in subpackages {@code model} and {@code api}.
+     * Fully qualified package name for generated Java sources. The generated classes will be
+     * located in subpackages {@code model} and {@code api}.
      */
     @Parameter(name = "package", required = true)
     private String packageName;
 
+    /**
+     * Should discriminator properties be mutable?
+     */
     @Parameter(defaultValue = "false")
     private boolean discriminatorMutable;
 
+    /**
+     * Suffix for interface names. This suffix is appended to the code name of a resource.
+     * The code name is either specified explicitly by the {@ (codeName)} annotation, or implicitly
+     * by the resource name, converted to camel case.
+     */
     @Parameter(defaultValue = "Resource")
     private String interfaceNameSuffix;
 
+    /**
+     * Should Java classes include type information annotations for type hierarchies?
+     */
     @Parameter(defaultValue = "false")
     private boolean jacksonTypeInfo;
 
@@ -78,8 +90,13 @@ public abstract class AbstractJavaMojo extends AbstractMojo {
             config.setInterfaceNameSuffix(interfaceNameSuffix);
             config.setJacksonTypeInfo(jacksonTypeInfo);
 
-            Generator generator = new Generator(config);
-            generator.generate();
+            try {
+                Generator generator = new Generator(config);
+                generator.generate();
+            }
+            catch (RamlerException exc) {
+                throw new MojoFailureException("code generation failed", exc);
+            }
             refreshGeneratedSources();
         }
         else {

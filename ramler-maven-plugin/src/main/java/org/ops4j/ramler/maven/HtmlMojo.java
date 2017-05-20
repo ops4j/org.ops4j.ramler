@@ -29,6 +29,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.ops4j.ramler.exc.Exceptions;
+import org.ops4j.ramler.exc.RamlerException;
 import org.ops4j.ramler.html.HtmlConfiguration;
 import org.ops4j.ramler.html.HtmlGenerator;
 import org.sonatype.plexus.build.incremental.BuildContext;
@@ -71,7 +72,7 @@ public class HtmlMojo extends AbstractMojo {
     @Inject
     private BuildContext buildContext;
 
-    protected void generateWebResources() {
+    protected void generateWebResources() throws MojoFailureException {
         if (buildContext.hasDelta(model)) {
             getLog().info("Generating HTML documentation from " + model);
 
@@ -88,6 +89,9 @@ public class HtmlMojo extends AbstractMojo {
             HtmlGenerator generator = new HtmlGenerator(config);
             try {
                 generator.generate();
+            }
+            catch (RamlerException exc) {
+                throw new MojoFailureException("HTML generation failed", exc);
             }
             catch (IOException exc) {
                 throw Exceptions.unchecked(exc);

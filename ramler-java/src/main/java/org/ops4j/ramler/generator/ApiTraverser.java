@@ -98,13 +98,11 @@ public class ApiTraverser {
 
     private void storeHierarchy(Map<String, TypeDeclaration> orderedTypes, Api api,
         TypeDeclaration type) {
-        if (type instanceof ObjectTypeDeclaration) {
-            for (TypeDeclaration baseType : type.parentTypes()) {
-                String baseTypeName = baseType.name();
-                if (!baseTypeName.equals(Constants.OBJECT)) {
-                    if (!orderedTypes.containsKey(baseTypeName)) {
-                        storeHierarchy(orderedTypes, api, baseType);
-                    }
+        for (TypeDeclaration baseType : type.parentTypes()) {
+            String baseTypeName = baseType.name();
+            if (!baseTypeName.equals(Constants.OBJECT)) {
+                if (!orderedTypes.containsKey(baseTypeName)) {
+                    storeHierarchy(orderedTypes, api, baseType);
                 }
             }
         }

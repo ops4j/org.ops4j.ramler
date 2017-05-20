@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.stream.Stream;
 
 import org.ops4j.ramler.exc.Exceptions;
+import org.ops4j.ramler.exc.ParserException;
 import org.ops4j.ramler.model.ApiModel;
 import org.raml.v2.api.RamlModelBuilder;
 import org.raml.v2.api.RamlModelResult;
@@ -80,9 +81,9 @@ public class Generator {
         RamlModelResult ramlModelResult = new RamlModelBuilder().buildApi(config.getSourceFile());
         if (ramlModelResult.hasErrors()) {
             for (ValidationResult result : ramlModelResult.getValidationResults()) {
-                log.error(result.getMessage());
+                log.error("{}: {}", result.getPath(), result.getMessage());
             }
-            return null;
+            throw new ParserException("RAML syntax errors, see previous messages");
         }
 
         Api api = ramlModelResult.getApiV10();
