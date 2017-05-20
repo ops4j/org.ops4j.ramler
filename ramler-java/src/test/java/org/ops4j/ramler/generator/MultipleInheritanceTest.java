@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 OPS4J Contributors
+ * Copyright 2017 OPS4J Contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
  */
 package org.ops4j.ramler.generator;
 
-import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.assertThat;
 
 import java.util.HashSet;
@@ -25,41 +25,43 @@ import java.util.Set;
 
 import org.junit.Test;
 
-public class ParameterizedTest extends AbstractGeneratorTest {
+public class MultipleInheritanceTest extends AbstractGeneratorTest {
 
     @Override
     public String getBasename() {
-        return "parameterized";
+        return "multipleInheritance";
     }
-
     @Test
     public void shouldFindModelClasses() {
         Set<String> classNames = new HashSet<>();
         modelPackage.classes().forEachRemaining(c -> classNames.add(c.name()));
-        assertThat(classNames, containsInAnyOrder("Animal", "AnimalResponse", "IntegerResponse", "ListResult", "Person",
-            "Response", "Result", "Status", "StringResponse"));
+        assertThat(classNames, contains("A", "B", "C"));
     }
 
     @Test
-    public void shouldFindResultMembers() {
-        expectClass("Result", "T");
-        assertProperty(klass, "result", "T", "getResult", "setResult");
+    public void shouldFindAMembers() {
+        expectClass("A");
+        assertProperty(klass, "a1", "String", "getA1", "setA1");
+        assertProperty(klass, "a2", "String", "getA2", "setA2");
+        assertDiscriminator(klass, "DISCRIMINATOR", "String", "getDisc");
         verifyClass();
     }
 
     @Test
-    public void shouldFindResponseMembers() {
-        expectClass("Response", "T");
-        assertProperty(klass, "data", "Result<T>", "getData", "setData");
-        assertProperty(klass, "status", "Status", "getStatus", "setStatus");
-        assertProperty(klass, "success", "boolean", "isSuccess", "setSuccess");
+    public void shouldFindBMembers() {
+        expectClass("B");
+        assertProperty(klass, "b1", "int", "getB1", "setB1");
+        assertProperty(klass, "b2", "int", "getB2", "setB2");
         verifyClass();
     }
 
     @Test
-    public void shouldFindAnimalResponseMembers() {
-        expectClass("AnimalResponse");
-        expectBaseclass("Response<Animal>");
+    public void shouldFindCMembers() {
+        expectClass("C");
+        assertProperty(klass, "c1", "String", "getC1", "setC1");
+        assertProperty(klass, "b1", "int", "getB1", "setB1");
+        assertProperty(klass, "b2", "int", "getB2", "setB2");
+        assertDiscriminator(klass, "DISCRIMINATOR", "String", "getDisc");
         verifyClass();
     }
 }

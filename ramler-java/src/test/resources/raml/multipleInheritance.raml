@@ -1,0 +1,18 @@
+#%RAML 1.0
+title: Multiple Inheritance
+mediaType: application/json
+types:
+  A:
+    discriminator: disc
+    properties:
+      a1: string
+      a2: string
+      disc: string
+  B:
+    properties:   
+      b1: integer
+      b2: integer
+  C:
+    type: [A, B]
+    properties:
+      c1: string    

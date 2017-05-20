@@ -200,7 +200,6 @@ public class ParserTest {
         assertThat(member, instanceOf(ArrayTypeDeclaration.class));
         ArrayTypeDeclaration arrayType = (ArrayTypeDeclaration) member;
         TypeDeclaration item = arrayType.items();
-        System.out.println(String.format("%s, %s, %s, %s, %s", objectType.name(), item.name(), item.type(), apiModel.getItemType(member), apiModel.metatype(item)));
         assertThat(item.name(), is(itemName));
         assertThat(item.type(), is(itemType));
         assertThat(apiModel.getItemType(member), is(realItemType));
@@ -258,7 +257,7 @@ public class ParserTest {
 
     @Test
     public void shouldParseEnums() {
-        parse("enum.raml");
+        parse("enums.raml");
 
         TypeDeclaration decl = apiModel.getDeclaredType("Colour");
 
@@ -276,7 +275,7 @@ public class ParserTest {
 
     @Test
     public void shouldGetEnumValues() {
-        parse("enum.raml");
+        parse("enums.raml");
 
         TypeDeclaration decl = apiModel.getDeclaredType("Colour");
         assertThat(apiModel.isEnum(decl), is(true));

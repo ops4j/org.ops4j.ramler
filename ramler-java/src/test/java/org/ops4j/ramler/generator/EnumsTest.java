@@ -23,43 +23,24 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
-import java.io.File;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.reflect.FieldUtils;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.sun.codemodel.ClassType;
-import com.sun.codemodel.JCodeModel;
-import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JEnumConstant;
 import com.sun.codemodel.JExpression;
-import com.sun.codemodel.JPackage;
 import com.sun.codemodel.JStringLiteral;
 
-public class EnumTest {
+public class EnumsTest extends AbstractGeneratorTest {
 
-    private static Generator generator;
-    private static JCodeModel codeModel;
-    private static JPackage modelPackage;
-    private JDefinedClass klass;
-
-    @BeforeClass
-    public static void shouldGenerateArrays() {
-        Configuration config = new Configuration();
-        config.setSourceFile("raml/enum.raml");
-        config.setBasePackage("org.ops4j.raml.enums");
-        config.setTargetDir(new File("target/generated/raml"));
-
-        generator = new Generator(config);
-        generator.generate();
-
-        codeModel = generator.getContext().getCodeModel();
-        modelPackage = codeModel._package("org.ops4j.raml.enums.model");
+    @Override
+    public String getBasename() {
+        return "enums";
     }
 
     @Test

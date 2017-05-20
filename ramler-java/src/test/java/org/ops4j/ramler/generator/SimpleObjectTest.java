@@ -17,59 +17,28 @@
  */
 package org.ops4j.ramler.generator;
 
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
-import java.io.File;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.reflect.FieldUtils;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
 
 import com.sun.codemodel.ClassType;
-import com.sun.codemodel.JCodeModel;
-import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JEnumConstant;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JPackage;
-import com.sun.codemodel.JType;
 
-public class SimpleObjectTest {
+public class SimpleObjectTest extends AbstractGeneratorTest {
 
-    private static Generator generator;
-    private static JCodeModel codeModel;
-    private static JPackage modelPackage;
-    private JDefinedClass klass;
-    private Set<String> methodNames;
-    private Set<String> fieldNames;
-
-    @BeforeClass
-    public static void shouldGeneratePojos() {
-        Configuration config = new Configuration();
-        config.setSourceFile("raml/simpleobject.raml");
-        config.setBasePackage("org.ops4j.raml.demo");
-        config.setTargetDir(new File("target/generated/raml"));
-        config.setDiscriminatorMutable(true);
-
-        generator = new Generator(config);
-        generator.generate();
-
-        codeModel = generator.getContext().getCodeModel();
-        modelPackage = codeModel._package("org.ops4j.raml.demo.model");
+    @Override
+    public String getBasename() {
+        return "simpleobject";
     }
 
     @Test
@@ -101,20 +70,7 @@ public class SimpleObjectTest {
     public void shouldFindDiscriminator() {
         TypeDeclaration type = generator.getContext().getApiModel().getDeclaredType("Manager");
         ObjectTypeDeclaration objectType = (ObjectTypeDeclaration) type;
-        objectType.properties().forEach(p -> System.out.println(p.name()));
         assertThat(objectType.discriminator(), is("objectType"));
-    }
-
-    private void expectClass(String className) {
-        klass = modelPackage._getClass(className);
-        fieldNames = new HashSet<>(klass.fields().keySet());
-        methodNames = klass.methods().stream().map(m -> m.name()).collect(toSet());
-
-    }
-
-    private void verifyClass() {
-        assertThat(fieldNames, is(empty()));
-        assertThat(methodNames, is(empty()));
     }
 
     @Test
@@ -179,28 +135,5 @@ public class SimpleObjectTest {
         methodNames.remove("getObjectType");
         methodNames.remove("setObjectType");
         verifyClass();
-    }
-
-
-    private void assertProperty(JDefinedClass klass, String memberName, String typeName, String getterName, String setterName) {
-        JFieldVar field = klass.fields().get(memberName);
-        assertThat(field, is(notNullValue()));
-        assertThat(field.type().name(), is(typeName));
-
-        List<JMethod> getters = klass.methods().stream().filter(m -> m.name().equals(getterName)).collect(toList());
-        assertThat(getters, hasSize(1));
-        JMethod getter = getters.get(0);
-        assertThat(getter.type().name(), is(typeName));
-        assertThat(getter.hasSignature(new JType[0]), is(true));
-
-        List<JMethod> setters = klass.methods().stream().filter(m -> m.name().equals(setterName)).collect(toList());
-        assertThat(setters, hasSize(1));
-        JMethod setter = setters.get(0);
-        assertThat(setter.type(), is(codeModel.VOID));
-        assertThat(setter.hasSignature(new JType[]{field.type()}), is(true));
-
-        fieldNames.remove(memberName);
-        methodNames.remove(getterName);
-        methodNames.remove(setterName);
     }
 }
