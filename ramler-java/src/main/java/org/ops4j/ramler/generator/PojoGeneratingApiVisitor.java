@@ -95,6 +95,7 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         addBaseClass(klass, type);
         addDiscriminator(klass, type);
         addJsonTypeInfo(klass, type);
+        addMixinProperties(klass, type);
     }
 
     private void addJavadoc(JDefinedClass klass, ObjectTypeDeclaration type) {
@@ -107,8 +108,9 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
     }
 
     private void addBaseClass(JDefinedClass klass, ObjectTypeDeclaration type) {
-        if (!type.type().equals(OBJECT)) {
-            JClass baseClass = pkg._getClass(type.type());
+        TypeDeclaration parentType = type.parentTypes().get(0);
+        if (!parentType.name().equals(OBJECT)) {
+            JClass baseClass = pkg._getClass(parentType.name());
 
             List<String> typeArgs = Annotations.getStringAnnotations(type, TYPE_ARGS);
             if (!typeArgs.isEmpty()) {
@@ -179,6 +181,19 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         typeVars.forEach(klass::generify);
     }
 
+    private void addMixinProperties(JDefinedClass klass, ObjectTypeDeclaration type) {
+        type.parentTypes().stream().skip(1).forEach(p -> addMixinPropertiesFromParent(klass, p));
+    }
+
+    private void addMixinPropertiesFromParent(JDefinedClass klass, TypeDeclaration parentType) {
+        if (parentType instanceof ObjectTypeDeclaration) {
+            ObjectTypeDeclaration objectType = (ObjectTypeDeclaration) parentType;
+            for (TypeDeclaration property : objectType.properties()) {
+                generateFieldAndAccessors(klass, property);
+            }
+        }
+    }
+
     @Override
     public void visitObjectTypeProperty(ObjectTypeDeclaration type, TypeDeclaration property) {
         if (context.getApiModel().isInternal(type)) {
@@ -195,10 +210,10 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
     }
 
     private boolean isInherited(ObjectTypeDeclaration type, TypeDeclaration property) {
-        if (type.type().equals(OBJECT)) {
+        if (type.name().equals(OBJECT)) {
             return false;
         }
-        JDefinedClass baseClass = pkg._getClass(type.type());
+        JDefinedClass baseClass = pkg._getClass(type.name());
         return baseClass.fields().containsKey(property.name());
     }
 

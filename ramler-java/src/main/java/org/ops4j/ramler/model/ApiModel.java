@@ -108,9 +108,11 @@ public class ApiModel {
 
     private void mapDerivedTypes() {
         for (TypeDeclaration type : api.types()) {
-            if (type instanceof ObjectTypeDeclaration && !type.type().equals(Constants.OBJECT)) {
-                String baseTypeName = type.type();
-                derivedTypes.merge(baseTypeName, singletonList(type.name()), this::join);
+            for (TypeDeclaration baseType : type.parentTypes()) {
+                String baseTypeName = baseType.name();
+                if (!baseTypeName.equals(Constants.OBJECT)) {
+                    derivedTypes.merge(baseTypeName, singletonList(type.name()), this::join);
+                }
             }
         }
     }
