@@ -96,7 +96,6 @@ public class ParameterizedTest {
     public void shouldFindAnimalResponseMembers() {
         expectClass("AnimalResponse");
         expectBaseclass("Response<Animal>");
-        assertProperty(klass, "result", "Animal", "getResult", "setResult");
         verifyClass();
     }
 
