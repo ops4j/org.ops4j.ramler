@@ -19,6 +19,7 @@ package org.ops4j.ramler.generator;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
+import static org.ops4j.ramler.generator.Constants.TYPE_ARGS;
 import static org.ops4j.ramler.generator.Constants.VALUE;
 
 import java.lang.annotation.Annotation;
@@ -39,6 +40,7 @@ import javax.ws.rs.core.MediaType;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.ops4j.ramler.exc.Exceptions;
+import org.ops4j.ramler.exc.GeneratorException;
 import org.ops4j.ramler.model.Annotations;
 import org.raml.v2.api.model.v10.api.Api;
 import org.raml.v2.api.model.v10.bodies.Response;
@@ -120,7 +122,7 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
                 innerResource = resource;
             }
             else {
-                throw new IllegalStateException(
+                throw new GeneratorException(
                     "cannot handle resources nested more than two levels");
             }
         }
@@ -231,17 +233,13 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
     }
 
     private JType addTypeArguments(JType resultType, TypeDeclaration body) {
-        JType narrowedResultType = resultType;
-        List<String> args = Annotations.getStringAnnotations(body, "typeArgs");
-        if (!args.isEmpty()) {
-            JClass jclass = (JClass) resultType;
-            for (String arg : args) {
-                JType typeArg = context.getModelPackage()._getClass(arg);
-                jclass = jclass.narrow(typeArg);
-            }
-            narrowedResultType = jclass;
+        List<String> args = Annotations.getStringAnnotations(body, TYPE_ARGS);
+        JClass jclass = (JClass) resultType;
+        for (String arg : args) {
+            JType typeArg = context.getModelPackage()._getClass(arg);
+            jclass = jclass.narrow(typeArg);
         }
-        return narrowedResultType;
+        return jclass;
     }
 
     private void addQueryParameters(Method method, JMethod codeMethod) {

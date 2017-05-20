@@ -28,13 +28,10 @@ import java.nio.file.Path;
 import java.util.stream.Stream;
 
 import org.ops4j.ramler.exc.Exceptions;
-import org.ops4j.ramler.generator.FileHelper;
+import org.ops4j.ramler.generator.ApiModelBuilder;
+import static org.ops4j.ramler.generator.FileHelper.*;
 import org.ops4j.ramler.html.trimou.TemplateEngine;
 import org.ops4j.ramler.model.ApiModel;
-import org.raml.v2.api.RamlModelBuilder;
-import org.raml.v2.api.RamlModelResult;
-import org.raml.v2.api.model.common.ValidationResult;
-import org.raml.v2.api.model.v10.api.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,17 +68,13 @@ public class HtmlGenerator {
      * @throws IOException
      */
     public void generate() throws IOException {
-        Api api = buildApi();
-        if (api == null) {
-            return;
-        }
-        ApiModel apiModel = new ApiModel(api);
+        ApiModel apiModel = new ApiModelBuilder().buildApiModel(config.getSourceFile());
         TemplateEngine engine = new TemplateEngine();
         engine.setTemplateDir(config.getTemplateDir());
         String result = engine.renderTemplate("api", apiModel);
 
         File targetDir = new File(config.getTargetDir());
-        FileHelper.createDirectoryIfNeeded(targetDir);
+        createDirectoryIfNeeded(targetDir);
         Files.write(targetDir.toPath().resolve("index.html"), result.getBytes(StandardCharsets.UTF_8));
 
         writeWebResources(targetDir);
@@ -127,40 +120,27 @@ public class HtmlGenerator {
     private void copyTo(Path sourcePath, Path sourceRoot, Path targetRoot) {
         Path relPath = sourceRoot.relativize(sourcePath);
         Path targetPath = targetRoot.resolve(relPath);
-        if (sourcePath.toFile().isDirectory()) {
-            targetPath.toFile().mkdirs();
-        }
-        else {
-            log.debug("copying {} to {}", sourcePath, targetPath);
-            try {
+        try {
+            if (sourcePath.toFile().isDirectory()) {
+                createDirectoryIfNeeded(targetPath.toFile());
+            }
+            else {
+                log.debug("copying {} to {}", sourcePath, targetPath);
                 Files.copy(sourcePath, targetPath, REPLACE_EXISTING);
             }
-            catch (IOException exc) {
-                throw Exceptions.unchecked(exc);
-            }
-        }
-    }
-
-    private void copyTo(String file, File targetDir) {
-        new File(targetDir, file).getParentFile().mkdirs();
-        try (InputStream is = getClass().getClassLoader().getResourceAsStream(file)) {
-            Files.copy(is, targetDir.toPath().resolve(file), REPLACE_EXISTING);
         }
         catch (IOException exc) {
             throw Exceptions.unchecked(exc);
         }
     }
 
-    private Api buildApi() {
-        RamlModelResult ramlModelResult = new RamlModelBuilder().buildApi(config.getSourceFile());
-        if (ramlModelResult.hasErrors()) {
-            for (ValidationResult result : ramlModelResult.getValidationResults()) {
-                log.error(result.getMessage());
-            }
-            return null;
+    private void copyTo(String file, File targetDir) {
+        try (InputStream is = getClass().getClassLoader().getResourceAsStream(file)) {
+            createDirectoryIfNeeded(new File(targetDir, file).getParentFile());
+            Files.copy(is, targetDir.toPath().resolve(file), REPLACE_EXISTING);
         }
-
-        return ramlModelResult.getApiV10();
+        catch (IOException exc) {
+            throw Exceptions.unchecked(exc);
+        }
     }
-
 }

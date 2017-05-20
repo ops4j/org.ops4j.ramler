@@ -79,6 +79,7 @@ public class EnumGenerator {
     /**
      * Creates an empty enum class for the given type.
      * @param type enumeration type declaration
+     * @return enum class
      */
     public JDefinedClass createEnumClass(StringTypeDeclaration type) {
         try {

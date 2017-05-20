@@ -22,14 +22,7 @@ import java.io.IOException;
 import java.util.stream.Stream;
 
 import org.ops4j.ramler.exc.Exceptions;
-import org.ops4j.ramler.exc.ParserException;
 import org.ops4j.ramler.model.ApiModel;
-import org.raml.v2.api.RamlModelBuilder;
-import org.raml.v2.api.RamlModelResult;
-import org.raml.v2.api.model.common.ValidationResult;
-import org.raml.v2.api.model.v10.api.Api;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.sun.codemodel.writer.FileCodeWriter;
 
@@ -42,8 +35,6 @@ import com.sun.codemodel.writer.FileCodeWriter;
  *
  */
 public class Generator {
-
-    private static Logger log = LoggerFactory.getLogger(Generator.class);
 
     private Configuration config;
 
@@ -68,27 +59,11 @@ public class Generator {
      * Generates code for the given configuration.
      */
     public void generate() {
-        Api api = buildApi();
-        if (api == null) {
-            return;
-        }
+        ApiModel apiModel = new ApiModelBuilder().buildApiModel(config.getSourceFile());
+        context.setApiModel(apiModel);
 
         buildCodeModel();
         writeCodeModel();
-    }
-
-    private Api buildApi() {
-        RamlModelResult ramlModelResult = new RamlModelBuilder().buildApi(config.getSourceFile());
-        if (ramlModelResult.hasErrors()) {
-            for (ValidationResult result : ramlModelResult.getValidationResults()) {
-                log.error("{}: {}", result.getPath(), result.getMessage());
-            }
-            throw new ParserException("RAML syntax errors, see previous messages");
-        }
-
-        Api api = ramlModelResult.getApiV10();
-        context.setApiModel(new ApiModel(api));
-        return api;
     }
 
     private void buildCodeModel() {

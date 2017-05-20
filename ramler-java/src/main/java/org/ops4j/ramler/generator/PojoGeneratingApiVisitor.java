@@ -20,6 +20,7 @@ package org.ops4j.ramler.generator;
 import static org.ops4j.ramler.generator.Constants.DISCRIMINATOR;
 import static org.ops4j.ramler.generator.Constants.OBJECT;
 import static org.ops4j.ramler.generator.Constants.TYPE_ARGS;
+import static org.ops4j.ramler.generator.Constants.TYPE_VAR;
 import static org.ops4j.ramler.generator.Constants.TYPE_VARS;
 import static org.ops4j.ramler.generator.Constants.VALUE;
 
@@ -291,7 +292,7 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
     }
 
     private Optional<JType> findTypeVar(JDefinedClass klass, TypeDeclaration property) {
-        return property.annotations().stream().filter(a -> a.annotation().name().equals("typeVar"))
+        return property.annotations().stream().filter(a -> a.annotation().name().equals(TYPE_VAR))
             .findFirst().flatMap(t -> findTypeParam(klass, t));
     }
 
