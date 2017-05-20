@@ -17,14 +17,9 @@
  */
 package org.ops4j.ramler.generator;
 
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.lang.reflect.FieldUtils;
 import org.junit.Test;
@@ -43,19 +38,17 @@ public class SimpleObjectTest extends AbstractGeneratorTest {
 
     @Test
     public void shouldFindModelClasses() {
-        Set<String> classNames = new HashSet<>();
-        modelPackage.classes().forEachRemaining(c -> classNames.add(c.name()));
-        assertThat(classNames, containsInAnyOrder("Address", "Colour", "Employee", "FileResponse",
-            "Integers", "Manager", "Numbers", "Person", "Temporals", "User", "UserGroup"));
+        assertClasses("Address", "Colour", "Employee", "FileResponse",
+            "Integers", "Manager", "Numbers", "Person", "Temporals", "User", "UserGroup");
     }
 
     @SuppressWarnings("unchecked")
     @Test
     public void shouldFindEnumValues() throws IllegalAccessException {
         klass = modelPackage._getClass("Colour");
-        assertThat(klass.getClassType(), is(ClassType.ENUM));
+        assertThat(klass.getClassType()).isEqualTo(ClassType.ENUM);
         Map<String,JEnumConstant> enums = (Map<String, JEnumConstant>) FieldUtils.readField(klass, "enumConstantsByName", true);
-        assertThat(enums.keySet(), contains("LIGHT_BLUE", "RED", "YELLOW", "GREEN"));
+        assertThat(enums.keySet()).containsExactly("LIGHT_BLUE", "RED", "YELLOW", "GREEN");
     }
 
     @Test
@@ -70,7 +63,7 @@ public class SimpleObjectTest extends AbstractGeneratorTest {
     public void shouldFindDiscriminator() {
         TypeDeclaration type = generator.getContext().getApiModel().getDeclaredType("Manager");
         ObjectTypeDeclaration objectType = (ObjectTypeDeclaration) type;
-        assertThat(objectType.discriminator(), is("objectType"));
+        assertThat(objectType.discriminator()).isEqualTo("objectType");
     }
 
     @Test
@@ -128,7 +121,7 @@ public class SimpleObjectTest extends AbstractGeneratorTest {
     @Test
     public void shouldFindEmployeeMembers() {
         expectClass("Employee");
-        assertThat(klass._extends().name(), is("Person"));
+        assertThat(klass._extends().name()).isEqualTo("Person");
         assertProperty(klass, "department", "String", "getDepartment", "setDepartment");
 
         fieldNames.remove("DISCRIMINATOR");

@@ -17,9 +17,7 @@
  */
 package org.ops4j.ramler.itest;
 
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -51,7 +49,7 @@ public class PolymorphicUnmarshallingTest {
         String json = sw.toString();
 
         Person p = mapper.readerFor(Person.class).readValue(json);
-        assertThat(p, instanceOf(Person.class));
+        assertThat(p).isInstanceOf(Person.class);
     }
 
     @Test
@@ -72,9 +70,9 @@ public class PolymorphicUnmarshallingTest {
         String json = sw.toString();
 
         Person p = mapper.readValue(json, Person.class);
-        assertThat(p, instanceOf(Employee.class));
+        assertThat(p).isInstanceOf(Employee.class);
         Employee e = (Employee) p;
-        assertThat(e.getDepartment(), is("Sales"));
+        assertThat(e.getDepartment()).isEqualTo("Sales");
     }
 
     @Test
@@ -96,10 +94,10 @@ public class PolymorphicUnmarshallingTest {
         String json = sw.toString();
 
         Person p = mapper.readValue(json, Person.class);
-        assertThat(p, instanceOf(Manager.class));
+        assertThat(p).isInstanceOf(Manager.class);
         Manager m = (Manager) p;
-        assertThat(m.getDepartment(), is("Sales"));
-        assertThat(m.getNumEmployees(), is(5));
+        assertThat(m.getDepartment()).isEqualTo("Sales");
+        assertThat(m.getNumEmployees()).isEqualTo(5);
     }
 
 }

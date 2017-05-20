@@ -17,12 +17,6 @@
  */
 package org.ops4j.ramler.generator;
 
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.junit.Assert.assertThat;
-
-import java.util.HashSet;
-import java.util.Set;
-
 import org.junit.Test;
 
 public class ParameterizedTest extends AbstractGeneratorTest {
@@ -34,10 +28,8 @@ public class ParameterizedTest extends AbstractGeneratorTest {
 
     @Test
     public void shouldFindModelClasses() {
-        Set<String> classNames = new HashSet<>();
-        modelPackage.classes().forEachRemaining(c -> classNames.add(c.name()));
-        assertThat(classNames, containsInAnyOrder("Animal", "AnimalResponse", "IntegerResponse", "ListResult", "Person",
-            "Response", "Result", "Status", "StringResponse"));
+        assertClasses("Animal", "AnimalResponse", "IntegerResponse", "ListResult", "Person",
+            "Response", "Result", "Status", "StringResponse");
     }
 
     @Test

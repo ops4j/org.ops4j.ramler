@@ -17,21 +17,10 @@
  */
 package org.ops4j.ramler.generator;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import org.junit.Test;
-
 public class RegistryTest extends AbstractGeneratorTest {
 
     @Override
     public String getBasename() {
         return "registry";
-    }
-
-    @Test
-    public void shouldFindModelClasses() {
-        Set<String> classNames = new HashSet<>();
-        modelPackage.classes().forEachRemaining(c -> classNames.add(c.name()));
     }
 }

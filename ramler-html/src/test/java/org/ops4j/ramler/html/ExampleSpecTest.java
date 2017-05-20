@@ -17,10 +17,7 @@
  */
 package org.ops4j.ramler.html;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
@@ -43,7 +40,7 @@ public class ExampleSpecTest {
 
     private void parse(String simpleName) {
         RamlModelResult ramlModelResult = new RamlModelBuilder().buildApi("raml/" + simpleName);
-        assertFalse(ramlModelResult.hasErrors());
+        assertThat(ramlModelResult.hasErrors()).isFalse();
         Api api = ramlModelResult.getApiV10();
         apiModel = new ApiModel(api);
     }
@@ -56,59 +53,59 @@ public class ExampleSpecTest {
     public void shouldParseObjectExample() {
         parse("simpleobject.raml");
         TypeDeclaration userGroup = apiModel.getDeclaredType("UserGroup");
-        assertThat(userGroup, is(notNullValue()));
+        assertThat(userGroup).isNotNull();
         ExampleSpec exampleSpec = getExample(userGroup);
         TypeInstance instance = exampleSpec.structuredValue();
-        assertThat(instance.isScalar(), is(false));
+        assertThat(instance.isScalar()).isFalse();
         TypeInstanceProperty users = instance.properties().get(1);
-        assertThat(users.isArray(), is(true));
+        assertThat(users.isArray()).isTrue();
         TypeInstance user = users.values().get(0);
-        assertThat(user.properties().get(0).name(), is("firstname"));
-        assertThat(user.properties().get(0).value().value(), is("Anna"));
+        assertThat(user.properties().get(0).name()).isEqualTo("firstname");
+        assertThat(user.properties().get(0).value().value()).isEqualTo("Anna");
 
         ExampleSpecJsonRenderer renderer = new ExampleSpecJsonRenderer();
         JsonValue jsonValue = renderer.toJsonValue(userGroup, exampleSpec);
 
-        assertThat(jsonValue.toString(),
-            is("{\"name\":\"Editors\",\"users\":["
+        assertThat(jsonValue.toString()).
+            isEqualTo("{\"name\":\"Editors\",\"users\":["
                 + "{\"firstname\":\"Anna\",\"lastname\":\"Walter\",\"age\":32,"
                 + "\"address\":{\"city\":\"Hamburg\",\"street\":\"Colonnaden\"},"
                 + "\"registered\":true,\"dateOfBirth\":\"1985-04-30\","
-                + "\"registrationDate\":\"2016-02-28T16:41:41.090Z\"}]}"));
+                + "\"registrationDate\":\"2016-02-28T16:41:41.090Z\"}]}");
     }
 
     @Test
     public void shouldParseListExample() {
         parse("simpleobject.raml");
         TypeDeclaration nameList = apiModel.getDeclaredType("NameList");
-        assertThat(nameList, is(notNullValue()));
+        assertThat(nameList).isNotNull();
         ExampleSpec exampleSpec = getExample(nameList);
         List<TypeInstanceProperty> props = exampleSpec.structuredValue().properties();
         TypeInstanceProperty p0 = props.get(0);
-        assertThat(p0.isArray(), is(true));
+        assertThat(p0.isArray()).isTrue();
 
         ExampleSpecJsonRenderer renderer = new ExampleSpecJsonRenderer();
         JsonValue jsonValue = renderer.toJsonValue(nameList, exampleSpec);
 
-        assertThat(jsonValue.toString(), is("[\"foo\",\"bar\"]"));
+        assertThat(jsonValue.toString()).isEqualTo("[\"foo\",\"bar\"]");
     }
 
     @Test
     public void shouldParseNumberExample() {
         parse("simpleobject.raml");
         TypeDeclaration age = apiModel.getDeclaredType("Age");
-        assertThat(age, is(notNullValue()));
+        assertThat(age).isNotNull();
         ExampleSpec exampleSpec = getExample(age);
         List<TypeInstanceProperty> props = exampleSpec.structuredValue().properties();
         TypeInstanceProperty p0 = props.get(0);
-        assertThat(p0.isArray(), is(false));
-        assertThat(p0.name(), is("value"));
-        assertThat(p0.value().isScalar(), is(true));
+        assertThat(p0.isArray()).isFalse();
+        assertThat(p0.name()).isEqualTo("value");
+        assertThat(p0.value().isScalar()).isTrue();
         Object scalar = p0.value().value();
-        assertThat(scalar, is(37L));
+        assertThat(scalar).isEqualTo(37L);
 
         ExampleSpecJsonRenderer renderer = new ExampleSpecJsonRenderer();
         JsonValue jsonValue = renderer.toJsonValue(age, exampleSpec);
-        assertThat(jsonValue.toString(), is("37"));
+        assertThat(jsonValue.toString()).isEqualTo("37");
     }
 }

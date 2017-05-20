@@ -17,12 +17,6 @@
  */
 package org.ops4j.ramler.generator;
 
-import static org.hamcrest.Matchers.contains;
-import static org.junit.Assert.assertThat;
-
-import java.util.HashSet;
-import java.util.Set;
-
 import org.junit.Test;
 
 public class MultipleInheritanceTest extends AbstractGeneratorTest {
@@ -33,9 +27,7 @@ public class MultipleInheritanceTest extends AbstractGeneratorTest {
     }
     @Test
     public void shouldFindModelClasses() {
-        Set<String> classNames = new HashSet<>();
-        modelPackage.classes().forEachRemaining(c -> classNames.add(c.name()));
-        assertThat(classNames, contains("A", "B", "C"));
+        assertClasses("A", "B", "C");
     }
 
     @Test

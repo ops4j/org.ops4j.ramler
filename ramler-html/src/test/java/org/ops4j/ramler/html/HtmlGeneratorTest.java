@@ -16,16 +16,12 @@
  * limitations under the License.
  */
 package org.ops4j.ramler.html;
-
-import static java.util.stream.Collectors.toList;
-import static org.hamcrest.Matchers.hasItems;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 
 import org.junit.Test;
 
@@ -52,7 +48,7 @@ public class HtmlGeneratorTest {
     @Test
     public void shouldWalkTree() throws IOException {
         Path root = Paths.get("src/main/resources");
-        List<String> paths = Files.walk(root).map(p -> root.relativize(p).toString()).collect(toList());
-        assertThat(paths, hasItems("fonts", "fonts/slate.eot", "trimou", "trimou/api.trimou.html"));
+        assertThat(Files.walk(root).map(p -> root.relativize(p).toString()))
+            .contains("fonts", "fonts/slate.eot", "trimou", "trimou/api.trimou.html");
     }
 }

@@ -17,16 +17,10 @@
  */
 package org.ops4j.ramler.generator;
 
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.lang.reflect.FieldUtils;
 import org.junit.Test;
@@ -45,28 +39,26 @@ public class EnumsTest extends AbstractGeneratorTest {
 
     @Test
     public void shouldFindModelClasses() {
-        Set<String> classNames = new HashSet<>();
-        modelPackage.classes().forEachRemaining(c -> classNames.add(c.name()));
-        assertThat(classNames, contains("Colour"));
+        assertClasses("Colour");
     }
 
     @SuppressWarnings("unchecked")
     @Test
     public void shouldFindEnumValues() throws IllegalAccessException {
         klass = modelPackage._getClass("Colour");
-        assertThat(klass.getClassType(), is(ClassType.ENUM));
+        assertThat(klass.getClassType()).isEqualTo(ClassType.ENUM);
         Map<String,JEnumConstant> enums = (Map<String, JEnumConstant>) FieldUtils.readField(klass, "enumConstantsByName", true);
-        assertThat(enums.keySet(), contains("LIGHT_BLUE", "RED"));
+        assertThat(enums.keySet()).contains("LIGHT_BLUE", "RED");
 
         JEnumConstant lightBlue = enums.get("LIGHT_BLUE");
-        assertThat(lightBlue.javadoc().get(0), is("Colour of the sky"));
+        assertThat(lightBlue.javadoc().get(0)).isEqualTo("Colour of the sky");
 
         List<JExpression> args = (List<JExpression>) FieldUtils.readField(lightBlue, "args", true);
-        assertThat(args, hasSize(1));
+        assertThat(args).hasSize(1);
 
-        assertThat(args.get(0), instanceOf(JStringLiteral.class));
+        assertThat(args.get(0)).isInstanceOf(JStringLiteral.class);
 
         String literal = (String) FieldUtils.readField(args.get(0), "str", true);
-        assertThat(literal, is("lightBlue"));
+        assertThat(literal).isEqualTo("lightBlue");
     }
 }
