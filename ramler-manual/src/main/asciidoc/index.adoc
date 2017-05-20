@@ -28,7 +28,9 @@ The RESTful API Modeling Language (http://www.raml.org[RAML]) is an open standar
 Ramler supports a model-first strategy for designing, implementing and documenting a RESTful API.
 
 Given a RAML specification, Ramler generates Java entity classes and resource interfaces compliant 
-with JAX-RS 2.0.
+with JAX-RS 2.0. The generated code can be fine-tuned using some custom RAML annotations defined by
+Ramler. Ramler contains special support for https://jersey.github.io/[Jersey] with 
+https://github.com/FasterXML/jackson-databind[Jackson data binding].
 
 Ramler also generates a link:registry/[static HTML 5 website] with hyperlinked and searchable documentation directly from a RAML specification. 
 
@@ -143,42 +145,525 @@ into methods of the same JAX-RS resource class.
 == Overview
 
 Given a RAML specification, the Java code generator creates plain old Java objects (POJO) with getters
-and setters for each structured type and a Java interface for each resource, with methods corresponding
+and setters for each user-defined object type and a Java interface for each resource, with methods corresponding
 to the HTTP methods defined in RAML.
 
 RAML descriptions are converted to Javadoc comments.
 
-== Maven Plugin
+Example: 
 
-=== java Goal
+This RAML type
 
-[options="header"]
-|=======================
+    Person:
+      firstName: string
+      lastName: string
+
+    
+will generate the following Java class:
+
+[source,java]
+----
+public class Person {
+
+    private String firstName;
+    private String lastName;
+
+    public String getFirstname() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastname(String lastName) {
+        this.lastName = lastName;
+    }
+}
+----    
+
+
+== Scalar Property Mapping
+
+Properties of an object type with a scalar RAML type are mapped to fields with Java types 
+according to the following table:
+
+|===
+| RAML type       | Format        | Required          | Java type
+
+| `boolean`         |               | yes               | `boolean`
+| `boolean`         |               | no                | `java.lang.Boolean`
+| `date-only`       |               |                   | `java.time.LocalDate`
+| `datetime`        |               |                   | `java.time.ZonedDateTime`
+| `datetime-only`   |               |                   | `java.time.LocalDateTime`
+| `file`            |               |                   | `java.io.InputStream`
+| `integer`         | `int64, long`   | yes             | `long`
+| `integer`         | `int64, long`   | no              | `java.lang.Long`
+| `integer`         | `int8, int16, int32, int`   | yes   | `int`
+| `integer`         | `int8, int16, int32, int`   | yes   | `java.lang.Integer`
+| `null`            |               |                   | `java.lang.Object`
+| `number`          | `double`      | yes               | `double`
+| `number`          | `double`      | no                | `java.lang.Double`
+| `number`          | `float`       | yes               | `float`
+| `number`          | `float`       | no                | `java.lang.Float`
+| `string`          |               |                   | `java.lang.String` or `enum` type
+| `time-only`       |               |                   | `java.time.LocalTime`
+|===
+
+
+== Structured Property Mapping
+
+Properties of an object type with a structured RAML type are mapped to fields with Java types 
+according to the following table:
+
+|===
+| RAML type         | Java type
+
+| `any`             | `java.lang.Object`
+| `array`           | `java.util.List<I>`
+| `object`          | POJO or `java.lang.Object`
+| `union`           | not supported
+|===
+
+
+For array types, the type argument `I` of the Java `List` type will be the Java type of the array item type.
+
+For object types, the referenced type will be the generated Java class if the type has any properties, 
+or `java.lang.Object` otherwise.
+
+Union types are currently not supported. 
+
+== Enumeration Types
+
+A user-defined RAML type with base type `string` and an `enum` facet will be mapped to a Java `enum` class 
+with constants corresponding to the value list of the `enum` facet.
+
+    Colour:
+      type: string
+      enum:
+      - lightBlue
+      - red
+ 
+[source,java]
+----
+public enum Colour {
+
+    LIGHT_BLUE("lightBlue"),
+    RED("red");
+    private final String value;
+
+    private Colour(String value) {
+        this.value = value;
+    }
+
+    public String value() {
+        return value;
+    }
+
+    public static Colour fromValue(String value) {
+        for (Colour v: Colour.values()) {
+            if (v.value.equals(value)) {
+                return v;
+            }
+        }
+        throw new IllegalArgumentException(value);
+    }
+}
+----
+
+Since RAML 1.0 does not allow for any facets or annotations on `enum` values, Ramler provides an `(enum)`
+annotation as an alternative.
+
+    Colour:
+      type: string
+      (r.enum):
+        values:
+          - name: lightBlue
+            description: Colour of the sky.
+          - name: red
+            description: Colour of tomatoes.
+
+[source,java]
+----
+public enum Colour {
+
+    /**
+     * Colour of the sky.
+     */
+    LIGHT_BLUE("lightBlue"),
+
+    /**
+     * Colour of tomatoes.
+     */
+    RED("red");
+
+    // further members omitted
+}    
+----
+
+== Inheritance
+
+A user-defined RAML object type can have one or more base types. Since Java does not support multiple
+inheritance, Ramler maps the first base type as Java base class and adds all properties from any
+additional base types directly to the Java class.
+
+Example:
+
+   A:
+     properties:
+       a1: string
+       a2: string
+   B:
+     properties:   
+       b1: int
+       b2: int
+   C:
+     type: [A, B]
+     properties
+       c1: string    
+
+[source,java]
+----
+public class C extends A {
+    private int b1;
+    private int b2;
+    private String c1;
+	// methods omitted
+}
+----
+
+== Discriminators
+
+A RAML type with a discriminator is mapped to a Java class with a public string constant `DISCRIMINATOR` 
+defining the discriminator value. By default, the discriminator property is immutable, it only has a getter which
+returns the constant.
+
+In some situations, e.g. for provoking validation errors in tests, it may be required to have mutable 
+discriminator properties. This feature can be enabled by setting the Ramler configuration property
+`discriminatorMutable` to `true`.
+
+Example:
+
+    Person:
+      discriminator: objectType
+      discriminatorValue: p
+      properties:
+        firstName: string
+        lastName: string
+        objectType: string
+    Employee:
+      discriminatorValue: e
+      type: Person
+      properties:
+        department: string
+
+[source,java]
+----
+public class Person {
+
+    public final static String DISCRIMINATOR = "p";
+    private String firstname;
+    private String lastname;
+
+    public String getObjectType() {
+        return Person.DISCRIMINATOR;
+    }
+
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+}
+
+public class Employee extends Person {
+
+    public final static String DISCRIMINATOR = "e";
+    private String department;
+
+    public String getObjectType() {
+        return DISCRIMINATOR;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+}
+----
+
+Same example with mutable discriminators:
+
+[source,java]
+----
+public class Person {
+
+    public final static String DISCRIMINATOR = "p";
+    private String objectType;
+    private String firstname;
+    private String lastname;
+
+    public Person() {
+        setObjectType(DISCRIMINATOR);
+    }
+
+    public String getObjectType() {
+        return objectType;
+    }
+
+    public void setObjectType(String objectType) {
+        this.objectType = objectType;
+    }
+
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+}
+
+public class Employee extends Person {
+
+    public final static String DISCRIMINATOR = "e";
+    private String department;
+
+    public Employee() {
+        setObjectType(DISCRIMINATOR);
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+}
+----
+
+== Polymorphic Deserialization
+
+For RAML types with discriminators, the generated Java classes can be enriched with Jackson annotations to 
+support polymorphic deserialization. These annotations enable the Jackson `ObjectMapper` to select
+the appropriate Java class for unmarshalling a JSON object based on its discriminator property.
+
+This feature can be enabled by setting the Ramler configuration property
+`jacksonTypeInfo` to `true`.
+
+In the above example, some annotations would be added to the `Person` class.
+
+[source,java]
+----
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "objectType")
+@JsonSubTypes({
+    @JsonSubTypes.Type(Employee.class)
+})
+public class Person {
+    // members omitted
+}
+----
+
+== Specialization and Generics
+
+In RAML, derived types can specialize a base type property with a narrower type, e.g.
+
+    Result:
+      properties:
+        result: any
+        message?: string
+    PersonResult:
+      type: Result
+      properties:
+        result: Person
+        message?: string
+
+This does not map very well to Java, because `PersonResult.setResult(Person)` does not override 
+`Result.setResult(Object)`.
+
+In Java, it would be more suitable to model this situation with generics, e.g. `Result<T>.setResult(T)`.
+
+To support this use case, Ramler provides three annotations `typeArgs`, `typeVar` and `typeVars` to add sufficient 
+information for generating Java generics and parameterized types.
+
+`typeVars` defines the parameter list of a generic type. `typeVar` references a type parameter from
+the body of a generic type. `typeArgs` defines the argument list for a parameterized type, where the size
+of the argument list must match the size of the parameter list of the underlying generic type.
+
+Using these annotations, the given example can be rewritten as
+
+    Result:
+      (typeVars): [T]
+      properties:
+        result: 
+          (typeVar): T
+          type: any
+        message?: string
+    PersonResult:
+      type: Result
+      (typeArgs): [Person] 
+
+and the generated Java classes will look like this:
+
+[source,java]
+----
+public class Result<T> {
+
+    private T result;
+    private String message;
+
+    public T getResult() {
+        return result;
+    }
+
+    public void setResult(T result) {
+        this.result = result;
+    }
+    
+    public String getMessage() {
+        return message;
+    }
+    
+    public void setMessage(String message) {
+        this.message = message;
+    }
+}
+
+public class PersonResult extends Result<Person> {
+}
+----
+
+
+== Resource Interfaces
+
+RAML resources can have subresources nested to any depth. 
+
+To simplify code generation, Ramler currently only supports two nesting levels, always mapping the first
+level to a resource interface with a `@Path` annotation and the second level to a method of the same interface
+with an additional `@Path` annotation.
+
+Ramler does not impose any restrictions on the number of relative path components used at each nesting level.
+
+For the generated Java interface, the class name is a camel-case version of the resource path name with a 
+configurable suffix. The default interface name suffix is `Resource`. The suffix can be changed by setting
+the Ramler configuration property `interfaceNameSuffix`.
+
+The Java method name is the camel-case display name of the corresponding RAML method, if present, or the
+HTTP method name otherwise.
+
+    /person:
+      get:
+        displayName: Find persons
+        responses:
+          200:
+            body:
+              type: Person[]
+      /address:
+        get:        
+          displayName: Get address
+          responses:
+            200:
+              body:
+                type: Address
+      
+[source,java]
+----
+@Path("/person")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
+public interface PersonResource {
+
+    /** Find persons */
+    @GET
+    List<Person> findPersons();
+
+    /** Get address */
+    @Path("/address")
+    @GET
+    Address getAddress();
+}
+----
+
+For more fine-grained control over interface and method names, Ramler provides the `codeName` annotation.
+The value of this annotation, if present, takes precedence over the `displayName` facet. The configured
+interface name suffix is always appended last, even when `codeName` is set.
+
+== Resource Methods
+
+The Java return type of a method is always determined by the RAML type of the first response, or `void` otherwise.
+
+A method body type, if present, gives rise to a Java method parameter with the corresponding Java type, unless the 
+response media type is `multipart/form-data`.
+
+In this case, each property of the body type gives rise to a Java method parameter annotated
+by `@FormDataParam`. A RAML parameter of type `file` gives rise to two Java parameters of types
+`java.io.InputStream` and `org.glassfish.jersey.media.multipart.FormDataContentDisposition`.
+
+Each RAML query parameter gives rise to a Java method parameter annotated by `@QueryParam`.
+
+Each RAML URI parameter gives rise to a Java method parameter annotated by `@PathParam`.
+
+For all `@*Param` annotations, the unnamed annotation argument corresponds to the RAML parameter name.
+
+Ramler does not currently support header or matrix parameters.
+
+= Maven Plugin
+
+== java Goal
+
+|===
 | Parameter     | Type          | Meaning
-| model         | String        | RAML specification file
 
-| packageName   | String        | Fully qualified package name for generated Java sources. 
+| `model`         | `String`        | RAML specification file
+
+| `packageName`   | `String`        | Fully qualified package name for generated Java sources. 
 The generated classes will be located in subpackages `model` and `api`
 
-| outputDir     | File          | Output directory for generated code. 
+| `outputDir`     | `File`          | Output directory for generated code. 
 Default: `${project.build.directory}/generated-sources/ramler`
 
-|=======================
+|===
 
 
 
-=== java-test Goal  
+== java-test Goal  
 
-[options="header"]
-|=======================
+|===
 | Parameter     | Type          | Meaning
-| model         | String        | RAML specification file
-| packageName   | String        | Fully qualified package name for generated Java sources. 
+
+| `model`         | `String`        | RAML specification file
+| `packageName`   | `String`        | Fully qualified package name for generated Java sources. 
 The generated classes will be located in subpackages `model` and `api`
 
-| outputDir     | File          | Output directory for generated code. 
+| `outputDir`     | `File`          | Output directory for generated code. 
 Default: `${project.build.directory}/generated-test-sources/ramler`
-|=======================
+|===
 
 
 // Return to normal title levels 
