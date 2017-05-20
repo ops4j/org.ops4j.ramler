@@ -34,6 +34,10 @@ import org.raml.v2.api.model.v10.declarations.AnnotationRef;
  */
 public class Annotations {
 
+    private Annotations() {
+        // hidden utility class constructor
+    }
+
     /**
      * Gets the value list of a string valued annotation of a given name on the given type.
      *
@@ -57,13 +61,23 @@ public class Annotations {
         return (String) ref.structuredValue().value();
     }
 
+    /**
+     * Find all annotations with the given name on the given declaration.
+     * @param decl declaration
+     * @param name annotation name
+     * @return stream of matching annotations
+     */
     public static Stream<AnnotationRef> annotationsByName(Annotable decl, String name) {
         return decl.annotations().stream().filter(a -> a.annotation().name().equals(name));
     }
 
-    public static String findCodeName(Annotable method) {
-        return annotationsByName(method, "codeName").findFirst()
+    /**
+     * Finds the value of the {@code (codeName)} annotation on the given declaration.
+     * @param decl declaration
+     * @return annotation value, or null if annotation not present
+     */
+    public static String findCodeName(Annotable decl) {
+        return annotationsByName(decl, "codeName").findFirst()
             .map(Annotations::findStringAnnotationValue).orElse(null);
     }
-
 }

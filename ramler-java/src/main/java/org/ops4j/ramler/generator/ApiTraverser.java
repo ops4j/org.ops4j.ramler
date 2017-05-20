@@ -100,10 +100,8 @@ public class ApiTraverser {
         TypeDeclaration type) {
         for (TypeDeclaration baseType : type.parentTypes()) {
             String baseTypeName = baseType.name();
-            if (!baseTypeName.equals(Constants.OBJECT)) {
-                if (!orderedTypes.containsKey(baseTypeName)) {
-                    storeHierarchy(orderedTypes, api, baseType);
-                }
+            if (!baseTypeName.equals(Constants.OBJECT) && !orderedTypes.containsKey(baseTypeName)) {
+                storeHierarchy(orderedTypes, api, baseType);
             }
         }
         orderedTypes.put(type.name(), type);

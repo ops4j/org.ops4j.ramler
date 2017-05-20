@@ -63,7 +63,7 @@ public class EnumGenerator {
     }
 
     /**
-     * Genererates an enum class for the given type.
+     * Fills an enum class for the given type with values and methods.
      * @param type enumeration type declaration
      */
     public void generateEnumClass(StringTypeDeclaration type) {
@@ -76,6 +76,10 @@ public class EnumGenerator {
         generateEnumFromValueMethod(klass, valueField);
     }
 
+    /**
+     * Creates an empty enum class for the given type.
+     * @param type enumeration type declaration
+     */
     public JDefinedClass createEnumClass(StringTypeDeclaration type) {
         try {
             JDefinedClass klass = pkg._enum(type.name());
