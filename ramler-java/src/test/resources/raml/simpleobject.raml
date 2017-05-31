@@ -1,6 +1,8 @@
 #%RAML 1.0
 title: API with Types
 mediaType: application/json
+uses:
+  r: ../ramler.raml 
 types:
   Address:
     properties:
@@ -139,7 +141,10 @@ types:
     properties:
       static: boolean
       customer.name : string
-      interface: integer    
+      interface: integer
+      rawName:
+        type: string
+        (r.codeName): someOtherName    
 /user:
   get:
     displayName: find all users

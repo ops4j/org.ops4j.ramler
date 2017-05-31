@@ -33,7 +33,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class PolymorphicUnmarshallingTest {
 
     @Test
-    public void shouldMarshalPerson() throws IOException {
+    public void shouldUnmarshalPerson() throws IOException {
         Person person = new Person();
         person.setFirstname("Anna");
         person.setLastname("Blume");
@@ -53,7 +53,7 @@ public class PolymorphicUnmarshallingTest {
     }
 
     @Test
-    public void shouldMarshalEmployee() throws IOException {
+    public void shouldUnmarshalEmployee() throws IOException {
         Employee person = new Employee();
         person.setFirstname("Anna");
         person.setLastname("Blume");
@@ -76,7 +76,7 @@ public class PolymorphicUnmarshallingTest {
     }
 
     @Test
-    public void shouldManager() throws IOException {
+    public void shouldUnmarshalManager() throws IOException {
         Manager person = new Manager();
         person.setFirstname("Anna");
         person.setLastname("Blume");
@@ -99,5 +99,4 @@ public class PolymorphicUnmarshallingTest {
         assertThat(m.getDepartment()).isEqualTo("Sales");
         assertThat(m.getNumEmployees()).isEqualTo(5);
     }
-
 }

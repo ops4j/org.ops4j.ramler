@@ -38,6 +38,7 @@ import org.raml.v2.api.model.v10.datamodel.StringTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
 import org.raml.v2.api.model.v10.declarations.AnnotationRef;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -244,20 +245,28 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
     }
 
     private void generateSimpleFieldAndAccessor(JDefinedClass klass, TypeDeclaration property) {
-        String fieldName = Names.buildVariableName(property.name());
+        String fieldName = Names.buildVariableName(property);
         JType jtype = context.getJavaType(property);
         JFieldVar field = klass.field(JMod.PRIVATE, jtype, fieldName);
+        annotateFieldWithPropertyName(field, property);
 
         generateGetter(property, klass, field, this::getGetterName);
         generateSetter(klass, jtype, fieldName);
     }
 
+    private void annotateFieldWithPropertyName(JFieldVar field, TypeDeclaration property) {
+        if (context.getConfig().isJacksonPropertyName() && !field.name().equals(property.name())) {
+            field.annotate(JsonProperty.class).param(VALUE, property.name());
+        }
+    }
+
     private void generateListFieldAndAccessors(JDefinedClass klass, ArrayTypeDeclaration property) {
-        String fieldName = Names.buildVariableName(property.name());
+        String fieldName = Names.buildVariableName(property);
         String itemTypeName = context.getApiModel().getItemType(property);
         JType elementType = findTypeVar(klass, property).orElse(context.getJavaType(itemTypeName));
         JClass listType = codeModel.ref(List.class).narrow(elementType);
         JFieldVar field = klass.field(JMod.PRIVATE, listType, fieldName);
+        annotateFieldWithPropertyName(field, property);
 
         JMethod getter = klass.method(JMod.PUBLIC, listType, getGetterName(fieldName));
         getter.body()._return(field);
@@ -269,7 +278,7 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
     }
 
     private void generateObjectFieldAndAccessors(JDefinedClass klass, TypeDeclaration property) {
-        String fieldName = Names.buildVariableName(property.name());
+        String fieldName = Names.buildVariableName(property);
 
         JType jtype = findTypeVar(klass, property).orElse(context.getJavaType(property));
         List<String> args = Annotations.getStringAnnotations(property, TYPE_ARGS);
@@ -282,6 +291,7 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
             jtype = jclass;
         }
         JFieldVar field = klass.field(JMod.PRIVATE, jtype, fieldName);
+        annotateFieldWithPropertyName(field, property);
 
         generateGetter(property, klass, field, this::getGetterName);
         generateSetter(klass, jtype, fieldName);
@@ -324,9 +334,10 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
 
     private void generateBooleanFieldAndAccessors(JDefinedClass klass,
         BooleanTypeDeclaration property) {
-        String fieldName = Names.buildVariableName(property.name());
+        String fieldName = Names.buildVariableName(property);
         JType jtype = context.getJavaType(property);
         JFieldVar field = klass.field(JMod.PRIVATE, jtype, fieldName);
+        annotateFieldWithPropertyName(field, property);
 
         generateGetter(property, klass, field, this::getCheckerName);
         generateSetter(klass, jtype, fieldName);

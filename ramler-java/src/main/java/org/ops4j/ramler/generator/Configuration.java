@@ -44,6 +44,8 @@ public class Configuration {
 
     private boolean jacksonTypeInfo;
 
+    private boolean jacksonPropertyName;
+
     /**
      * Gets the name of the base package for all subpackages created by the code generator.
      *
@@ -173,23 +175,27 @@ public class Configuration {
         this.interfaceNameSuffix = interfaceNameSuffix;
     }
 
-
     public boolean isDiscriminatorMutable() {
         return discriminatorMutable;
     }
-
 
     public void setDiscriminatorMutable(boolean discriminatorMutable) {
         this.discriminatorMutable = discriminatorMutable;
     }
 
-
     public boolean isJacksonTypeInfo() {
         return jacksonTypeInfo;
     }
 
-
     public void setJacksonTypeInfo(boolean jacksonTypeInfo) {
         this.jacksonTypeInfo = jacksonTypeInfo;
+    }
+
+    public boolean isJacksonPropertyName() {
+        return jacksonPropertyName;
+    }
+
+    public void setJacksonPropertyName(boolean jacksonPropertyName) {
+        this.jacksonPropertyName = jacksonPropertyName;
     }
 }

@@ -57,7 +57,7 @@ public abstract class AbstractJavaMojo extends AbstractMojo {
 
     /**
      * Suffix for interface names. This suffix is appended to the code name of a resource.
-     * The code name is either specified explicitly by the {@ (codeName)} annotation, or implicitly
+     * The code name is either specified explicitly by the {@code (codeName)} annotation, or implicitly
      * by the resource name, converted to camel case.
      */
     @Parameter(defaultValue = "Resource")
@@ -68,6 +68,12 @@ public abstract class AbstractJavaMojo extends AbstractMojo {
      */
     @Parameter(defaultValue = "false")
     private boolean jacksonTypeInfo;
+
+    /**
+     * Should Java classes include {@code JsonProperty} annotations for properties with illegal Java names?
+     */
+    @Parameter(defaultValue = "false")
+    private boolean jacksonPropertyName;
 
     @Parameter(readonly = true, defaultValue = "${project}")
     protected MavenProject project;
@@ -89,6 +95,7 @@ public abstract class AbstractJavaMojo extends AbstractMojo {
             config.setDiscriminatorMutable(discriminatorMutable);
             config.setInterfaceNameSuffix(interfaceNameSuffix);
             config.setJacksonTypeInfo(jacksonTypeInfo);
+            config.setJacksonPropertyName(jacksonPropertyName);
 
             try {
                 Generator generator = new Generator(config);

@@ -136,6 +136,7 @@ public class SimpleObjectTest extends AbstractGeneratorTest {
         assertProperty(klass, "$static", "boolean", "isStatic", "setStatic");
         assertProperty(klass, "customerName", "String", "getCustomerName", "setCustomerName");
         assertProperty(klass, "$interface", "int", "getInterface", "setInterface");
+        assertProperty(klass, "someOtherName", "String", "getSomeOtherName", "setSomeOtherName");
         verifyClass();
     }
 }

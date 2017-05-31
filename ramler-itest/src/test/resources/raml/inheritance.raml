@@ -1,6 +1,9 @@
 #%RAML 1.0
 title: Type hierarchy
 mediaType: application/json
+annotationTypes:
+  codeName:
+    type: string
 types:
   Address:
     properties:
@@ -33,3 +36,11 @@ types:
     type: Employee
     properties:
       numEmployees: integer
+  FunnyNames:
+    properties:
+      static: boolean
+      customer.name : string
+      interface: integer
+      rawName:
+        type: string
+        (codeName): someOtherName
