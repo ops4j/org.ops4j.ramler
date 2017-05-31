@@ -39,15 +39,15 @@ import com.sun.codemodel.JTypeVar;
 
 public abstract class AbstractGeneratorTest {
 
-    protected static Generator generator;
-    private static JCodeModel codeModel;
-    protected static JPackage modelPackage;
+    protected Generator generator;
+    protected JPackage modelPackage;
     protected JDefinedClass klass;
     protected Set<String> methodNames;
     protected Set<String> fieldNames;
+    private JCodeModel codeModel;
 
     @Before
-    public void shouldGeneratePojos() {
+    public void generateJavaModel() {
         Configuration config = new Configuration();
         config.setSourceFile(String.format("raml/%s.raml", getBasename()));
         config.setBasePackage(String.format("org.ops4j.raml.%s", getBasename()));
@@ -63,10 +63,8 @@ public abstract class AbstractGeneratorTest {
     public abstract String getBasename();
 
     protected void assertClasses(String... classNames) {
-        Set<String> actualClassNames = new HashSet<>();
-        modelPackage.classes().forEachRemaining(c -> actualClassNames.add(c.name()));
-        assertThat(actualClassNames).containsExactlyInAnyOrder(classNames);
-
+        assertThat(modelPackage.classes()).extracting(JDefinedClass::name)
+            .containsExactlyInAnyOrder(classNames);
     }
 
     protected void expectClass(String className) {
@@ -88,8 +86,6 @@ public abstract class AbstractGeneratorTest {
         JClass baseclass = klass._extends();
         assertThat(baseclass.name()).isEqualTo(className);
     }
-
-
 
     protected void verifyClass() {
         assertThat(fieldNames).isEmpty();
@@ -128,7 +124,6 @@ public abstract class AbstractGeneratorTest {
         JMethod getter = getters.get(0);
         assertThat(getter.type().name()).isEqualTo(typeName);
         assertThat(getter.hasSignature(new JType[0])).isTrue();
-
 
         fieldNames.remove(memberName);
         methodNames.remove(getterName);
