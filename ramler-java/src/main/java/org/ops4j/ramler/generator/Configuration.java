@@ -175,26 +175,50 @@ public class Configuration {
         this.interfaceNameSuffix = interfaceNameSuffix;
     }
 
+    /**
+     * Should discriminator properties be mutable?
+     * @return true if discriminators are mutable
+     */
     public boolean isDiscriminatorMutable() {
         return discriminatorMutable;
     }
 
+    /**
+     * Should discriminator properties be mutable?
+     * @param discriminatorMutable desired setting
+     */
     public void setDiscriminatorMutable(boolean discriminatorMutable) {
         this.discriminatorMutable = discriminatorMutable;
     }
 
+    /**
+     * Should Jackson annotation {@code @JsonTypeInfo} be used where appropriate?
+     * @return true if type info is added to generated code
+     */
     public boolean isJacksonTypeInfo() {
         return jacksonTypeInfo;
     }
 
+    /**
+     * Should Jackson annotation {@code @JsonTypeInfo} be used where appropriate?
+     * @param jacksonTypeInfo desired setting
+     */
     public void setJacksonTypeInfo(boolean jacksonTypeInfo) {
         this.jacksonTypeInfo = jacksonTypeInfo;
     }
 
+    /**
+     * Should Jackson annotation {@code @JsonProperty} be used where necessary?
+     * @return true if differing JSON property name is added to generated code
+     */
     public boolean isJacksonPropertyName() {
         return jacksonPropertyName;
     }
 
+    /**
+     * Should Jackson annotation {@code @JsonProperty} be used where necessary?
+     * @param jacksonPropertyName desired setting
+     */
     public void setJacksonPropertyName(boolean jacksonPropertyName) {
         this.jacksonPropertyName = jacksonPropertyName;
     }

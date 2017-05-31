@@ -91,6 +91,14 @@ public class Names {
         return Constants.JAVA_KEYWORDS.contains(name) ? ("$" + name) : name;
     }
 
+    /**
+     * Builds a variable name for the given property. The result will be a camel-case identifier
+     * starting with a lower-case character. If the name would conflict with a Java keyword,
+     * a "$" character is prefixed.
+     *
+     * @param property RAML property
+     * @return legal Java identifier.
+     */
     public static String buildVariableName(TypeDeclaration property) {
         return defaultIfBlank(Annotations.findCodeName(property),
             buildVariableName(property.name()));

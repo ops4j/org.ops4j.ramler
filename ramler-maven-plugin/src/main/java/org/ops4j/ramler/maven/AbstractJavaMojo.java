@@ -56,9 +56,9 @@ public abstract class AbstractJavaMojo extends AbstractMojo {
     private boolean discriminatorMutable;
 
     /**
-     * Suffix for interface names. This suffix is appended to the code name of a resource.
-     * The code name is either specified explicitly by the {@code (codeName)} annotation, or implicitly
-     * by the resource name, converted to camel case.
+     * Suffix for interface names. This suffix is appended to the code name of a resource. The code
+     * name is either specified explicitly by the {@code (codeName)} annotation, or implicitly by
+     * the resource name, converted to camel case.
      */
     @Parameter(defaultValue = "Resource")
     private String interfaceNameSuffix;
@@ -70,7 +70,8 @@ public abstract class AbstractJavaMojo extends AbstractMojo {
     private boolean jacksonTypeInfo;
 
     /**
-     * Should Java classes include {@code JsonProperty} annotations for properties with illegal Java names?
+     * Should Java classes include {@code JsonProperty} annotations for properties with illegal Java
+     * names?
      */
     @Parameter(defaultValue = "false")
     private boolean jacksonPropertyName;
