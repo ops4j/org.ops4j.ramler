@@ -244,7 +244,7 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
     }
 
     private void generateSimpleFieldAndAccessor(JDefinedClass klass, TypeDeclaration property) {
-        String fieldName = property.name();
+        String fieldName = Names.buildVariableName(property.name());
         JType jtype = context.getJavaType(property);
         JFieldVar field = klass.field(JMod.PRIVATE, jtype, fieldName);
 
@@ -253,7 +253,7 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
     }
 
     private void generateListFieldAndAccessors(JDefinedClass klass, ArrayTypeDeclaration property) {
-        String fieldName = property.name();
+        String fieldName = Names.buildVariableName(property.name());
         String itemTypeName = context.getApiModel().getItemType(property);
         JType elementType = findTypeVar(klass, property).orElse(context.getJavaType(itemTypeName));
         JClass listType = codeModel.ref(List.class).narrow(elementType);
@@ -269,7 +269,7 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
     }
 
     private void generateObjectFieldAndAccessors(JDefinedClass klass, TypeDeclaration property) {
-        String fieldName = property.name();
+        String fieldName = Names.buildVariableName(property.name());
 
         JType jtype = findTypeVar(klass, property).orElse(context.getJavaType(property));
         List<String> args = Annotations.getStringAnnotations(property, TYPE_ARGS);
@@ -324,7 +324,7 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
 
     private void generateBooleanFieldAndAccessors(JDefinedClass klass,
         BooleanTypeDeclaration property) {
-        String fieldName = property.name();
+        String fieldName = Names.buildVariableName(property.name());
         JType jtype = context.getJavaType(property);
         JFieldVar field = klass.field(JMod.PRIVATE, jtype, fieldName);
 
@@ -355,9 +355,13 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
     }
 
     private String getAccessorName(String prefix, String fieldName) {
+        int start = 0;
+        if (fieldName.startsWith("$")) {
+            start++;
+        }
         StringBuilder buffer = new StringBuilder(prefix);
-        buffer.append(fieldName.substring(0, 1).toUpperCase());
-        buffer.append(fieldName.substring(1));
+        buffer.append(fieldName.substring(start, start + 1).toUpperCase());
+        buffer.append(fieldName.substring(start + 1));
         return buffer.toString();
     }
 }

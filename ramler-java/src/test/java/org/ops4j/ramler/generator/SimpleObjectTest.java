@@ -38,7 +38,7 @@ public class SimpleObjectTest extends AbstractGeneratorTest {
 
     @Test
     public void shouldFindModelClasses() {
-        assertClasses("Address", "Colour", "Employee", "FileResponse",
+        assertClasses("Address", "Colour", "Employee", "FileResponse", "FunnyNames",
             "Integers", "Manager", "Numbers", "Person", "Temporals", "User", "UserGroup");
     }
 
@@ -127,6 +127,15 @@ public class SimpleObjectTest extends AbstractGeneratorTest {
         fieldNames.remove("DISCRIMINATOR");
         methodNames.remove("getObjectType");
         methodNames.remove("setObjectType");
+        verifyClass();
+    }
+
+    @Test
+    public void shouldFindFunnyNamesMembers() {
+        expectClass("FunnyNames");
+        assertProperty(klass, "$static", "boolean", "isStatic", "setStatic");
+        assertProperty(klass, "customerName", "String", "getCustomerName", "setCustomerName");
+        assertProperty(klass, "$interface", "int", "getInterface", "setInterface");
         verifyClass();
     }
 }
