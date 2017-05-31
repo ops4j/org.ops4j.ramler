@@ -25,6 +25,7 @@ import java.io.StringWriter;
 import org.junit.Test;
 import org.ops4j.ramler.itest.model.FunnyNames;
 
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class FunnyPropertyNameTest {
@@ -39,10 +40,11 @@ public class FunnyPropertyNameTest {
 
         StringWriter sw = new StringWriter();
         ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true);
         mapper.writer().writeValue(sw, funnyNames);
         String json = sw.toString();
 
-        assertThat(json).isEqualTo("{\"static\":true,\"interface\":-1,\"customer.name\":\"Donald Duck\",\"rawName\":\"Voldemort\"}");
+        assertThat(json).isEqualTo("{\"customer.name\":\"Donald Duck\",\"interface\":-1,\"rawName\":\"Voldemort\",\"static\":true}");
     }
 
     @Test
