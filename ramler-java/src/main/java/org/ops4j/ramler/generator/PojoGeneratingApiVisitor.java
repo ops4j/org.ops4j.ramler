@@ -25,6 +25,7 @@ import static org.ops4j.ramler.generator.Constants.TYPE_VARS;
 import static org.ops4j.ramler.generator.Constants.VALUE;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
@@ -227,7 +228,10 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
     }
 
     private void generateFieldAndAccessors(JDefinedClass klass, TypeDeclaration property) {
-        if (property instanceof ObjectTypeDeclaration) {
+        if (isAdditionalProperties(property)) {
+            generateAdditionalPropertiesFieldAndAccessors(klass, property);
+        }
+        else if (property instanceof ObjectTypeDeclaration) {
             generateObjectFieldAndAccessors(klass, property);
         }
         else if (property instanceof ArrayTypeDeclaration) {
@@ -242,6 +246,34 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         else {
             generateSimpleFieldAndAccessor(klass, property);
         }
+    }
+
+    /**
+     * @param property
+     * @return
+     */
+    private boolean isAdditionalProperties(TypeDeclaration property) {
+        return property.name().startsWith("/");
+    }
+
+    /**
+     * @param klass
+     * @param property
+     */
+    private void generateAdditionalPropertiesFieldAndAccessors(JDefinedClass klass,
+        TypeDeclaration property) {
+        String fieldName = Names.buildVariableName(property);
+        JClass mapType = codeModel.ref(Map.class).narrow(String.class, Object.class);
+        JFieldVar field = klass.field(JMod.PRIVATE, mapType, fieldName);
+        annotateFieldWithPropertyName(field, property);
+
+        JMethod getter = klass.method(JMod.PUBLIC, mapType, getGetterName(fieldName));
+        getter.body()._return(field);
+
+        if (property.description() != null) {
+            getter.javadoc().add(property.description().value());
+        }
+        generateSetter(klass, mapType, fieldName);
     }
 
     private void generateSimpleFieldAndAccessor(JDefinedClass klass, TypeDeclaration property) {

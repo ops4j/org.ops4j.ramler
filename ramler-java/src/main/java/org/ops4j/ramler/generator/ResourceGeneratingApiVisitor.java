@@ -176,11 +176,31 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
 
     @Override
     public void visitMethodStart(Method method) {
-        int numResponseTypes = 0;
-        if (!method.responses().isEmpty()) {
-            numResponseTypes = method.responses().get(0).body().size();
+        int numResponseTypes = getNumResponseTypes(method);
+        if (numResponseTypes == 0) {
+            buildVoidMethod(method);
         }
+        else {
+            buildNonVoidMethods(method, numResponseTypes);
+        }
+    }
+
+    private void buildVoidMethod(Method method) {
+        String methodName = buildMethodName(method, -1);
+        JMethod codeMethod = klass.method(JMod.NONE, klass, methodName);
+
+        addJavadoc(method, codeMethod);
+        addSubresourcePath(codeMethod);
+        addHttpMethodAnnotation(method.method(), codeMethod);
+        addBodyParameters(method, codeMethod);
+        addPathParameters(method, codeMethod);
+        addQueryParameters(method, codeMethod);
+        addReturnType(method, codeMethod, null);
+    }
+
+    private void buildNonVoidMethods(Method method, int numResponseTypes) {
         for (int bodyIndex = 0; bodyIndex < numResponseTypes; bodyIndex++) {
+            TypeDeclaration body = method.responses().get(0).body().get(bodyIndex);
             String methodName = buildMethodName(method, bodyIndex);
             JMethod codeMethod = klass.method(JMod.NONE, klass, methodName);
 
@@ -190,9 +210,17 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
             addBodyParameters(method, codeMethod);
             addPathParameters(method, codeMethod);
             addQueryParameters(method, codeMethod);
-            TypeDeclaration body = method.responses().get(0).body().get(bodyIndex);
             addReturnType(method, codeMethod, body);
             addProduces(method, codeMethod, body);
+        }
+    }
+
+    private int getNumResponseTypes(Method method) {
+        if (method.responses().isEmpty()) {
+            return 0;
+        }
+        else {
+            return method.responses().get(0).body().size();
         }
     }
 

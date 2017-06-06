@@ -1,0 +1,19 @@
+#%RAML 1.0
+title: API with Types
+mediaType: application/json
+uses:
+  r: ../ramler.raml 
+types:
+  Person:
+    properties:
+      firstname:
+        type: string
+      lastname:
+        type: string
+      address:
+        type: string
+      age:
+        type: integer
+      //:
+        (r.codeName): addProps
+        type: integer    

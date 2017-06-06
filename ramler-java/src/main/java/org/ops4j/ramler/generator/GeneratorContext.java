@@ -239,8 +239,8 @@ public class GeneratorContext {
      */
     public JType getJavaType(TypeDeclaration decl) {
         if (decl instanceof ObjectTypeDeclaration) {
-            if (decl.type().equals("object")) {
-                return codeModel.ref(Object.class);
+            if (decl.type().equals(Constants.OBJECT)) {
+                return codeModel.ref(Map.class).narrow(String.class, Object.class);
             }
             return getModelPackage()._getClass(decl.type());
         }

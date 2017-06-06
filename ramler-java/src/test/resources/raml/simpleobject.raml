@@ -196,3 +196,14 @@ types:
           text/csv:
             (r.codeName): asCsv
             type: string
+/anything:
+  post:
+    body:
+      type: object
+    responses:
+      200:
+  get:
+      responses:
+        200:
+          body:
+            type: object
