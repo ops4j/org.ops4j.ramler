@@ -34,7 +34,9 @@ public class AdditionalPropertiesTest extends AbstractGeneratorTest {
     @Test
     public void shouldFindPersonListMembers() {
         expectClass("Person");
-        assertProperty(klass, "list", "List<Person>", "getList", "setList");
+        assertProperty(klass, "firstName", "String", "getFirstName", "setFirstName");
+        assertProperty(klass, "lastName", "String", "getLastName", "setLastName");
+        assertProperty(klass, "addProps", "Map<String,Object>", "getAddProps", "setAddProps");
         verifyClass();
     }
 }
