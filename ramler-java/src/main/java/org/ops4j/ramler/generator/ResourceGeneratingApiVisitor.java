@@ -90,6 +90,7 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
 
     private List<String> mediaTypes = Collections.emptyList();
 
+
     /**
      * Creates a visitor for the given generator context.
      *
@@ -122,8 +123,7 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
                 innerResource = resource;
             }
             else {
-                throw new GeneratorException(
-                    "cannot handle resources nested more than two levels");
+                throw new GeneratorException("cannot handle resources nested more than two levels");
             }
         }
         catch (JClassAlreadyExistsException exc) {
@@ -139,10 +139,10 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
 
     private void addMediaTypes() {
         if (mediaTypes.size() > 1) {
-            mediaTypes.forEach(
-                m -> klass.annotate(Produces.class).paramArray(VALUE).param(mediaType(m)));
-            mediaTypes.forEach(
-                m -> klass.annotate(Consumes.class).paramArray(VALUE).param(mediaType(m)));
+            mediaTypes
+                .forEach(m -> klass.annotate(Produces.class).paramArray(VALUE).param(mediaType(m)));
+            mediaTypes
+                .forEach(m -> klass.annotate(Consumes.class).paramArray(VALUE).param(mediaType(m)));
         }
         else if (!mediaTypes.isEmpty()) {
             JExpression m = mediaType(mediaTypes.get(0));
@@ -176,16 +176,47 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
 
     @Override
     public void visitMethodStart(Method method) {
-        String methodName = buildMethodName(method);
-        JMethod codeMethod = klass.method(JMod.NONE, klass, methodName);
+        int numResponseTypes = 0;
+        if (!method.responses().isEmpty()) {
+            numResponseTypes = method.responses().get(0).body().size();
+        }
+        for (int bodyIndex = 0; bodyIndex < numResponseTypes; bodyIndex++) {
+            String methodName = buildMethodName(method, bodyIndex);
+            JMethod codeMethod = klass.method(JMod.NONE, klass, methodName);
 
-        addJavadoc(method, codeMethod);
-        addSubresourcePath(codeMethod);
-        addHttpMethodAnnotation(method.method(), codeMethod);
-        addBodyParameters(method, codeMethod);
-        addPathParameters(method, codeMethod);
-        addQueryParameters(method, codeMethod);
-        addReturnType(method, codeMethod);
+            addJavadoc(method, codeMethod);
+            addSubresourcePath(codeMethod);
+            addHttpMethodAnnotation(method.method(), codeMethod);
+            addBodyParameters(method, codeMethod);
+            addPathParameters(method, codeMethod);
+            addQueryParameters(method, codeMethod);
+            TypeDeclaration body = method.responses().get(0).body().get(bodyIndex);
+            addReturnType(method, codeMethod, body);
+            addProduces(method, codeMethod, body);
+        }
+    }
+
+    private void addProduces(Method method, JMethod codeMethod, TypeDeclaration body) {
+        String mediaType = body.name();
+        boolean useDefault = (mediaTypes.size() == 1) && mediaTypes.get(0).equals(mediaType);
+        if (!useDefault) {
+            codeMethod.annotate(Produces.class).param(VALUE, mediaType);
+        }
+    }
+
+    private String buildMethodName(Method method, int bodyIndex) {
+        String methodName = buildMethodName(method);
+        if (bodyIndex > 0) {
+            TypeDeclaration responseType = method.responses().get(0).body().get(bodyIndex);
+            String codeName = Annotations.findCodeName(responseType);
+            if (codeName == null) {
+                methodName += bodyIndex;
+            }
+            else {
+                methodName = codeName;
+            }
+        }
+        return methodName;
     }
 
     private String buildMethodName(Method method) {
@@ -214,7 +245,7 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
         }
     }
 
-    private void addReturnType(Method method, JMethod codeMethod) {
+    private void addReturnType(Method method, JMethod codeMethod, TypeDeclaration body) {
         if (method.responses().isEmpty()) {
             codeMethod.type(codeModel.VOID);
         }
@@ -224,7 +255,6 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
                 codeMethod.type(codeModel.VOID);
             }
             else {
-                TypeDeclaration body = response.body().get(0);
                 JType resultType = context.getJavaType(body);
                 resultType = addTypeArguments(resultType, body);
                 codeMethod.type(resultType);

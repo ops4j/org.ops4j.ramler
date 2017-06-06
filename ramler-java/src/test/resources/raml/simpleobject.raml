@@ -191,4 +191,8 @@ types:
     responses:
       200:
         body:
-          type: FileResponse
+          application/json:
+            type: FileResponse
+          text/csv:
+            (r.codeName): asCsv
+            type: string
