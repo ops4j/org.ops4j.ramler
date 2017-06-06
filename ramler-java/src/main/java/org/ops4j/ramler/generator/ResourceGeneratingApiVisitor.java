@@ -211,7 +211,7 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
             addPathParameters(method, codeMethod);
             addQueryParameters(method, codeMethod);
             addReturnType(method, codeMethod, body);
-            addProduces(method, codeMethod, body);
+            addProduces(codeMethod, body);
         }
     }
 
@@ -224,7 +224,7 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
         }
     }
 
-    private void addProduces(Method method, JMethod codeMethod, TypeDeclaration body) {
+    private void addProduces(JMethod codeMethod, TypeDeclaration body) {
         String mediaType = body.name();
         boolean useDefault = (mediaTypes.size() == 1) && mediaTypes.get(0).equals(mediaType);
         if (!useDefault) {
@@ -238,7 +238,7 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
             TypeDeclaration responseType = method.responses().get(0).body().get(bodyIndex);
             String codeName = Annotations.findCodeName(responseType);
             if (codeName == null) {
-                methodName += bodyIndex;
+                methodName += Integer.toString(bodyIndex);
             }
             else {
                 methodName = codeName;
