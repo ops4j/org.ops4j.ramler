@@ -186,6 +186,14 @@ public class Person {
 }
 ----    
 
+By default, the Java field name will be equal to the RAML property name and the accessor method names will follow
+the usual Java bean naming conventions. The getter for a boolean property `foo` is named `isFoo()`.
+
+If the property name conflicts with a Java keyword, the field name is prefixed with a `$`.
+
+Custom field names can be specified with the RAML annotation `(codeName)`. When the Ramler configuration 
+property `jacksonPropertyName` is set, Ramler will add a `JsonProperty` annotation to the field so that
+Jackson will map the Java field to the JSON property indicated by the annotation.
 
 == Scalar Property Mapping
 
@@ -204,7 +212,7 @@ according to the following table:
 | `integer`         | `int64, long`   | yes             | `long`
 | `integer`         | `int64, long`   | no              | `java.lang.Long`
 | `integer`         | `int8, int16, int32, int`   | yes   | `int`
-| `integer`         | `int8, int16, int32, int`   | yes   | `java.lang.Integer`
+| `integer`         | `int8, int16, int32, int`   | no    | `java.lang.Integer`
 | `null`            |               |                   | `java.lang.Object`
 | `number`          | `double`      | yes               | `double`
 | `number`          | `double`      | no                | `java.lang.Double`
@@ -225,15 +233,16 @@ according to the following table:
 
 | `any`             | `java.lang.Object`
 | `array`           | `java.util.List<I>`
-| `object`          | POJO or `java.lang.Object`
+| `object`          | POJO or `Map<String, Object>`
 | `union`           | not supported
 |===
 
 
 For array types, the type argument `I` of the Java `List` type will be the Java type of the array item type.
 
-For object types, the referenced type will be the generated Java class if the type has any properties, 
-or `java.lang.Object` otherwise.
+For object types, the referenced type will be the generated Java class if the type has any properties. A RAML `object`
+type without any specified properties will be mapped to `Map<String, Object>`, to allow for any JSON properties
+at run-time that are unknown at modelling time.
 
 Union types are currently not supported. 
 
@@ -633,7 +642,73 @@ For all `@*Param` annotations, the unnamed annotation argument corresponds to th
 
 Ramler does not currently support header or matrix parameters.
 
+== Multiple Media Types
+
+For a resource method with a response body that supports multiple media types, Ramler will generate a separate Java method 
+for each media type and add a `@Produces` annotation to each method not matching the media type defined at class level.
+
+It is recommended to specify the generated method name with a `codeName` annotation to the alternative media type. By default,
+Ramler will simply add a numerical suffix to the RAML method name.
+
+Example:
+
+  /anything:
+    get:
+      responses:
+        200:
+          body:
+            application/json:
+              type: object
+            text/csv:
+              (r.codeName): getCsv
+              type: string
+
+[source,java]
+----
+
+@Path("/anything")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
+public interface AnythingResource {
+
+    @GET
+    Map<String, Object> get();
+
+    @GET
+    @Produces("text/csv")
+    String getCsv();
+
+}
+----
+
+= HTML Generator
+
+The HTML generator generates a static website with three columns for types and resources, details and examples.
+
+You can customize the layout by overriding the included web resources or even by adapting the 
+http://www.trimou.org[Trimou] templates used to generate output from the parsed API model.
+
+To do so, set the configuration properties `webResourceDir` or `templateDir`, respectively.
+
 = Maven Plugin
+
+== html Goal
+
+|===
+| Parameter     | Type          | Meaning
+
+| `model`         | `String`        | RAML specification file
+
+| `outputDir`     | `File`          | Output directory for generated code. 
+Default: `${project.build.directory}/generated-sources/ramler`
+
+| `webResourceDir` | `File` | Directory with web resources to be used instead of the built-in resources.
+
+| `templateDir` | `File` | Directory with Trimou templates which take precedence over the built-in templates.
+The entry template is named `api.trimou.html`.
+
+|===
+
 
 == java Goal
 
@@ -648,8 +723,23 @@ The generated classes will be located in subpackages `model` and `api`
 | `outputDir`     | `File`          | Output directory for generated code. 
 Default: `${project.build.directory}/generated-sources/ramler`
 
-|===
+| `discriminatorMutable` | `boolean` | Should discriminator properties be mutable?
+Default: `false`
 
+| `interfaceNameSuffix` | `String` | Suffix for interface names. 
+This suffix is appended to the code name of a resource. The code
+name is either specified explicitly by the `(codeName)` annotation, or implicitly by
+the resource name, converted to camel case.
+Default: `Resource`
+
+| `jacksonPropertyName` | `boolean` |  Should Java classes include `JsonProperty` annotations 
+for properties with illegal Java names?
+Default: `false`
+
+| `jacksonTypeInfo` | `boolean` |  Should Java classes include `JsonTypeInfo` annotations for type hierarchies?
+Default: `false`
+
+|===
 
 
 == java-test Goal  
@@ -663,6 +753,23 @@ The generated classes will be located in subpackages `model` and `api`
 
 | `outputDir`     | `File`          | Output directory for generated code. 
 Default: `${project.build.directory}/generated-test-sources/ramler`
+
+| `discriminatorMutable` | `boolean` | Should discriminator properties be mutable?
+Default: `false`
+
+| `interfaceNameSuffix` | `String` | Suffix for interface names. 
+This suffix is appended to the code name of a resource. The code
+name is either specified explicitly by the `(codeName)` annotation, or implicitly by
+the resource name, converted to camel case.
+Default: `Resource`
+
+| `jacksonPropertyName` | `boolean` |  Should Java classes include `JsonProperty` annotations 
+for properties with illegal Java names?
+Default: `false`
+
+| `jacksonTypeInfo` | `boolean` |  Should Java classes include `JsonTypeInfo` annotations for type hierarchies?
+Default: `false`
+
 |===
 
 
