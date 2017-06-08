@@ -232,11 +232,11 @@ public class ParserTest {
         Api api = apiModel.getApi();
 
         assertTypes(api.types().get(0), "ObjectList",   "object",         "object");
-        assertTypes(api.types().get(1), "NameList",     "string",         "Name");
-        assertTypes(api.types().get(2), "PersonList",   "object",         "Person");
+        assertTypes(api.types().get(1), "NameList",     "Name",           "Name");
+        assertTypes(api.types().get(2), "PersonList",   "Person",         "Person");
         assertTypes(api.types().get(3), "StringList",   "string",         "string");
-        assertTypes(api.types().get(4), "BooleanList",  "boolean",         "boolean");
-        assertTypes(api.types().get(5), "DigitList",    "integer",         "Digit");
+        assertTypes(api.types().get(4), "BooleanList",  "boolean",        "boolean");
+        assertTypes(api.types().get(5), "DigitList",    "Digit",          "Digit");
     }
 
     @Test
@@ -244,8 +244,8 @@ public class ParserTest {
         parse("nestedArray.raml");
         Api api = apiModel.getApi();
 
-        assertTypes(api.types().get(0), "PersonList",       "object",   "Person");
-        assertTypes(api.types().get(1), "PersonArrayList",  "array",    "PersonArray");
+        assertTypes(api.types().get(0), "PersonList",       "Person",   "Person");
+        assertTypes(api.types().get(1), "PersonArrayList",  "PersonArray",    "PersonArray");
     }
 
     @Test
