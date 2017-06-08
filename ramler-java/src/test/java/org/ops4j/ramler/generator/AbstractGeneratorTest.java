@@ -22,16 +22,20 @@ import static java.util.stream.Collectors.toSet;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
+import java.io.StringWriter;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.junit.Before;
 
+import com.sun.codemodel.JAnnotationUse;
+import com.sun.codemodel.JAnnotationValue;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JFieldVar;
+import com.sun.codemodel.JFormatter;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JPackage;
 import com.sun.codemodel.JType;
@@ -45,6 +49,7 @@ public abstract class AbstractGeneratorTest {
     protected Set<String> methodNames;
     protected Set<String> fieldNames;
     private JCodeModel codeModel;
+    private JPackage apiPackage;
 
     @Before
     public void generateJavaModel() {
@@ -58,6 +63,7 @@ public abstract class AbstractGeneratorTest {
 
         codeModel = generator.getContext().getCodeModel();
         modelPackage = codeModel._package(String.format("org.ops4j.raml.%s.model", getBasename()));
+        apiPackage = codeModel._package(String.format("org.ops4j.raml.%s.api", getBasename()));
     }
 
     public abstract String getBasename();
@@ -65,6 +71,49 @@ public abstract class AbstractGeneratorTest {
     protected void assertClasses(String... classNames) {
         assertThat(modelPackage.classes()).extracting(JDefinedClass::name)
             .containsExactlyInAnyOrder(classNames);
+    }
+
+    protected void assertApiClasses(String... classNames) {
+        assertThat(apiPackage.classes()).extracting(JDefinedClass::name)
+            .containsExactlyInAnyOrder(classNames);
+    }
+
+    protected void assertApiMethods(String className, String... methodNames) {
+        JDefinedClass klass = apiPackage._getClass(className);
+        assertThat(klass.methods()).extracting(JMethod::name).containsExactlyInAnyOrder(methodNames);
+    }
+
+    protected JMethod findApiMethod(String className, String methodName) {
+        JDefinedClass klass = apiPackage._getClass(className);
+        return klass.methods().stream().filter(m -> m.name().equals(methodName)).findFirst().get();
+    }
+
+    protected void assertReturnType(JMethod method, String returnType) {
+        assertThat(method.type().name()).isEqualTo(returnType);
+    }
+
+    protected void assertSignature(JMethod method, String... parameterTypes) {
+        assertThat(method.listParamTypes()).hasSize(parameterTypes.length)
+            .extracting(JType::name).containsExactly(parameterTypes);
+    }
+
+    protected void assertSimpleAnnotation(JMethod method, String annotation, String argument) {
+        JAnnotationUse annotationUse = method.annotations().stream()
+            .filter(a -> a.getAnnotationClass().name().equals(annotation)).findFirst().get();
+        JAnnotationValue value = annotationUse.getAnnotationMembers().get("value");
+        StringWriter writer = new StringWriter();
+        JFormatter formatter = new JFormatter(writer);
+        value.generate(formatter);
+        assertThat(writer.toString()).isEqualTo(argument);
+    }
+
+    protected void assertNoArgAnnotation(JMethod method, Class<?> annotation) {
+        JAnnotationUse annotationUse = method.annotations().stream()
+            .filter(a -> a.getAnnotationClass().name().equals(annotation.getSimpleName())).findFirst().get();
+        StringWriter writer = new StringWriter();
+        JFormatter formatter = new JFormatter(writer);
+        annotationUse.generate(formatter);
+        assertThat(writer.toString()).isEqualTo("@" + annotation.getName());
     }
 
     protected void expectClass(String className) {
