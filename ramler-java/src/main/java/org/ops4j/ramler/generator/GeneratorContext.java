@@ -257,8 +257,8 @@ public class GeneratorContext {
      * @return corresponding Java type
      */
     public JType getJavaType(String type) {
-        if (type.equals("object")) {
-            return codeModel.ref(Object.class);
+        if (type.equals(Constants.OBJECT)) {
+            return codeModel.ref(Map.class).narrow(String.class, Object.class);
         }
         if (type.equals("string")) {
             return codeModel.ref(String.class);

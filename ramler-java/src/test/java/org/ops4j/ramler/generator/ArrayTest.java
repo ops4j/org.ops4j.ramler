@@ -56,7 +56,7 @@ public class ArrayTest extends AbstractGeneratorTest {
     @Test
     public void shouldFindObjectListMembers() {
         expectClass("ObjectList");
-        assertProperty(klass, "list", "List<Object>", "getList", "setList");
+        assertProperty(klass, "list", "List<Map<String,Object>>", "getList", "setList");
         verifyClass();
     }
 

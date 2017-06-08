@@ -294,7 +294,7 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
         List<String> args = Annotations.getStringAnnotations(body, TYPE_ARGS);
         JClass jclass = (JClass) resultType;
         for (String arg : args) {
-            JType typeArg = context.getModelPackage()._getClass(arg);
+            JType typeArg = context.getJavaType(arg);
             jclass = jclass.narrow(typeArg);
         }
         return jclass;
