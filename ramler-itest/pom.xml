@@ -3,7 +3,7 @@
     <parent>
         <groupId>org.ops4j</groupId>
         <artifactId>ramler</artifactId>
-        <version>0.6.0-SNAPSHOT</version>
+        <version>0.6.0</version>
     </parent>
     <artifactId>ramler-itest</artifactId>
 
