@@ -24,6 +24,7 @@ import java.io.StringWriter;
 
 import org.junit.Test;
 import org.ops4j.ramler.itest.model.Address;
+import org.ops4j.ramler.itest.model.Colour;
 import org.ops4j.ramler.itest.model.Employee;
 import org.ops4j.ramler.itest.model.Manager;
 import org.ops4j.ramler.itest.model.Person;
@@ -42,6 +43,7 @@ public class PolymorphicUnmarshallingTest {
         address.setCity("Hamburg");
         address.setStreet("Colonnaden");
         person.setAddress(address);
+        person.setPreferredColour(Colour.RED);
 
         StringWriter sw = new StringWriter();
         ObjectMapper mapper = new ObjectMapper();

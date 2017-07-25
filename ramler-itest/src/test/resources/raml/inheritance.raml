@@ -14,6 +14,8 @@ types:
     format: int16
     minimum: 0
     maximum: 120
+  Colour:
+    enum: [red, blue]
   Name:
     maxLength: 80
   Person:
@@ -28,6 +30,7 @@ types:
           type: Address
       age:
           type: Age
+      preferredColour: Colour    
   Employee:
     type: Person
     properties:

@@ -23,6 +23,7 @@ import org.ops4j.ramler.exc.Exceptions;
 import org.ops4j.ramler.model.EnumValue;
 import org.raml.v2.api.model.v10.datamodel.StringTypeDeclaration;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JCodeModel;
@@ -102,6 +103,10 @@ public class EnumGenerator {
         JEnumConstant constant = klass.enumConstant(Names.buildConstantName(enumValue.getName()))
             .arg(JExpr.lit(enumValue.getName()));
 
+        if (context.getConfig().isJacksonPropertyName()) {
+    			constant.annotate(JsonProperty.class).param(VALUE, enumValue.getName());
+        }
+
         if (enumValue.getDescription() != null) {
             constant.javadoc().add(enumValue.getDescription());
         }
@@ -121,6 +126,7 @@ public class EnumGenerator {
     private void generateEnumFromValueMethod(JDefinedClass klass, JFieldVar valueField) {
         JMethod converter = klass.method(JMod.PUBLIC | JMod.STATIC, klass, "fromValue");
         JVar param = converter.param(String.class, VALUE);
+        
         JBlock body = converter.body();
         JForEach forEach = body.forEach(klass, "v", klass.staticInvoke("values"));
         JBlock loopBlock = forEach.body();
