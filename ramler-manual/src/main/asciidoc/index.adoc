@@ -314,6 +314,8 @@ public enum Colour {
 }    
 ----
 
+When the Ramler configuration property `jacksonPropertyName` is set, Ramler will add a `JsonProperty` annotation to each enum constant, so Jackson will map the Java constant to the correct JSON string.
+
 == Inheritance
 
 A user-defined RAML object type can have one or more base types. Since Java does not support multiple
@@ -733,7 +735,7 @@ the resource name, converted to camel case.
 Default: `Resource`
 
 | `jacksonPropertyName` | `boolean` |  Should Java classes include `JsonProperty` annotations 
-for properties with illegal Java names?
+for properties with illegal Java names? Will also annotate `enum` constants.
 Default: `false`
 
 | `jacksonTypeInfo` | `boolean` |  Should Java classes include `JsonTypeInfo` annotations for type hierarchies?
@@ -764,7 +766,7 @@ the resource name, converted to camel case.
 Default: `Resource`
 
 | `jacksonPropertyName` | `boolean` |  Should Java classes include `JsonProperty` annotations 
-for properties with illegal Java names?
+for properties with illegal Java names? Will also annotate `enum` constants.
 Default: `false`
 
 | `jacksonTypeInfo` | `boolean` |  Should Java classes include `JsonTypeInfo` annotations for type hierarchies?
