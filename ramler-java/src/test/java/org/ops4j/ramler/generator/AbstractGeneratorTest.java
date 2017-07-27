@@ -48,17 +48,13 @@ public abstract class AbstractGeneratorTest {
     protected JDefinedClass klass;
     protected Set<String> methodNames;
     protected Set<String> fieldNames;
-    private JCodeModel codeModel;
+    protected JCodeModel codeModel;
     private JPackage apiPackage;
 
     @Before
     public void generateJavaModel() {
-        Configuration config = new Configuration();
-        config.setSourceFile(String.format("raml/%s.raml", getBasename()));
-        config.setBasePackage(String.format("org.ops4j.raml.%s", getBasename()));
-        config.setTargetDir(new File("target/generated/raml"));
 
-        generator = new Generator(config);
+        generator = new Generator(getConfiguration());
         generator.generate();
 
         codeModel = generator.getContext().getCodeModel();
@@ -67,6 +63,14 @@ public abstract class AbstractGeneratorTest {
     }
 
     public abstract String getBasename();
+
+    protected Configuration getConfiguration() {
+        Configuration config = new Configuration();
+        config.setSourceFile(String.format("raml/%s.raml", getBasename()));
+        config.setBasePackage(String.format("org.ops4j.raml.%s", getBasename()));
+        config.setTargetDir(new File("target/generated/raml"));
+        return config;
+    }
 
     protected void assertClasses(String... classNames) {
         assertThat(modelPackage.classes()).extracting(JDefinedClass::name)

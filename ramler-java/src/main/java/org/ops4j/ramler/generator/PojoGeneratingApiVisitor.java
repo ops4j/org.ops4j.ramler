@@ -101,6 +101,15 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         addMixinProperties(klass, type);
     }
 
+    @Override
+    public void visitObjectTypeEnd(ObjectTypeDeclaration type) {
+        if (context.getApiModel().isInternal(type)) {
+            return;
+        }
+        JDefinedClass klass = pkg._getClass(type.name());
+        addFluentSetters(klass, type);
+    }
+
     private void addJavadoc(JDefinedClass klass, ObjectTypeDeclaration type) {
         if (type.description() == null) {
             klass.javadoc().add("Generated from a RAML specification.");
@@ -188,6 +197,33 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         type.parentTypes().stream().skip(1).forEach(p -> addMixinPropertiesFromParent(klass, p));
     }
 
+    private void addFluentSetters(JDefinedClass klass, ObjectTypeDeclaration type) {
+        if( context.getConfig().isFluentSetters() ) {
+
+            String discriminator = type.discriminator();
+
+            // add fluent setters for ACTUAL class properties as well as properties from INHERITED
+            // This is because fluent api breaks when parent types simply return current object as their type
+            // rather than as current type
+            for (TypeDeclaration property : type.properties()) {
+                String propertyName = Names.buildVariableName(property);
+                JType propertyType = context.getJavaType(property);
+
+                if( hasSetter(propertyName, discriminator) ) {
+                    generateFluentSetter(klass, propertyType, propertyName);
+                }
+            }
+        }
+    }
+
+    /**
+     * Checks whether given property is "writable" ans has a setter. This is currently hacked a little bit
+     * by checking whether property is the discriminator which is not writable
+     */
+    private boolean hasSetter(String propertyName, String discriminatorName) {
+        return !propertyName.equals(discriminatorName);
+    }
+
     private void addMixinPropertiesFromParent(JDefinedClass klass, TypeDeclaration parentType) {
         if (parentType instanceof ObjectTypeDeclaration) {
             ObjectTypeDeclaration objectType = (ObjectTypeDeclaration) parentType;
@@ -211,6 +247,8 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
             generateFieldAndAccessors(klass, property);
         }
     }
+
+
 
     private boolean isInherited(ObjectTypeDeclaration type, TypeDeclaration property) {
         if (type.name().equals(OBJECT)) {
@@ -364,6 +402,19 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         setter.body().assign(JExpr._this().ref(fieldName), p1);
     }
 
+    /**
+     * Generates a fluent setter, e.g. "ClassType withPropertyName(PropertyType value)"
+     */
+    private void generateFluentSetter(JDefinedClass klass, JType fieldType, String fieldName) {
+
+        JMethod method = klass.method(JMod.PUBLIC, klass, getFluentSetterName(fieldName));
+        JVar valueParameter = method.param(fieldType, fieldName);
+        // call "setter" with value from this method's parameter
+        method.body().invoke(getSetterName(fieldName)).arg(valueParameter);
+        // return "this"
+        method.body()._return(JExpr._this());
+    }
+
     private void generateBooleanFieldAndAccessors(JDefinedClass klass,
         BooleanTypeDeclaration property) {
         String fieldName = Names.buildVariableName(property);
@@ -395,6 +446,10 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
 
     private String getSetterName(String fieldName) {
         return getAccessorName("set", fieldName);
+    }
+
+    private String getFluentSetterName(String fieldName) {
+        return getAccessorName(context.getConfig().getFluentSetterPrefix(), fieldName);
     }
 
     private String getAccessorName(String prefix, String fieldName) {

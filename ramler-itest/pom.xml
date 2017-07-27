@@ -43,6 +43,7 @@
                     <model>${basedir}/src/test/resources/raml/inheritance.raml</model>
                     <jacksonTypeInfo>true</jacksonTypeInfo>
                     <jacksonPropertyName>true</jacksonPropertyName>
+                    <fluentSetterPrefix>with</fluentSetterPrefix>
                 </configuration>
                 <executions>
                     <execution>
