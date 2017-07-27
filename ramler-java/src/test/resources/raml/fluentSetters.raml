@@ -1,0 +1,20 @@
+#%RAML 1.0
+title: Fluent Setters Test
+mediaType: application/json
+uses:
+  r: ../ramler.raml 
+types:
+  Person:
+    discriminator: objectType
+    properties:
+      objectType: string
+      duplicateProperty: integer
+      firstName: string
+      lastName: string
+  Employee:
+    type: Person
+    properties:
+      duplicateProperty: integer
+      employeeId: integer
+      colleagues: Employee[]
+

@@ -76,6 +76,13 @@ public abstract class AbstractJavaMojo extends AbstractMojo {
     @Parameter(defaultValue = "false")
     private boolean jacksonPropertyName;
 
+    /**
+     * A prefix (e.g. "with") to be used for fluent setter generation. If not set, then no fluent setters will
+     * be generated at all
+     */
+    @Parameter
+    private String fluentSetterPrefix;
+
     @Parameter(readonly = true, defaultValue = "${project}")
     protected MavenProject project;
 
@@ -97,6 +104,7 @@ public abstract class AbstractJavaMojo extends AbstractMojo {
             config.setInterfaceNameSuffix(interfaceNameSuffix);
             config.setJacksonTypeInfo(jacksonTypeInfo);
             config.setJacksonPropertyName(jacksonPropertyName);
+            config.setFluentSetterPrefix(fluentSetterPrefix);
 
             try {
                 Generator generator = new Generator(config);

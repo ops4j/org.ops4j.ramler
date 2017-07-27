@@ -46,6 +46,8 @@ public class Configuration {
 
     private boolean jacksonPropertyName;
 
+    private String fluentSetterPrefix;
+
     /**
      * Gets the name of the base package for all subpackages created by the code generator.
      *
@@ -221,5 +223,24 @@ public class Configuration {
      */
     public void setJacksonPropertyName(boolean jacksonPropertyName) {
         this.jacksonPropertyName = jacksonPropertyName;
+    }
+
+    /**
+     * Whether fluent setters shall be generated
+     */
+    public boolean isFluentSetters() {
+        return fluentSetterPrefix != null;
+    }
+
+    /**
+     * Sets prefix for fluent setters
+     * @param fluentSetterPrefix Prefix or <code>null</code> (=default) if no fluent setters shall be generated
+     */
+    public void setFluentSetterPrefix(String fluentSetterPrefix) {
+        this.fluentSetterPrefix = fluentSetterPrefix;
+    }
+
+    public String getFluentSetterPrefix() {
+        return fluentSetterPrefix;
     }
 }
