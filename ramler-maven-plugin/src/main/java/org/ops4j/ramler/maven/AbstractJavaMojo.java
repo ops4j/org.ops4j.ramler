@@ -76,6 +76,15 @@ public abstract class AbstractJavaMojo extends AbstractMojo {
     @Parameter(defaultValue = "false")
     private boolean jacksonPropertyName;
 
+    @Parameter(defaultValue = "false")
+    private boolean delegators;
+
+    @Parameter(defaultValue = "Delegator")
+    private String delegatorSuffix;
+
+    @Parameter(defaultValue = "delegate")
+    private String delegateFieldName;
+
     @Parameter(readonly = true, defaultValue = "${project}")
     protected MavenProject project;
 

@@ -75,6 +75,8 @@ public class GeneratorContext {
 
     private JPackage apiPackage;
 
+    private JPackage delegatorPackage;
+
     private Map<String, JType> typeMap;
 
     private ApiModel apiModel;
@@ -94,6 +96,7 @@ public class GeneratorContext {
         JPackage basePackage = codeModel._package(config.getBasePackage());
         modelPackage = basePackage.subPackage(config.getModelPackage());
         apiPackage = basePackage.subPackage(config.getApiPackage());
+        delegatorPackage = basePackage.subPackage(config.getDelegatorPackage());
     }
 
     /**
@@ -380,5 +383,14 @@ public class GeneratorContext {
      */
     public JPackage getApiPackage() {
         return apiPackage;
+    }
+
+    /**
+     * Gets the Java package for the generated delegator classes.
+     *
+     * @return the delegator package
+     */
+    public JPackage getDelegatorPackage() {
+        return delegatorPackage;
     }
 }

@@ -34,6 +34,8 @@ public class Configuration {
 
     private String apiPackage;
 
+    private String delegatorPackage;
+
     private String sourceFile;
 
     private File targetDir;
@@ -45,6 +47,12 @@ public class Configuration {
     private boolean jacksonTypeInfo;
 
     private boolean jacksonPropertyName;
+
+    private boolean delegators;
+
+    private String delegatorSuffix;
+
+    private String delegateFieldName;
 
     /**
      * Gets the name of the base package for all subpackages created by the code generator.
@@ -110,6 +118,29 @@ public class Configuration {
      */
     public void setApiPackage(String apiPackage) {
         this.apiPackage = apiPackage;
+    }
+
+    /**
+     * Gets the name of the subpackage with delegator classes.
+     * <p>
+     * Example: Given the base package {@code com.example.myapi} and the API package
+     * {@code gen.deleg}, the resource interfaces will be generated in package
+     * {@code com.example.myapi.gen.deleg}.
+     *
+     * @return the delegator package, defaulting to {@code delegator}.
+     */
+    public String getDelegatorPackage() {
+        return Optional.ofNullable(delegatorPackage).orElse("delegator");
+    }
+
+    /**
+     * Gets the name of the subpackage with delegator classes.
+     *
+     * @param delegatorPackage
+     *            name of delegator subpackage
+     */
+    public void setDelegatorPackage(String delegatorPackage) {
+        this.delegatorPackage = delegatorPackage;
     }
 
     /**
@@ -221,5 +252,53 @@ public class Configuration {
      */
     public void setJacksonPropertyName(boolean jacksonPropertyName) {
         this.jacksonPropertyName = jacksonPropertyName;
+    }
+
+
+    /**
+     * @return the delegators
+     */
+    public boolean isDelegators() {
+        return delegators;
+    }
+
+
+    /**
+     * @param delegators the delegators to set
+     */
+    public void setDelegators(boolean delegators) {
+        this.delegators = delegators;
+    }
+
+
+    /**
+     * @return the delegatorSuffix
+     */
+    public String getDelegatorSuffix() {
+        return Optional.ofNullable(delegatorSuffix).orElse("Delegator");
+    }
+
+
+    /**
+     * @param delegatorSuffix the delegatorSuffix to set
+     */
+    public void setDelegatorSuffix(String delegatorSuffix) {
+        this.delegatorSuffix = delegatorSuffix;
+    }
+
+
+    /**
+     * @return the delegateFieldName
+     */
+    public String getDelegateFieldName() {
+        return Optional.ofNullable(delegateFieldName).orElse("delegate");
+    }
+
+
+    /**
+     * @param delegateFieldName the delegateFieldName to set
+     */
+    public void setDelegateFieldName(String delegateFieldName) {
+        this.delegateFieldName = delegateFieldName;
     }
 }

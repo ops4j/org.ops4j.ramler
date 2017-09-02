@@ -74,6 +74,8 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
 
     private EnumGenerator enumGenerator;
 
+    private DelegatorGenerator delegatorGenerator;
+
     /**
      * Creates a visitor for the given generator context.
      *
@@ -85,6 +87,7 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         this.codeModel = context.getCodeModel();
         this.pkg = context.getModelPackage();
         this.enumGenerator = new EnumGenerator(context);
+        this.delegatorGenerator = new DelegatorGenerator(context);
     }
 
     @Override
@@ -99,6 +102,21 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         addDiscriminator(klass, type);
         addJsonTypeInfo(klass, type);
         addMixinProperties(klass, type);
+    }
+
+    @Override
+    public void visitObjectTypeEnd(ObjectTypeDeclaration type) {
+        JDefinedClass klass = pkg._getClass(type.name());
+        if (klass != null) {
+            generateDelegator(klass);
+        }
+    }
+
+    /**
+     * @param klass
+     */
+    private void generateDelegator(JDefinedClass klass) {
+        delegatorGenerator.generateDelegator(klass);
     }
 
     private void addJavadoc(JDefinedClass klass, ObjectTypeDeclaration type) {
