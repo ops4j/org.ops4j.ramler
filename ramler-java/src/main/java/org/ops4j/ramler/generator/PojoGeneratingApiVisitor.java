@@ -106,9 +106,11 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
 
     @Override
     public void visitObjectTypeEnd(ObjectTypeDeclaration type) {
-        JDefinedClass klass = pkg._getClass(type.name());
-        if (klass != null) {
-            generateDelegator(klass);
+        if (context.getConfig().isDelegators()) {
+            JDefinedClass klass = pkg._getClass(type.name());
+            if (klass != null) {
+                generateDelegator(klass);
+            }
         }
     }
 
