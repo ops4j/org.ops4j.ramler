@@ -106,6 +106,9 @@ public abstract class AbstractJavaMojo extends AbstractMojo {
             config.setInterfaceNameSuffix(interfaceNameSuffix);
             config.setJacksonTypeInfo(jacksonTypeInfo);
             config.setJacksonPropertyName(jacksonPropertyName);
+            config.setDelegators(delegators);
+            config.setDelegateFieldName(delegateFieldName);
+            config.setDelegatorSuffix(delegatorSuffix);
 
             try {
                 Generator generator = new Generator(config);
