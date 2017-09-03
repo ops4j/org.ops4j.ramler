@@ -59,7 +59,7 @@ public class DelegatorGenerator {
             }
 
             JFieldVar delegate = delegator.field(JMod.PROTECTED, delegateType, context.getConfig().getDelegateFieldName());
-            delegate.init(JExpr._new(delegateClass));
+            delegate.init(JExpr._new(delegateType));
 
             JDefinedClass klass = delegateClass;
             while (klass != null) {
