@@ -24,6 +24,7 @@ import org.ops4j.ramler.exc.Exceptions;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
@@ -58,6 +59,7 @@ public class DelegatorGenerator {
             }
 
             JFieldVar delegate = delegator.field(JMod.PROTECTED, delegateType, context.getConfig().getDelegateFieldName());
+            delegate.init(JExpr._new(delegateClass));
 
             JDefinedClass klass = delegateClass;
             while (klass != null) {
