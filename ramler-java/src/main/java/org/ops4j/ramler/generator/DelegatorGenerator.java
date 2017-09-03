@@ -17,8 +17,11 @@
  */
 package org.ops4j.ramler.generator;
 
+import java.util.stream.Stream;
+
 import org.ops4j.ramler.exc.Exceptions;
 
+import com.sun.codemodel.JClass;
 import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JFieldVar;
@@ -26,6 +29,7 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JPackage;
 import com.sun.codemodel.JType;
+import com.sun.codemodel.JTypeVar;
 import com.sun.codemodel.JVar;
 
 /**
@@ -44,7 +48,16 @@ public class DelegatorGenerator {
         JPackage pkg = context.getDelegatorPackage();
         try {
             JDefinedClass delegator = pkg._class(delegateClass.name() + context.getConfig().getDelegatorSuffix());
-            JFieldVar delegate = delegator.field(JMod.PROTECTED, delegateClass, context.getConfig().getDelegateFieldName());
+            context.annotateAsGenerated(delegator);
+
+            JClass delegateType = delegateClass;
+
+            if (delegateClass.typeParams().length > 0) {
+                Stream.of(delegateClass.typeParams()).map(JTypeVar::name).forEach(delegator::generify);
+                delegateType = delegateClass.narrow(delegateClass.typeParams());
+            }
+
+            JFieldVar delegate = delegator.field(JMod.PROTECTED, delegateType, context.getConfig().getDelegateFieldName());
 
             JDefinedClass klass = delegateClass;
             while (klass != null) {
