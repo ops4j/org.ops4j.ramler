@@ -13,6 +13,14 @@ annotationTypes:
   enum:
     properties:
       values: _EnumValue[]
+  id:
+    displayName: Identity property
+    type: nil
+    description: |
+      Marks an object property as identity property. This annotation may occur on at most one property
+      of an object type. The code generator may generate a single-argument constructor, taking the
+      value of this property. This can be used as a shortcut deserialize a simple value to a class
+      corresponding to an object type.
   internal:
     type: nil
     displayName: Internal type

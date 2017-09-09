@@ -80,4 +80,8 @@ public class Annotations {
         return annotationsByName(decl, "codeName").findFirst()
             .map(Annotations::findStringAnnotationValue).orElse(null);
     }
+
+    public static boolean isIdentity(Annotable decl) {
+        return annotationsByName(decl, "id").findFirst().isPresent();
+    }
 }

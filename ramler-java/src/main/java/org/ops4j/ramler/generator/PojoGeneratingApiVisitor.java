@@ -217,6 +217,18 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         }
     }
 
+    private void addConstructors(JDefinedClass klass, TypeDeclaration property) {
+        // add default constructor
+        klass.constructor(JMod.PUBLIC);
+
+        // add single-argument constructor for identity property
+        String fieldName = Names.buildVariableName(property);
+        JFieldVar idField = klass.fields().get(fieldName);
+        JMethod idConstructor = klass.constructor(JMod.PUBLIC);
+        JVar p1 = idConstructor.param(idField.type(), fieldName);
+        idConstructor.body().assign(JExpr._this().ref(fieldName), p1);
+    }
+
     @Override
     public void visitObjectTypeProperty(ObjectTypeDeclaration type, TypeDeclaration property) {
         if (context.getApiModel().isInternal(type)) {
@@ -229,6 +241,9 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         }
         if (!isInherited(type, property)) {
             generateFieldAndAccessors(klass, property);
+        }
+        if (Annotations.isIdentity(property)) {
+            addConstructors(klass, property);
         }
     }
 
