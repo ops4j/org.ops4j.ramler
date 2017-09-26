@@ -74,7 +74,8 @@ public class EnumGenerator {
 
         generateEnumConstructor(klass, valueField);
         generateEnumValueMethod(klass, valueField);
-        generateEnumFromValueMethod(klass, valueField);
+        generateEnumFromStringMethod(klass, valueField);
+        generateEnumToStringMethod(klass, valueField);
     }
 
     /**
@@ -123,8 +124,8 @@ public class EnumGenerator {
         getter.body()._return(valueField);
     }
 
-    private void generateEnumFromValueMethod(JDefinedClass klass, JFieldVar valueField) {
-        JMethod converter = klass.method(JMod.PUBLIC | JMod.STATIC, klass, "fromValue");
+    private void generateEnumFromStringMethod(JDefinedClass klass, JFieldVar valueField) {
+        JMethod converter = klass.method(JMod.PUBLIC | JMod.STATIC, klass, "fromString");
         JVar param = converter.param(String.class, VALUE);
         
         JBlock body = converter.body();
@@ -133,5 +134,12 @@ public class EnumGenerator {
         loopBlock._if(forEach.var().ref(valueField).invoke("equals").arg(param))._then()
             ._return(forEach.var());
         body._throw(JExpr._new(codeModel._ref(IllegalArgumentException.class)).arg(param));
+    }
+
+    private void generateEnumToStringMethod(JDefinedClass klass, JFieldVar valueField) {
+        JMethod converter = klass.method(JMod.PUBLIC, String.class, "toString");
+
+        JBlock body = converter.body();
+        body._return(valueField);
     }
 }
