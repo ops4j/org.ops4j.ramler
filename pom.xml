@@ -34,6 +34,7 @@
         <module>ramler-java</module>
         <module>ramler-maven-plugin</module>
         <module>ramler-html</module>
+        <module>ramler-typescript</module>
         <module>ramler-itest</module>
         <module>ramler-manual</module>
         <module>samples</module>

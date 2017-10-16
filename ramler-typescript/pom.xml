@@ -8,9 +8,9 @@
     </parent>
 
     <groupId>org.ops4j.ramler</groupId>
-    <artifactId>ramler-html</artifactId>
+    <artifactId>ramler-typescript</artifactId>
 
-    <name>OPS4J Ramler HTML Documentation Generator</name>
+    <name>OPS4J Ramler Typescript Generator</name>
 
     <dependencies>
         <dependency>
@@ -35,13 +35,8 @@
             <artifactId>trimou-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.platform</groupId>
-            <artifactId>junit-platform-launcher</artifactId>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -56,37 +51,5 @@
         </dependency>
     </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>com.github.eirslett</groupId>
-                <artifactId>frontend-maven-plugin</artifactId>
-                <configuration>
-                    <nodeVersion>v7.10.1</nodeVersion>
-                    <npmVersion>4.2.0</npmVersion>
-                    <installDirectory>${project.build.directory}</installDirectory>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>node</id>
-                        <goals>
-                            <goal>install-node-and-npm</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>npm</id>
-                        <goals>
-                            <goal>npm</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>grunt</id>
-                        <goals>
-                            <goal>grunt</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
+
 </project>

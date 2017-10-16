@@ -151,6 +151,25 @@ public class Names {
         return friendlyName;
     }
 
+    public static String buildLowerKebabCaseName(String source) {
+        Matcher m = CAMEL_CASE_PATTERN.matcher(source);
+
+        StringBuffer sb = new StringBuffer();
+        while (m.find()) {
+            m.appendReplacement(sb, "-" + m.group());
+        }
+        m.appendTail(sb);
+
+        String friendlyName = sb.toString().toLowerCase();
+
+        if (isDigits(left(friendlyName, 1))) {
+            friendlyName = "-" + friendlyName;
+        }
+
+        return friendlyName;
+    }
+
+
     /**
      * Get enum field name from value
      *

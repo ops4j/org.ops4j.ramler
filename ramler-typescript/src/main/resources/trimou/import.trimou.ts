@@ -1,0 +1,1 @@
+import { {{tsType}} } from './{{tsFile}}';
