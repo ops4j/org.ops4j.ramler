@@ -17,7 +17,7 @@
  */
 package org.ops4j.ramler.typescript;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class SimpleObjectTest extends AbstractGeneratorTest {
 

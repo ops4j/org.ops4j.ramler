@@ -20,7 +20,7 @@ package org.ops4j.ramler.typescript;
 import java.io.File;
 import java.util.Set;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 
 public abstract class AbstractGeneratorTest {
 
@@ -28,7 +28,7 @@ public abstract class AbstractGeneratorTest {
     protected Set<String> methodNames;
     protected Set<String> fieldNames;
 
-    @Before
+    @BeforeEach
     public void generateJavaModel() {
         TypescriptConfiguration config = new TypescriptConfiguration();
         config.setSourceFile(String.format("raml/%s.raml", getBasename()));
