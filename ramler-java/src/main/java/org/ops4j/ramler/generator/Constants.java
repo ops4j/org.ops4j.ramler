@@ -84,6 +84,16 @@ public class Constants {
      */
     public static final String OBJECT = "object";
 
+    /**
+     * Name of built-in RAML integer type.
+     */
+    public static final String INTEGER = "integer";
+
+    /**
+     * Name of built-in RAML integer type.
+     */
+    public static final String STRING = "string";
+
     private Constants() {
         throw new UnsupportedOperationException();
     }

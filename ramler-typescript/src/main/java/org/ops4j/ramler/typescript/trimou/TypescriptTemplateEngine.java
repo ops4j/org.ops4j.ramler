@@ -100,7 +100,6 @@ public class TypescriptTemplateEngine {
                 .setProperty(EngineConfigurationKey.DEFAULT_FILE_ENCODING,
                     StandardCharsets.UTF_8.name())
                 .addTemplateLocator(genericLocator)
-                .registerHelper(PropertyContextHelper.NAME, new PropertyContextHelper())
                 .registerHelpers(HelpersBuilder.builtin().addInclude().addInvoke().addSet()
                     .addSwitch().addWith().build());
             if (templateDir != null) {

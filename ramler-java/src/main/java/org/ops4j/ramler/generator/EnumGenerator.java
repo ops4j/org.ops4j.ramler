@@ -105,7 +105,7 @@ public class EnumGenerator {
             .arg(JExpr.lit(enumValue.getName()));
 
         if (context.getConfig().isJacksonPropertyName()) {
-    			constant.annotate(JsonProperty.class).param(VALUE, enumValue.getName());
+            constant.annotate(JsonProperty.class).param(VALUE, enumValue.getName());
         }
 
         if (enumValue.getDescription() != null) {
@@ -127,7 +127,7 @@ public class EnumGenerator {
     private void generateEnumFromStringMethod(JDefinedClass klass, JFieldVar valueField) {
         JMethod converter = klass.method(JMod.PUBLIC | JMod.STATIC, klass, "fromString");
         JVar param = converter.param(String.class, VALUE);
-        
+
         JBlock body = converter.body();
         JForEach forEach = body.forEach(klass, "v", klass.staticInvoke("values"));
         JBlock loopBlock = forEach.body();

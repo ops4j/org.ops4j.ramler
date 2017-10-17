@@ -100,14 +100,15 @@ public class ApiTraverser {
         TypeDeclaration type) {
         for (TypeDeclaration baseType : type.parentTypes()) {
             String baseTypeName = baseType.name();
-            if (!baseTypeName.equals(Constants.OBJECT) && !orderedTypes.containsKey(baseTypeName)) {
+            if (!baseTypeName.equals(Constants.OBJECT) && !baseTypeName.equals(Constants.INTEGER) && !baseTypeName.equals(Constants.STRING)
+                && !orderedTypes.containsKey(baseTypeName)) {
                 storeHierarchy(orderedTypes, api, baseType);
             }
         }
         orderedTypes.put(type.name(), type);
     }
 
-    private void traverse(TypeDeclaration type, ApiVisitor visitor) {
+    public void traverse(TypeDeclaration type, ApiVisitor visitor) {
         if (type instanceof AnyTypeDeclaration) {
             visitor.visitAnyType((AnyTypeDeclaration) type);
         }

@@ -1,1 +1,1 @@
-    {{name}}: {{tsType}};
+    {{name}}: {{tsPropType}};

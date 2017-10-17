@@ -39,6 +39,7 @@ public class TypescriptGeneratorContext {
     private TypescriptConfiguration config;
     private ApiModel apiModel;
     private TypescriptTemplateEngine templateEngine;
+    private Appendable output;
 
     /**
      *
@@ -89,6 +90,22 @@ public class TypescriptGeneratorContext {
         this.templateEngine = templateEngine;
     }
 
+
+
+
+    /**
+     * @return the output
+     */
+    public Appendable getOutput() {
+        return output;
+    }
+
+    /**
+     * @param output the output to set
+     */
+    public void setOutput(Appendable output) {
+        this.output = output;
+    }
 
     public String getTypescriptType(TypeDeclaration type) {
         if (type instanceof StringTypeDeclaration) {

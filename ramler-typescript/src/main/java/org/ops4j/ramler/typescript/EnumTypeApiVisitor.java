@@ -17,20 +17,19 @@
  */
 package org.ops4j.ramler.typescript;
 
+import static java.util.stream.Collectors.toList;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.List;
 import java.util.Map;
 
 import org.ops4j.ramler.exc.GeneratorException;
-import org.ops4j.ramler.generator.ApiTraverser;
 import org.ops4j.ramler.generator.ApiVisitor;
 import org.ops4j.ramler.generator.Names;
-import org.raml.v2.api.model.v10.datamodel.NumberTypeDeclaration;
-import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.StringTypeDeclaration;
-import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trimou.engine.MustacheEngine;
@@ -40,54 +39,44 @@ import org.trimou.util.ImmutableMap;
  * @author Harald Wellmann
  *
  */
-public class ModelCreatingApiVisitor implements ApiVisitor {
+public class EnumTypeApiVisitor implements ApiVisitor {
 
-    private static Logger log = LoggerFactory.getLogger(ModelCreatingApiVisitor.class);
+    private static Logger log = LoggerFactory.getLogger(EnumTypeApiVisitor.class);
 
     private TypescriptGeneratorContext context;
 
-    public ModelCreatingApiVisitor(TypescriptGeneratorContext context) {
+    private StringBuilder output;
+
+    static class EnumSymbol {
+        public String symbol;
+
+        public String value;
+
+        EnumSymbol(String symbol, String value) {
+            this.symbol = symbol;
+            this.value = value;
+        }
+    }
+
+    public EnumTypeApiVisitor(TypescriptGeneratorContext context) {
         this.context = context;
-    }
-
-    @Override
-    public void visitObjectTypeStart(ObjectTypeDeclaration type) {
-        ObjectCreatingApiVisitor visitor = new ObjectCreatingApiVisitor(context);
-        ApiTraverser traverser = new ApiTraverser();
-        traverser.traverse(type, visitor);
-    }
-
-    @Override
-    public void visitNumberType(NumberTypeDeclaration type) {
-        createTypeAlias(type, "number");
+        this.output = new StringBuilder();
     }
 
     @Override
     public void visitStringType(StringTypeDeclaration type) {
-        if (context.getApiModel().isEnum(type)) {
-            EnumTypeApiVisitor visitor = new EnumTypeApiVisitor(context);
-            ApiTraverser traverser = new ApiTraverser();
-            traverser.traverse(type, visitor);
-        }
-        else {
-            createTypeAlias(type, "string");
-        }
-    }
+        String name = type.name();
+        List<EnumSymbol> enumValues = context.getApiModel().getEnumValues(type).stream()
+                .map(v -> new EnumSymbol(Names.buildConstantName(v.getName()), v.getName())).collect(toList());
 
-    /**
-     * @param type
-     */
-    private void createTypeAlias(TypeDeclaration type, String targetType) {
-        StringBuilder output = new StringBuilder();
+        Map<String, Object> contextObject = ImmutableMap.of("name", name, "enumValues", enumValues);
 
         MustacheEngine engine = context.getTemplateEngine().getEngine();
-        Map<String, String> contextObject = ImmutableMap.of("name", type.name(), "tsType", targetType);
-        engine.getMustache("typeAlias").render(output, contextObject);
+        engine.getMustache("enum").render(output, contextObject);
 
         String moduleName = Names.buildLowerKebabCaseName(type.name());
         writeToFile(output.toString(), moduleName);
     }
-
 
     private void writeToFile(String content, String moduleName) {
         String tsFileName = moduleName + ".ts";
@@ -99,4 +88,5 @@ public class ModelCreatingApiVisitor implements ApiVisitor {
             throw new GeneratorException(exc);
         }
     }
+
 }
