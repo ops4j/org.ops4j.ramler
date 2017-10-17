@@ -22,7 +22,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.pegdown.Extensions;
 import org.pegdown.PegDownProcessor;
 

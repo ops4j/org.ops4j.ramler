@@ -27,7 +27,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 
 import com.sun.codemodel.JAnnotationUse;
 import com.sun.codemodel.JAnnotationValue;
@@ -51,7 +51,7 @@ public abstract class AbstractGeneratorTest {
     private JCodeModel codeModel;
     private JPackage apiPackage;
 
-    @Before
+    @BeforeEach
     public void generateJavaModel() {
         Configuration config = new Configuration();
         config.setSourceFile(String.format("raml/%s.raml", getBasename()));

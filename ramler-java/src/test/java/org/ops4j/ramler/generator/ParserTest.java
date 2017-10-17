@@ -26,7 +26,7 @@ import static org.ops4j.ramler.model.Metatype.STRING;
 
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.ops4j.ramler.model.ApiModel;
 import org.ops4j.ramler.model.EnumValue;
 import org.ops4j.ramler.model.Metatype;

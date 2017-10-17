@@ -20,7 +20,7 @@ package org.ops4j.ramler.generator;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.sun.codemodel.JMethod;
 

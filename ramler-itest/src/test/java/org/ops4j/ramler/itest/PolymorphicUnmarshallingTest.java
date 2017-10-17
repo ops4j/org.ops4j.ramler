@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.io.StringWriter;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.ops4j.ramler.itest.model.Address;
 import org.ops4j.ramler.itest.model.Colour;
 import org.ops4j.ramler.itest.model.Employee;

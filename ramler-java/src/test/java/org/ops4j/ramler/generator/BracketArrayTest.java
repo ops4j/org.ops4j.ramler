@@ -17,7 +17,7 @@
  */
 package org.ops4j.ramler.generator;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class BracketArrayTest extends AbstractGeneratorTest {
 
