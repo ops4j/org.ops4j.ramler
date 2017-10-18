@@ -53,7 +53,6 @@ public class ObjectCreatingApiVisitor implements ApiVisitor {
             return;
         }
 
-        log.debug("generating {}\n{}", type.name(), output);
         context.setOutput(output);
 
         ObjectImportApiVisitor importVisitor = new ObjectImportApiVisitor(context);
@@ -69,8 +68,12 @@ public class ObjectCreatingApiVisitor implements ApiVisitor {
 
     @Override
     public void visitObjectTypeEnd(ObjectTypeDeclaration type) {
+        if (context.getApiModel().isInternal(type)) {
+            return;
+        }
+
         String tsFileName = Names.buildLowerKebabCaseName(type.name()) + ".ts";
-        log.debug("{}", output);
+        log.debug("generating {}\n{}", tsFileName, output);
         File tsFile = new File(context.getConfig().getTargetDir(), tsFileName);
         try {
             Files.write(tsFile.toPath(), output.toString().getBytes(StandardCharsets.UTF_8));

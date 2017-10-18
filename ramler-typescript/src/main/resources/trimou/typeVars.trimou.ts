@@ -1,3 +1,1 @@
-{{#if typeVars}}
-<{{#typeVars}}{{this}}{{#iter.hasNext}}, {{/iter.hasNext}}{{/typeVars}}>
-{{/if}}
+{{#if typeVars}}<{{#typeVars}}{{this}}{{#iter.hasNext}}, {{/iter.hasNext}}{{/typeVars}}>{{/if}}

@@ -21,12 +21,15 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.Collections;
 import java.util.Map;
 
 import org.ops4j.ramler.exc.GeneratorException;
 import org.ops4j.ramler.generator.ApiTraverser;
 import org.ops4j.ramler.generator.ApiVisitor;
 import org.ops4j.ramler.generator.Names;
+import org.ops4j.ramler.model.Metatype;
+import org.raml.v2.api.model.v10.datamodel.ArrayTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.NumberTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.StringTypeDeclaration;
@@ -74,13 +77,46 @@ public class ModelCreatingApiVisitor implements ApiVisitor {
         }
     }
 
+    @Override
+    public void visitArrayType(ArrayTypeDeclaration type) {
+        String itemTypeName = context.getApiModel().getItemType(type);
+        Map<String, String> imports = addTypeToImports(itemTypeName);
+
+        createTypeAlias(type, itemTypeName + "[]", imports);
+    }
+
+    private Map<String, String> addTypeToImports(String typeName) {
+        String tsType = typeName;
+        while (tsType.endsWith("[]")) {
+            tsType = tsType.substring(0, tsType.length() - 2);
+        }
+        if (!Metatype.isBuiltIn(tsType)) {
+            String tsFile = Names.buildLowerKebabCaseName(tsType);
+            return ImmutableMap.of(tsType, tsFile);
+        }
+        return Collections.emptyMap();
+    }
+
+
+    private void createTypeAlias(TypeDeclaration type, String targetType) {
+        createTypeAlias(type, targetType, Collections.emptyMap());
+    }
+
     /**
      * @param type
      */
-    private void createTypeAlias(TypeDeclaration type, String targetType) {
+    private void createTypeAlias(TypeDeclaration type, String targetType, Map<String, String> imports) {
+        MustacheEngine engine = context.getTemplateEngine().getEngine();
         StringBuilder output = new StringBuilder();
 
-        MustacheEngine engine = context.getTemplateEngine().getEngine();
+        if (!imports.isEmpty()) {
+            imports.forEach((k, v) -> {
+                Map<String, String> contextObject = ImmutableMap.of("tsType", k, "tsFile", v);
+                engine.getMustache("import").render(output, contextObject);
+            });
+            output.append("\n");
+        }
+
         Map<String, String> contextObject = ImmutableMap.of("name", type.name(), "tsType", targetType);
         engine.getMustache("typeAlias").render(output, contextObject);
 

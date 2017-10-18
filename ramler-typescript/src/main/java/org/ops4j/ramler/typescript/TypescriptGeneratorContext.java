@@ -19,6 +19,7 @@ package org.ops4j.ramler.typescript;
 
 import org.ops4j.ramler.model.ApiModel;
 import org.ops4j.ramler.typescript.trimou.TypescriptTemplateEngine;
+import org.raml.v2.api.model.v10.datamodel.AnyTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.ArrayTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.BooleanTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.DateTimeOnlyTypeDeclaration;
@@ -129,6 +130,9 @@ public class TypescriptGeneratorContext {
         }
         if (propertyType instanceof TimeOnlyTypeDeclaration) {
             return getDeclaredName(typeName, "string");
+        }
+        if (propertyType instanceof AnyTypeDeclaration) {
+            return getDeclaredName(typeName, "any");
         }
         if (propertyType instanceof ObjectTypeDeclaration) {
             return typeName;
