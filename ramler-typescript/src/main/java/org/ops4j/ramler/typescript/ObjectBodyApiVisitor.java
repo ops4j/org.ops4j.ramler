@@ -17,7 +17,10 @@
  */
 package org.ops4j.ramler.typescript;
 
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
+import static org.ops4j.ramler.generator.Constants.TYPE_ARGS;
+import static org.ops4j.ramler.generator.Constants.TYPE_VARS;
 
 import java.util.Collections;
 import java.util.List;
@@ -25,6 +28,9 @@ import java.util.Map;
 
 import org.ops4j.ramler.generator.ApiVisitor;
 import org.ops4j.ramler.generator.Constants;
+import org.ops4j.ramler.generator.Names;
+import org.ops4j.ramler.model.Annotations;
+import org.raml.v2.api.model.v10.datamodel.ArrayTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
 import org.trimou.engine.MustacheEngine;
@@ -44,10 +50,17 @@ public class ObjectBodyApiVisitor implements ApiVisitor {
 
     @Override
     public void visitObjectTypeStart(ObjectTypeDeclaration type) {
-        List<String> baseClasses = type.parentTypes().stream().map(t -> t.name()).
-            filter(n -> !n.equals(Constants.OBJECT)).collect(toList());
+        List<String> baseClasses = type.parentTypes().stream()
+                .filter(t -> !t.name().equals(Constants.OBJECT))
+                .map(t -> this.typeWithArgs(type, t))
+                .collect(toList());
 
-        Map<String, Object> contextObject = ImmutableMap.of("name", type.name(), "baseClasses", baseClasses);
+        List<String> typeVars = Annotations.getStringAnnotations(type, TYPE_VARS);
+
+        Map<String, Object> contextObject = ImmutableMap.of(
+                "name", type.name(),
+                "baseClasses", baseClasses,
+                "typeVars", typeVars);
 
         MustacheEngine engine = context.getTemplateEngine().getEngine();
         engine.getMustache("objectStart").render(context.getOutput(), contextObject);
@@ -61,13 +74,82 @@ public class ObjectBodyApiVisitor implements ApiVisitor {
 
     @Override
     public void visitObjectTypeProperty(ObjectTypeDeclaration type, TypeDeclaration property) {
-        String tsPropType = context.getTypescriptType(property);
-        String name = property.name();
+        if (property instanceof ArrayTypeDeclaration) {
+            generateArrayProperty(type, (ArrayTypeDeclaration) property);
+        }
+        else {
+            generateProperty(type, property);
+        }
+    }
 
-
+    /**
+     * @param type
+     * @param property
+     */
+    private void generateArrayProperty(ObjectTypeDeclaration type, ArrayTypeDeclaration property) {
+        String fieldName = Names.buildVariableName(property);
+        String itemTypeName = context.getApiModel().getItemType(property);
+        String typeVar = Annotations.findTypeVar(property);
+        String tsItemType;
+        if (typeVar != null) {
+            tsItemType = typeVar;
+        }
+        else {
+            tsItemType = itemTypeName;
+        }
         MustacheEngine engine = context.getTemplateEngine().getEngine();
-        Map<String, String> contextObject = ImmutableMap.of("name", name, "tsPropType", tsPropType);
+        Map<String, String> contextObject = ImmutableMap.of("name", fieldName, "tsPropType", tsItemType + "[]");
         engine.getMustache("property").render(context.getOutput(), contextObject);
+    }
+
+    /**
+     * @param type
+     * @param property
+     */
+    private void generateProperty(ObjectTypeDeclaration type, TypeDeclaration property) {
+        String fieldName = Names.buildVariableName(property);
+        String tsPropType;
+        String typeVar = Annotations.findTypeVar(property);
+        if (typeVar != null) {
+            tsPropType = typeVar;
+        } else {
+            tsPropType = propertyTypeWithArgs(property);
+        }
+        MustacheEngine engine = context.getTemplateEngine().getEngine();
+        Map<String, String> contextObject = ImmutableMap.of("name", fieldName, "tsPropType", tsPropType);
+        engine.getMustache("property").render(context.getOutput(), contextObject);
+    }
+
+    /**
+     * @param property
+     * @return
+     */
+    private String propertyTypeWithArgs(TypeDeclaration property) {
+        String tsPropType;
+        tsPropType = context.getTypescriptPropertyType(property);
+        List<String> typeArgs = Annotations.getStringAnnotations(property, TYPE_ARGS);
+        if (!typeArgs.isEmpty()) {
+            StringBuilder builder = new StringBuilder(tsPropType);
+            builder.append("<");
+            builder.append(typeArgs.stream().collect(joining(", ")));
+            builder.append(">");
+            tsPropType = builder.toString();
+        }
+        return tsPropType;
+    }
+
+    private String typeWithArgs(TypeDeclaration annotated, TypeDeclaration type) {
+        String tsPropType;
+        tsPropType = context.getTypescriptType(type);
+        List<String> typeArgs = Annotations.getStringAnnotations(annotated, TYPE_ARGS);
+        if (!typeArgs.isEmpty()) {
+            StringBuilder builder = new StringBuilder(tsPropType);
+            builder.append("<");
+            builder.append(typeArgs.stream().collect(joining(", ")));
+            builder.append(">");
+            tsPropType = builder.toString();
+        }
+        return tsPropType;
     }
 
 }

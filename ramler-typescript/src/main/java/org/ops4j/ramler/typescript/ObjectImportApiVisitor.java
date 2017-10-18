@@ -17,13 +17,15 @@
  */
 package org.ops4j.ramler.typescript;
 
-import static org.ops4j.ramler.generator.Constants.OBJECT;
+import static org.ops4j.ramler.generator.Constants.TYPE_ARGS;
 
 import java.util.Map;
 import java.util.TreeMap;
 
 import org.ops4j.ramler.generator.ApiVisitor;
 import org.ops4j.ramler.generator.Names;
+import org.ops4j.ramler.model.Annotations;
+import org.ops4j.ramler.model.Metatype;
 import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
 import org.trimou.engine.MustacheEngine;
@@ -44,27 +46,26 @@ public class ObjectImportApiVisitor implements ApiVisitor {
 
     @Override
     public void visitObjectTypeStart(ObjectTypeDeclaration type) {
-        for (TypeDeclaration parentType : type.parentTypes()) {
-            String typeName = parentType.name();
-            if (!typeName.equals(OBJECT)) {
-                String tsFile = Names.buildLowerKebabCaseName(typeName);
-                typeToModuleMap.put(typeName, tsFile);
-            }
-        }
+        type.parentTypes().stream().map(TypeDeclaration::name).forEach(this::addTypeToImports);
+        Annotations.getStringAnnotations(type, TYPE_ARGS).forEach(this::addTypeToImports);
     }
 
     @Override
     public void visitObjectTypeProperty(ObjectTypeDeclaration type, TypeDeclaration property) {
-        String tsPropType = context.getTypescriptType(property);
-        if (typeToModuleMap.containsKey(tsPropType)) {
+        String tsPropType = context.getTypescriptPropertyType(property);
+        if (typeToModuleMap.containsKey(tsPropType) || Annotations.findTypeVar(property) != null) {
             return;
         }
 
-        String tsType = tsPropType;
+        addTypeToImports(tsPropType);
+    }
+
+    private void addTypeToImports(String typeName) {
+        String tsType = typeName;
         while (tsType.endsWith("[]")) {
-            tsType = tsPropType.substring(0, tsType.length() - 2);
+            tsType = tsType.substring(0, tsType.length() - 2);
         }
-        if (Character.isUpperCase(tsPropType.charAt(0))) {
+        if (!Metatype.isBuiltIn(tsType)) {
             String tsFile = Names.buildLowerKebabCaseName(tsType);
             typeToModuleMap.put(tsType, tsFile);
         }
@@ -73,7 +74,7 @@ public class ObjectImportApiVisitor implements ApiVisitor {
 
     @Override
     public void visitObjectTypeEnd(ObjectTypeDeclaration objectType) {
-        typeToModuleMap.forEach((type, module) -> generateImport(type, module));
+        typeToModuleMap.forEach(this::generateImport);
     }
 
 

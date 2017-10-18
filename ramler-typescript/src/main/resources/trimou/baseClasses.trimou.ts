@@ -1,1 +1,1 @@
- extends {{#baseClasses}}{{this}}{{#iter.hasNext}}, {{/iter.hasNext}}{{/baseClasses}}
+ extends {{#baseClasses}}{{& this}}{{#iter.hasNext}}, {{/iter.hasNext}}{{/baseClasses}}

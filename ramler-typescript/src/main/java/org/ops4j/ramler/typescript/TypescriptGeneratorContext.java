@@ -107,38 +107,76 @@ public class TypescriptGeneratorContext {
         this.output = output;
     }
 
+    public String getTypescriptPropertyType(TypeDeclaration propertyType) {
+        String typeName = propertyType.type();
+        if (propertyType instanceof StringTypeDeclaration) {
+            return getDeclaredName(typeName, "string");
+        }
+        if (propertyType instanceof NumberTypeDeclaration) {
+            return getDeclaredName(typeName, "number");
+        }
+        if (propertyType instanceof BooleanTypeDeclaration) {
+            return getDeclaredName(typeName, "boolean");
+        }
+        if (propertyType instanceof DateTimeTypeDeclaration) {
+            return getDeclaredName(typeName, "string");
+        }
+        if (propertyType instanceof DateTimeOnlyTypeDeclaration) {
+            return getDeclaredName(typeName, "string");
+        }
+        if (propertyType instanceof DateTypeDeclaration) {
+            return getDeclaredName(typeName, "string");
+        }
+        if (propertyType instanceof TimeOnlyTypeDeclaration) {
+            return getDeclaredName(typeName, "string");
+        }
+        if (propertyType instanceof ObjectTypeDeclaration) {
+            return typeName;
+        }
+        if (propertyType instanceof ArrayTypeDeclaration) {
+            return apiModel.getItemType(propertyType) + "[]";
+        }
+        return "__UNDEFINED__";
+    }
+
     public String getTypescriptType(TypeDeclaration type) {
+        String typeName = type.name();
         if (type instanceof StringTypeDeclaration) {
-            if (apiModel.isEnum(type)) {
-                return type.type();
-            } else {
-                return "string";
-            }
+            return getDeclaredName(typeName, "string");
         }
         if (type instanceof NumberTypeDeclaration) {
-            return "number";
+            return getDeclaredName(typeName, "number");
         }
         if (type instanceof BooleanTypeDeclaration) {
-            return "number";
+            return getDeclaredName(typeName, "boolean");
         }
         if (type instanceof DateTimeTypeDeclaration) {
-            return "string";
+            return getDeclaredName(typeName, "string");
         }
         if (type instanceof DateTimeOnlyTypeDeclaration) {
-            return "string";
+            return getDeclaredName(typeName, "string");
         }
         if (type instanceof DateTypeDeclaration) {
-            return "string";
+            return getDeclaredName(typeName, "string");
         }
         if (type instanceof TimeOnlyTypeDeclaration) {
-            return "string";
+            return getDeclaredName(typeName, "string");
         }
         if (type instanceof ObjectTypeDeclaration) {
-            return type.type();
+            return typeName;
         }
         if (type instanceof ArrayTypeDeclaration) {
             return apiModel.getItemType(type) + "[]";
         }
         return "__UNDEFINED__";
+    }
+
+    private String getDeclaredName(String typeName, String fallback) {
+        if (apiModel.getDeclaredType(typeName) == null) {
+            return fallback;
+        }
+        else {
+            return typeName;
+        }
     }
 }

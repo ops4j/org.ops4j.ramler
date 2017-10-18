@@ -32,7 +32,7 @@ public abstract class AbstractGeneratorTest {
     public void generateJavaModel() {
         TypescriptConfiguration config = new TypescriptConfiguration();
         config.setSourceFile(String.format("raml/%s.raml", getBasename()));
-        config.setTargetDir(new File("target/generated/ts"));
+        config.setTargetDir(new File("target/generated/ts/" + getBasename()));
 
         generator = new TypescriptGenerator(config);
         generator.generate();

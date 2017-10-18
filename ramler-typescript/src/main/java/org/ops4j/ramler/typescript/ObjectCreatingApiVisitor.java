@@ -49,6 +49,11 @@ public class ObjectCreatingApiVisitor implements ApiVisitor {
 
     @Override
     public void visitObjectTypeStart(ObjectTypeDeclaration type) {
+        if (context.getApiModel().isInternal(type)) {
+            return;
+        }
+
+        log.debug("generating {}\n{}", type.name(), output);
         context.setOutput(output);
 
         ObjectImportApiVisitor importVisitor = new ObjectImportApiVisitor(context);
@@ -65,8 +70,8 @@ public class ObjectCreatingApiVisitor implements ApiVisitor {
     @Override
     public void visitObjectTypeEnd(ObjectTypeDeclaration type) {
         String tsFileName = Names.buildLowerKebabCaseName(type.name()) + ".ts";
+        log.debug("{}", output);
         File tsFile = new File(context.getConfig().getTargetDir(), tsFileName);
-        log.debug("generating {}\n{}", tsFileName, output);
         try {
             Files.write(tsFile.toPath(), output.toString().getBytes(StandardCharsets.UTF_8));
         } catch (IOException exc) {

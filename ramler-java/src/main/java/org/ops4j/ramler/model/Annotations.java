@@ -81,6 +81,11 @@ public class Annotations {
             .map(Annotations::findStringAnnotationValue).orElse(null);
     }
 
+    public static String findTypeVar(Annotable decl) {
+        return annotationsByName(decl, "typeVar").findFirst()
+            .map(Annotations::findStringAnnotationValue).orElse(null);
+    }
+
     public static boolean isIdentity(Annotable decl) {
         return annotationsByName(decl, "id").findFirst().isPresent();
     }
