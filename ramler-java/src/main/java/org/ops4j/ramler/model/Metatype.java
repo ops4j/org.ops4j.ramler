@@ -17,6 +17,9 @@
  */
 package org.ops4j.ramler.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Metatype of RAML types. Each type has a metatype. For primitive types, there is a one-to-one
  * correspondence between types and metatypes. For structured types, the metatype indicates the kind
@@ -28,44 +31,72 @@ package org.ops4j.ramler.model;
 public enum Metatype {
 
     /** Any type. */
-    ANY,
+    ANY("any"),
 
     /** Null type. */
-    NULL,
+    NULL("null"),
 
     /** Boolean type. */
-    BOOLEAN,
+    BOOLEAN("boolean"),
 
     /** Number type. */
-    NUMBER,
+    NUMBER("number"),
 
     /** Integer type. */
-    INTEGER,
+    INTEGER("integer"),
 
     /** String type. */
-    STRING,
+    STRING("string"),
 
     /** File type. */
-    FILE,
+    FILE("file"),
 
     /** Time type. */
-    TIME_ONLY,
+    TIME_ONLY("time-only"),
 
     /** Datetime type with timezone. */
-    DATETIME,
+    DATETIME("datetime"),
 
     /** Datetime type without timezone. */
-    DATETIME_ONLY,
+    DATETIME_ONLY("datetime-only"),
 
     /** Date type. */
-    DATE_ONLY,
+    DATE_ONLY("date"),
 
     /** Object type. */
-    OBJECT,
+    OBJECT("object"),
 
     /** Array type. */
-    ARRAY,
+    ARRAY("array"),
 
     /** Union type. */
-    UNION
+    UNION("union");
+
+    private static Map<String, Metatype> literalToTypeMap;
+
+
+    private String literal;
+
+    static {
+        literalToTypeMap = new HashMap<>();
+        for (Metatype metatype : values()) {
+            literalToTypeMap.put(metatype.getLiteral(), metatype);
+        }
+    }
+
+    Metatype(String literal) {
+        this.literal = literal;
+    }
+
+
+    /**
+     * @return the literal
+     */
+    public String getLiteral() {
+        return literal;
+    }
+
+    public static boolean isBuiltIn(String typeName) {
+        return literalToTypeMap.containsKey(typeName);
+    }
 }

@@ -37,8 +37,11 @@ import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
 public class TypescriptGeneratorContext {
 
     private TypescriptConfiguration config;
+
     private ApiModel apiModel;
+
     private TypescriptTemplateEngine templateEngine;
+
     private Appendable output;
 
     /**
@@ -90,9 +93,6 @@ public class TypescriptGeneratorContext {
         this.templateEngine = templateEngine;
     }
 
-
-
-
     /**
      * @return the output
      */
@@ -109,7 +109,11 @@ public class TypescriptGeneratorContext {
 
     public String getTypescriptType(TypeDeclaration type) {
         if (type instanceof StringTypeDeclaration) {
-            return "string";
+            if (apiModel.isEnum(type)) {
+                return type.type();
+            } else {
+                return "string";
+            }
         }
         if (type instanceof NumberTypeDeclaration) {
             return "number";

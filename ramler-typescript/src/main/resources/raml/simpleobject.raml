@@ -90,6 +90,26 @@ types:
         type: datetime-only
       dt:
         type: datetime
+  Person:
+    discriminator: objectType
+    properties:
+      objectType: string
+      firstname:
+        type: string
+      lastname:
+          type: string
+      address:
+          type: Address
+      age:
+          type: Age
+  Employee:
+    type: Person
+    properties:
+      department: string
+  Manager:
+    type: Employee
+    properties:
+      numEmployees: integer
   User:
     properties:
       firstname:
@@ -102,6 +122,7 @@ types:
         type: Address
       registered:
         type: boolean
+      favouriteColour?: Colour
       dateOfBirth:
         type: date-only
       registrationDate:

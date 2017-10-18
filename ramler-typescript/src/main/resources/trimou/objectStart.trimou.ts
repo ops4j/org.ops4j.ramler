@@ -1,2 +1,1 @@
-
-export class {{name}} {
+export interface {{name}}{{#if baseClasses}}{{>baseClasses}}{{/if}} {

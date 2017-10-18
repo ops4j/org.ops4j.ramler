@@ -17,6 +17,8 @@
  */
 package org.ops4j.ramler.typescript;
 
+import static org.ops4j.ramler.generator.Constants.OBJECT;
+
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -38,6 +40,17 @@ public class ObjectImportApiVisitor implements ApiVisitor {
 
     public ObjectImportApiVisitor(TypescriptGeneratorContext context) {
         this.context = context;
+    }
+
+    @Override
+    public void visitObjectTypeStart(ObjectTypeDeclaration type) {
+        for (TypeDeclaration parentType : type.parentTypes()) {
+            String typeName = parentType.name();
+            if (!typeName.equals(OBJECT)) {
+                String tsFile = Names.buildLowerKebabCaseName(typeName);
+                typeToModuleMap.put(typeName, tsFile);
+            }
+        }
     }
 
     @Override

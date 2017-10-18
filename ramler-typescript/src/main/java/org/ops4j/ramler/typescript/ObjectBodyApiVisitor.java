@@ -17,10 +17,14 @@
  */
 package org.ops4j.ramler.typescript;
 
+import static java.util.stream.Collectors.toList;
+
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import org.ops4j.ramler.generator.ApiVisitor;
+import org.ops4j.ramler.generator.Constants;
 import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
 import org.trimou.engine.MustacheEngine;
@@ -40,8 +44,12 @@ public class ObjectBodyApiVisitor implements ApiVisitor {
 
     @Override
     public void visitObjectTypeStart(ObjectTypeDeclaration type) {
+        List<String> baseClasses = type.parentTypes().stream().map(t -> t.name()).
+            filter(n -> !n.equals(Constants.OBJECT)).collect(toList());
+
+        Map<String, Object> contextObject = ImmutableMap.of("name", type.name(), "baseClasses", baseClasses);
+
         MustacheEngine engine = context.getTemplateEngine().getEngine();
-        Map<String, String> contextObject = ImmutableMap.of("name", type.name());
         engine.getMustache("objectStart").render(context.getOutput(), contextObject);
     }
 

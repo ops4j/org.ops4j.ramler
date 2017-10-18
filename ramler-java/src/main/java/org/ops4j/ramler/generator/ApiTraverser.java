@@ -20,6 +20,7 @@ package org.ops4j.ramler.generator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.ops4j.ramler.model.Metatype;
 import org.raml.v2.api.model.v10.api.Api;
 import org.raml.v2.api.model.v10.api.Library;
 import org.raml.v2.api.model.v10.datamodel.AnyTypeDeclaration;
@@ -100,8 +101,7 @@ public class ApiTraverser {
         TypeDeclaration type) {
         for (TypeDeclaration baseType : type.parentTypes()) {
             String baseTypeName = baseType.name();
-            if (!baseTypeName.equals(Constants.OBJECT) && !baseTypeName.equals(Constants.INTEGER) && !baseTypeName.equals(Constants.STRING)
-                && !orderedTypes.containsKey(baseTypeName)) {
+            if (!Metatype.isBuiltIn(baseTypeName) && !orderedTypes.containsKey(baseTypeName)) {
                 storeHierarchy(orderedTypes, api, baseType);
             }
         }
