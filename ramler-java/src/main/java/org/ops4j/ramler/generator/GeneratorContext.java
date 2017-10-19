@@ -20,7 +20,6 @@ package org.ops4j.ramler.generator;
 import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 import static java.time.temporal.ChronoUnit.SECONDS;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -29,7 +28,6 @@ import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.annotation.Generated;
 
@@ -64,8 +62,6 @@ import com.sun.codemodel.JType;
 public class GeneratorContext {
 
     private static Logger log = LoggerFactory.getLogger(GeneratorContext.class);
-
-    private static final String POM_PROPERTIES = "/META-INF/maven/org.ops4j.ramler/ramler-java/pom.properties";
 
     private Configuration config;
 
@@ -290,24 +286,7 @@ public class GeneratorContext {
         klass.annotate(Generated.class)
             .param("value", "org.ops4j.ramler")
             .param("date", ZonedDateTime.now().truncatedTo(SECONDS).format(ISO_OFFSET_DATE_TIME))
-            .param("comments", "version " + getRamlerVersion());
-    }
-
-    private String getRamlerVersion() {
-        if (ramlerVersion == null) {
-            Properties props = new Properties();
-            try (InputStream is = GeneratorContext.class.getResourceAsStream(POM_PROPERTIES)) {
-                // The resource may not be available when running from the IDE
-                if (is != null) {
-                    props.load(is);
-                }
-            }
-            catch (IOException exc) {
-                log.debug("Error loading pom.properties", exc);
-            }
-            ramlerVersion = props.getProperty("version", "UNKNOWN");
-        }
-        return ramlerVersion;
+            .param("comments", "version " + Version.getRamlerVersion());
     }
 
     /**

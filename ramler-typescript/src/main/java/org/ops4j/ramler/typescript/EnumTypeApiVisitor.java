@@ -60,7 +60,7 @@ public class EnumTypeApiVisitor implements ApiVisitor {
 
     public EnumTypeApiVisitor(TypescriptGeneratorContext context) {
         this.context = context;
-        this.output = new StringBuilder();
+        this.output = context.startOutput();
     }
 
     @Override
@@ -88,5 +88,4 @@ public class EnumTypeApiVisitor implements ApiVisitor {
             throw new GeneratorException(exc);
         }
     }
-
 }

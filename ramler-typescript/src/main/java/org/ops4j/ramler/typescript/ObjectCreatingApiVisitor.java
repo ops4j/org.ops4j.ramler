@@ -44,7 +44,7 @@ public class ObjectCreatingApiVisitor implements ApiVisitor {
 
     public ObjectCreatingApiVisitor(TypescriptGeneratorContext context) {
         this.context = context;
-        this.output = new StringBuilder();
+        this.output = context.startOutput();
     }
 
     @Override
@@ -52,8 +52,6 @@ public class ObjectCreatingApiVisitor implements ApiVisitor {
         if (context.getApiModel().isInternal(type)) {
             return;
         }
-
-        context.setOutput(output);
 
         ObjectImportApiVisitor importVisitor = new ObjectImportApiVisitor(context);
         ApiTraverser traverser = new ApiTraverser();

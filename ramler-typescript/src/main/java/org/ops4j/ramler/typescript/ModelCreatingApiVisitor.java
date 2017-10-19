@@ -107,7 +107,7 @@ public class ModelCreatingApiVisitor implements ApiVisitor {
      */
     private void createTypeAlias(TypeDeclaration type, String targetType, Map<String, String> imports) {
         MustacheEngine engine = context.getTemplateEngine().getEngine();
-        StringBuilder output = new StringBuilder();
+        StringBuilder output = context.startOutput();
 
         if (!imports.isEmpty()) {
             imports.forEach((k, v) -> {

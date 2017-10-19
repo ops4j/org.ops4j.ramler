@@ -17,6 +17,13 @@
  */
 package org.ops4j.ramler.typescript;
 
+import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+import static java.time.temporal.ChronoUnit.SECONDS;
+
+import java.time.ZonedDateTime;
+import java.util.Map;
+
+import org.ops4j.ramler.generator.Version;
 import org.ops4j.ramler.model.ApiModel;
 import org.ops4j.ramler.typescript.trimou.TypescriptTemplateEngine;
 import org.raml.v2.api.model.v10.datamodel.AnyTypeDeclaration;
@@ -30,6 +37,7 @@ import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.StringTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.TimeOnlyTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
+import org.trimou.util.ImmutableMap;
 
 /**
  * @author Harald Wellmann
@@ -106,6 +114,17 @@ public class TypescriptGeneratorContext {
      */
     public void setOutput(Appendable output) {
         this.output = output;
+    }
+
+    public StringBuilder startOutput() {
+        StringBuilder builder = new StringBuilder();
+        this.output = builder;
+
+        Map<String, String> contextObject = ImmutableMap.of("version", Version.getRamlerVersion(),
+                "date", ZonedDateTime.now().truncatedTo(SECONDS).format(ISO_OFFSET_DATE_TIME));
+        getTemplateEngine().getEngine().getMustache("generated").render(output, contextObject);
+        return builder;
+
     }
 
     public String getTypescriptPropertyType(TypeDeclaration propertyType) {
