@@ -23,8 +23,8 @@ import org.ops4j.ramler.model.ApiModel;
 import org.ops4j.ramler.typescript.trimou.TypescriptTemplateEngine;
 
 /**
- * Creates a Typescript model for a given RAML model. Entry point for code generation, the actual work is carried out
- * by a number of API visitors.
+ * Creates a Typescript model for a given RAML model. Entry point for code generation, the actual
+ * work is carried out by a number of API visitors.
  * <p>
  * Code generation is based on Trimou templates.
  *
@@ -38,7 +38,9 @@ public class TypescriptGenerator {
 
     /**
      * Creates a generator with the given configuration.
-     * @param config Typescript generator configuration
+     *
+     * @param config
+     *            Typescript generator configuration
      */
     public TypescriptGenerator(TypescriptConfiguration config) {
         this.config = config;

@@ -196,7 +196,8 @@ public class TypescriptGeneratorContext {
         if (propertyType instanceof ArrayTypeDeclaration) {
             return apiModel.getItemType(propertyType) + "[]";
         }
-        throw new GeneratorException("unsupported declaration type: " + propertyType.getClass().getName());
+        throw new GeneratorException(
+            "unsupported declaration type: " + propertyType.getClass().getName());
     }
 
     /**
