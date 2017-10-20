@@ -36,7 +36,11 @@ public class Version {
 
     private static String ramlerVersion;
 
-    public static  String getRamlerVersion() {
+    private Version() {
+        // hidden utility class constructor
+    }
+
+    public static synchronized String getRamlerVersion() {
         if (ramlerVersion == null) {
             Properties props = new Properties();
             try (InputStream is = GeneratorContext.class.getResourceAsStream(POM_PROPERTIES)) {

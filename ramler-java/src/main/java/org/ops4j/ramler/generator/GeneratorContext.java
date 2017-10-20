@@ -45,8 +45,6 @@ import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.StringTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.TimeOnlyTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
@@ -61,8 +59,6 @@ import com.sun.codemodel.JType;
  */
 public class GeneratorContext {
 
-    private static Logger log = LoggerFactory.getLogger(GeneratorContext.class);
-
     private Configuration config;
 
     private JCodeModel codeModel;
@@ -76,8 +72,6 @@ public class GeneratorContext {
     private Map<String, JType> typeMap;
 
     private ApiModel apiModel;
-
-    private String ramlerVersion;
 
     /**
      * Creates a generator context for the given configuration.

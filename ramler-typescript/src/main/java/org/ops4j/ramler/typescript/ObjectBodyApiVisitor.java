@@ -51,16 +51,13 @@ public class ObjectBodyApiVisitor implements ApiVisitor {
     @Override
     public void visitObjectTypeStart(ObjectTypeDeclaration type) {
         List<String> baseClasses = type.parentTypes().stream()
-                .filter(t -> !t.name().equals(Constants.OBJECT))
-                .map(t -> this.typeWithArgs(type, t))
-                .collect(toList());
+            .filter(t -> !t.name().equals(Constants.OBJECT)).map(t -> this.typeWithArgs(type, t))
+            .collect(toList());
 
         List<String> typeVars = Annotations.getStringAnnotations(type, TYPE_VARS);
 
-        Map<String, Object> contextObject = ImmutableMap.of(
-                "name", type.name(),
-                "baseClasses", baseClasses,
-                "typeVars", typeVars);
+        Map<String, Object> contextObject = ImmutableMap.of("name", type.name(), "baseClasses",
+            baseClasses, "typeVars", typeVars);
 
         MustacheEngine engine = context.getTemplateEngine().getEngine();
         engine.getMustache("objectStart").render(context.getOutput(), contextObject);
@@ -75,10 +72,10 @@ public class ObjectBodyApiVisitor implements ApiVisitor {
     @Override
     public void visitObjectTypeProperty(ObjectTypeDeclaration type, TypeDeclaration property) {
         if (property instanceof ArrayTypeDeclaration) {
-            generateArrayProperty(type, (ArrayTypeDeclaration) property);
+            generateArrayProperty((ArrayTypeDeclaration) property);
         }
         else {
-            generateProperty(type, property);
+            generateProperty(property);
         }
     }
 
@@ -86,7 +83,7 @@ public class ObjectBodyApiVisitor implements ApiVisitor {
      * @param type
      * @param property
      */
-    private void generateArrayProperty(ObjectTypeDeclaration type, ArrayTypeDeclaration property) {
+    private void generateArrayProperty(ArrayTypeDeclaration property) {
         String fieldName = Names.buildVariableName(property);
         String itemTypeName = context.getApiModel().getItemType(property);
         String typeVar = Annotations.findTypeVar(property);
@@ -98,7 +95,8 @@ public class ObjectBodyApiVisitor implements ApiVisitor {
             tsItemType = itemTypeName;
         }
         MustacheEngine engine = context.getTemplateEngine().getEngine();
-        Map<String, String> contextObject = ImmutableMap.of("name", fieldName, "tsPropType", tsItemType + "[]");
+        Map<String, String> contextObject = ImmutableMap.of("name", fieldName, "tsPropType",
+            tsItemType + "[]");
         engine.getMustache("property").render(context.getOutput(), contextObject);
     }
 
@@ -106,17 +104,19 @@ public class ObjectBodyApiVisitor implements ApiVisitor {
      * @param type
      * @param property
      */
-    private void generateProperty(ObjectTypeDeclaration type, TypeDeclaration property) {
+    private void generateProperty(TypeDeclaration property) {
         String fieldName = Names.buildVariableName(property);
         String tsPropType;
         String typeVar = Annotations.findTypeVar(property);
         if (typeVar != null) {
             tsPropType = typeVar;
-        } else {
+        }
+        else {
             tsPropType = propertyTypeWithArgs(property);
         }
         MustacheEngine engine = context.getTemplateEngine().getEngine();
-        Map<String, String> contextObject = ImmutableMap.of("name", fieldName, "tsPropType", tsPropType);
+        Map<String, String> contextObject = ImmutableMap.of("name", fieldName, "tsPropType",
+            tsPropType);
         engine.getMustache("property").render(context.getOutput(), contextObject);
     }
 

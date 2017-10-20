@@ -48,13 +48,28 @@ public class EnumTypeApiVisitor implements ApiVisitor {
     private StringBuilder output;
 
     static class EnumSymbol {
-        public String symbol;
 
-        public String value;
+        private String symbol;
+
+        private String value;
 
         EnumSymbol(String symbol, String value) {
             this.symbol = symbol;
             this.value = value;
+        }
+
+
+        /**
+         * @return the symbol
+         */
+        public String getSymbol() {
+            return symbol;
+        }
+        /**
+         * @return the value
+         */
+        public String getValue() {
+            return value;
         }
     }
 
@@ -67,7 +82,8 @@ public class EnumTypeApiVisitor implements ApiVisitor {
     public void visitStringType(StringTypeDeclaration type) {
         String name = type.name();
         List<EnumSymbol> enumValues = context.getApiModel().getEnumValues(type).stream()
-                .map(v -> new EnumSymbol(Names.buildConstantName(v.getName()), v.getName())).collect(toList());
+            .map(v -> new EnumSymbol(Names.buildConstantName(v.getName()), v.getName()))
+            .collect(toList());
 
         Map<String, Object> contextObject = ImmutableMap.of("name", name, "enumValues", enumValues);
 
@@ -84,7 +100,8 @@ public class EnumTypeApiVisitor implements ApiVisitor {
         log.debug("generating {}\n{}", tsFileName, content);
         try {
             Files.write(tsFile.toPath(), content.getBytes(StandardCharsets.UTF_8));
-        } catch (IOException exc) {
+        }
+        catch (IOException exc) {
             throw new GeneratorException(exc);
         }
     }

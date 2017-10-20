@@ -30,7 +30,6 @@ import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * @author Harald Wellmann
  *
@@ -61,7 +60,6 @@ public class ObjectCreatingApiVisitor implements ApiVisitor {
         ObjectBodyApiVisitor bodyVisitor = new ObjectBodyApiVisitor(context);
         traverser.traverse(type, bodyVisitor);
 
-
     }
 
     @Override
@@ -75,9 +73,9 @@ public class ObjectCreatingApiVisitor implements ApiVisitor {
         File tsFile = new File(context.getConfig().getTargetDir(), tsFileName);
         try {
             Files.write(tsFile.toPath(), output.toString().getBytes(StandardCharsets.UTF_8));
-        } catch (IOException exc) {
+        }
+        catch (IOException exc) {
             throw new GeneratorException(exc);
         }
-
     }
 }

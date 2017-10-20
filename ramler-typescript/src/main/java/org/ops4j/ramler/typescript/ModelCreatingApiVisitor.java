@@ -97,7 +97,6 @@ public class ModelCreatingApiVisitor implements ApiVisitor {
         return Collections.emptyMap();
     }
 
-
     private void createTypeAlias(TypeDeclaration type, String targetType) {
         createTypeAlias(type, targetType, Collections.emptyMap());
     }
@@ -105,7 +104,8 @@ public class ModelCreatingApiVisitor implements ApiVisitor {
     /**
      * @param type
      */
-    private void createTypeAlias(TypeDeclaration type, String targetType, Map<String, String> imports) {
+    private void createTypeAlias(TypeDeclaration type, String targetType,
+        Map<String, String> imports) {
         MustacheEngine engine = context.getTemplateEngine().getEngine();
         StringBuilder output = context.startOutput();
 
@@ -117,13 +117,13 @@ public class ModelCreatingApiVisitor implements ApiVisitor {
             output.append("\n");
         }
 
-        Map<String, String> contextObject = ImmutableMap.of("name", type.name(), "tsType", targetType);
+        Map<String, String> contextObject = ImmutableMap.of("name", type.name(), "tsType",
+            targetType);
         engine.getMustache("typeAlias").render(output, contextObject);
 
         String moduleName = Names.buildLowerKebabCaseName(type.name());
         writeToFile(output.toString(), moduleName);
     }
-
 
     private void writeToFile(String content, String moduleName) {
         String tsFileName = moduleName + ".ts";
@@ -131,7 +131,8 @@ public class ModelCreatingApiVisitor implements ApiVisitor {
         log.debug("generating {}\n{}", tsFileName, content);
         try {
             Files.write(tsFile.toPath(), content.getBytes(StandardCharsets.UTF_8));
-        } catch (IOException exc) {
+        }
+        catch (IOException exc) {
             throw new GeneratorException(exc);
         }
     }
