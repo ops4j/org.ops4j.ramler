@@ -20,6 +20,8 @@ package org.ops4j.ramler.typescript;
 import java.io.File;
 
 /**
+ * Configuration of the Typescript code generator.
+ *
  * @author Harald Wellmann
  *
  */
@@ -29,47 +31,36 @@ public class TypescriptConfiguration {
 
     private File targetDir;
 
-    private String templateDir;
-
     /**
-     * @return the sourceFile
+     * Gets the RAML source file name.
+     * @return source file name
      */
     public String getSourceFile() {
         return sourceFile;
     }
 
     /**
-     * @param sourceFile the sourceFile to set
+     * Sets the RAML source file name.
+     * @param sourceFile source file name
      */
     public void setSourceFile(String sourceFile) {
         this.sourceFile = sourceFile;
     }
 
     /**
-     * @return the targetDir
+     * Gets the target directory for the generated Typescript files.
+     * @return target directory
      */
     public File getTargetDir() {
         return targetDir;
     }
 
     /**
-     * @param targetDir the targetDir to set
+     * Sets the target directory.
+     * @param targetDir
+     *            target directory
      */
     public void setTargetDir(File targetDir) {
         this.targetDir = targetDir;
-    }
-
-    /**
-     * @return the templateDir
-     */
-    public String getTemplateDir() {
-        return templateDir;
-    }
-
-    /**
-     * @param templateDir the templateDir to set
-     */
-    public void setTemplateDir(String templateDir) {
-        this.templateDir = templateDir;
     }
 }

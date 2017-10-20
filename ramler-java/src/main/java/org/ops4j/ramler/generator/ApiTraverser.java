@@ -108,6 +108,14 @@ public class ApiTraverser {
         orderedTypes.put(type.name(), type);
     }
 
+    /**
+     * Lets the given visitor traverse the model tree of the given type declaration.
+     *
+     * @param type
+     *            type declaration
+     * @param visitor
+     *            concrete visitor
+     */
     public void traverse(TypeDeclaration type, ApiVisitor visitor) {
         if (type instanceof AnyTypeDeclaration) {
             visitor.visitAnyType((AnyTypeDeclaration) type);

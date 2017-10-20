@@ -37,6 +37,9 @@ import org.trimou.engine.MustacheEngine;
 import org.trimou.util.ImmutableMap;
 
 /**
+ * Creates the exported interface declaration of a Typescript module corresponding to a RAML object
+ * type.
+ *
  * @author Harald Wellmann
  *
  */
@@ -44,6 +47,12 @@ public class ObjectBodyApiVisitor implements ApiVisitor {
 
     private TypescriptGeneratorContext context;
 
+    /**
+     * Creates a visitor with the given generator context.
+     *
+     * @param context
+     *            generator context
+     */
     public ObjectBodyApiVisitor(TypescriptGeneratorContext context) {
         this.context = context;
     }

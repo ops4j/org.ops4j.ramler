@@ -31,6 +31,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Generates a Typescript interface for a given RAML object type.
+ *
  * @author Harald Wellmann
  *
  */
@@ -41,6 +43,12 @@ public class ObjectCreatingApiVisitor implements ApiVisitor {
     private TypescriptGeneratorContext context;
     private StringBuilder output;
 
+    /**
+     * Creates a visitor with the given generator context.
+     *
+     * @param context
+     *            generator context
+     */
     public ObjectCreatingApiVisitor(TypescriptGeneratorContext context) {
         this.context = context;
         this.output = context.startOutput();

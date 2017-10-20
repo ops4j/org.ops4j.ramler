@@ -32,6 +32,8 @@ import org.trimou.engine.MustacheEngine;
 import org.trimou.util.ImmutableMap;
 
 /**
+ * Creates the import statements of a Typescript module corresponding to a RAML object type.
+ *
  * @author Harald Wellmann
  *
  */
@@ -40,6 +42,12 @@ public class ObjectImportApiVisitor implements ApiVisitor {
     private TypescriptGeneratorContext context;
     private Map<String, String> typeToModuleMap = new TreeMap<>();
 
+    /**
+     * Creates a visitor with the given generator context.
+     *
+     * @param context
+     *            generator context
+     */
     public ObjectImportApiVisitor(TypescriptGeneratorContext context) {
         this.context = context;
     }
@@ -71,12 +79,10 @@ public class ObjectImportApiVisitor implements ApiVisitor {
         }
     }
 
-
     @Override
     public void visitObjectTypeEnd(ObjectTypeDeclaration objectType) {
         typeToModuleMap.forEach(this::generateImport);
     }
-
 
     private void generateImport(String type, String module) {
         MustacheEngine engine = context.getTemplateEngine().getEngine();

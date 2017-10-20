@@ -36,6 +36,8 @@ import org.trimou.engine.MustacheEngine;
 import org.trimou.util.ImmutableMap;
 
 /**
+ * Generates a Typescript enum class for a RAML enumeration type.
+ *
  * @author Harald Wellmann
  *
  */
@@ -47,32 +49,54 @@ public class EnumTypeApiVisitor implements ApiVisitor {
 
     private StringBuilder output;
 
+    /**
+     * Represents an enumeration member.
+     *
+     */
     static class EnumSymbol {
 
         private String symbol;
 
         private String value;
 
+        /**
+         * Creates an enumeration member with the given symbol and value.
+         *
+         * @param symbol
+         *            member symbol
+         * @param value
+         *            optional value
+         */
         EnumSymbol(String symbol, String value) {
             this.symbol = symbol;
             this.value = value;
         }
 
-
         /**
+         * Gets the symbol of this member.
+         *
          * @return the symbol
          */
         public String getSymbol() {
             return symbol;
         }
+
         /**
-         * @return the value
+         * Gets the valu of this member
+         *
+         * @return the value, or null
          */
         public String getValue() {
             return value;
         }
     }
 
+    /**
+     * Creates a new visitor with the given generation context.
+     *
+     * @param context
+     *            generation context
+     */
     public EnumTypeApiVisitor(TypescriptGeneratorContext context) {
         this.context = context;
         this.output = context.startOutput();

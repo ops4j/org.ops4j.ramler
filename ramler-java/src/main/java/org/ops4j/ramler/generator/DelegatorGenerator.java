@@ -34,6 +34,12 @@ import com.sun.codemodel.JTypeVar;
 import com.sun.codemodel.JVar;
 
 /**
+ * Creates a delegator class for a given model class. The delegator class has a protected
+ * {@code delegate} member of the target type and accessor methods delegating to the target.
+ * <p>
+ * Users can extend the delegator class, e.g. to implement custom builder methods for complex use
+ * cases.
+ *
  * @author Harald Wellmann
  *
  */
@@ -41,24 +47,39 @@ public class DelegatorGenerator {
 
     private GeneratorContext context;
 
+    /**
+     * Creates a delegator generator with the given context.
+     *
+     * @param context
+     *            generator context
+     */
     public DelegatorGenerator(GeneratorContext context) {
         this.context = context;
     }
 
+    /**
+     * Generates a delegator for the given class.
+     *
+     * @param delegateClass
+     *            delegate class
+     */
     public void generateDelegator(JDefinedClass delegateClass) {
         JPackage pkg = context.getDelegatorPackage();
         try {
-            JDefinedClass delegator = pkg._class(delegateClass.name() + context.getConfig().getDelegatorSuffix());
+            JDefinedClass delegator = pkg
+                ._class(delegateClass.name() + context.getConfig().getDelegatorSuffix());
             context.annotateAsGenerated(delegator);
 
             JClass delegateType = delegateClass;
 
             if (delegateClass.typeParams().length > 0) {
-                Stream.of(delegateClass.typeParams()).map(JTypeVar::name).forEach(delegator::generify);
+                Stream.of(delegateClass.typeParams()).map(JTypeVar::name)
+                    .forEach(delegator::generify);
                 delegateType = delegateClass.narrow(delegateClass.typeParams());
             }
 
-            JFieldVar delegate = delegator.field(JMod.PROTECTED, delegateType, context.getConfig().getDelegateFieldName());
+            JFieldVar delegate = delegator.field(JMod.PROTECTED, delegateType,
+                context.getConfig().getDelegateFieldName());
             delegate.init(JExpr._new(delegateType));
 
             JDefinedClass klass = delegateClass;
@@ -77,11 +98,6 @@ public class DelegatorGenerator {
         }
     }
 
-    /**
-     * @param delegateClass
-     * @param delegator
-     * @param delegate
-     */
     private void buildDelegatingMethods(JDefinedClass delegateClass, JDefinedClass delegator,
         JFieldVar delegate) {
         for (JMethod method : delegateClass.methods()) {
@@ -89,10 +105,6 @@ public class DelegatorGenerator {
         }
     }
 
-    /**
-     * @param delegator
-     * @param method
-     */
     private void buildDelegatingMethod(JDefinedClass delegator, JMethod method,
         JFieldVar delegate) {
         if (isSetter(method)) {
@@ -103,11 +115,6 @@ public class DelegatorGenerator {
         }
     }
 
-    /**
-     * @param delegator
-     * @param method
-     * @param delegate
-     */
     private void buildDelegatingGetter(JDefinedClass delegator, JMethod method,
         JFieldVar delegate) {
         if (delegator.getMethod(method.name(), new JType[0]) == null) {
@@ -116,11 +123,6 @@ public class DelegatorGenerator {
         }
     }
 
-    /**
-     * @param delegator
-     * @param method
-     * @param delegate
-     */
     private void buildDelegatingSetter(JDefinedClass delegator, JMethod method,
         JFieldVar delegate) {
         JType type = method.listParamTypes()[0];

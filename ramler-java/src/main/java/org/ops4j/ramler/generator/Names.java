@@ -151,6 +151,13 @@ public class Names {
         return friendlyName;
     }
 
+    /**
+     * Converts a camel case name to lower-case kebab case, using hyphens as separators.
+     * E.g. {@code UserGroup -> user-group}.
+     *
+     * @param source camel case string
+     * @return hyphen-separated lower-case string
+     */
     public static String buildLowerKebabCaseName(String source) {
         Matcher m = CAMEL_CASE_PATTERN.matcher(source);
 

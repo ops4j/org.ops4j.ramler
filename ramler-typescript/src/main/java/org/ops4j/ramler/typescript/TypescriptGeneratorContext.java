@@ -23,6 +23,7 @@ import static java.time.temporal.ChronoUnit.SECONDS;
 import java.time.ZonedDateTime;
 import java.util.Map;
 
+import org.ops4j.ramler.exc.GeneratorException;
 import org.ops4j.ramler.generator.Version;
 import org.ops4j.ramler.model.ApiModel;
 import org.ops4j.ramler.typescript.trimou.TypescriptTemplateEngine;
@@ -40,6 +41,8 @@ import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
 import org.trimou.util.ImmutableMap;
 
 /**
+ * Context information shared by all API visitors generating Typescript code.
+ *
  * @author Harald Wellmann
  *
  */
@@ -54,55 +57,75 @@ public class TypescriptGeneratorContext {
     private Appendable output;
 
     /**
+     * Creates a generator context for the given configuration.
      *
+     * @param config
+     *            Typescript generator configuration
      */
     public TypescriptGeneratorContext(TypescriptConfiguration config) {
         this.config = config;
     }
 
     /**
-     * @return the config
+     * Gets the generator configuration.
+     *
+     * @return generator configuration
      */
     public TypescriptConfiguration getConfig() {
         return config;
     }
 
     /**
-     * @param config the config to set
+     * Sets the generator configuration.
+     *
+     * @param config
+     *            generator configuration
      */
     public void setConfig(TypescriptConfiguration config) {
         this.config = config;
     }
 
     /**
-     * @return the apiModel
+     * Gets the RAML API model.
+     *
+     * @return API model
      */
     public ApiModel getApiModel() {
         return apiModel;
     }
 
     /**
-     * @param apiModel the apiModel to set
+     * Sets the RAML API model.
+     *
+     * @param apiModel
+     *            API model
      */
     public void setApiModel(ApiModel apiModel) {
         this.apiModel = apiModel;
     }
 
     /**
-     * @return the templateEngine
+     * Gets the template engine for code generation.
+     *
+     * @return template engine
      */
     public TypescriptTemplateEngine getTemplateEngine() {
         return templateEngine;
     }
 
     /**
-     * @param templateEngine the templateEngine to set
+     * Sets the template engine.
+     *
+     * @param templateEngine
+     *            template engine
      */
     public void setTemplateEngine(TypescriptTemplateEngine templateEngine) {
         this.templateEngine = templateEngine;
     }
 
     /**
+     * Get the current output to which the template engine will write.
+     *
      * @return the output
      */
     public Appendable getOutput() {
@@ -110,23 +133,37 @@ public class TypescriptGeneratorContext {
     }
 
     /**
-     * @param output the output to set
+     * Sets the current output for the template engine.
+     *
+     * @param output
+     *            the output to set
      */
     public void setOutput(Appendable output) {
         this.output = output;
     }
 
+    /**
+     * Starts a new output and generates a header comment.
+     *
+     * @return output
+     */
     public StringBuilder startOutput() {
         StringBuilder builder = new StringBuilder();
         this.output = builder;
 
         Map<String, String> contextObject = ImmutableMap.of("version", Version.getRamlerVersion(),
-                "date", ZonedDateTime.now().truncatedTo(SECONDS).format(ISO_OFFSET_DATE_TIME));
+            "date", ZonedDateTime.now().truncatedTo(SECONDS).format(ISO_OFFSET_DATE_TIME));
         getTemplateEngine().getEngine().getMustache("generated").render(output, contextObject);
         return builder;
-
     }
 
+    /**
+     * Gets the Typescript name for a given RAML property type.
+     *
+     * @param propertyType
+     *            property type
+     * @return Typescript name
+     */
     public String getTypescriptPropertyType(TypeDeclaration propertyType) {
         String typeName = propertyType.type();
         if (propertyType instanceof StringTypeDeclaration) {
@@ -159,9 +196,16 @@ public class TypescriptGeneratorContext {
         if (propertyType instanceof ArrayTypeDeclaration) {
             return apiModel.getItemType(propertyType) + "[]";
         }
-        return "__UNDEFINED__";
+        throw new GeneratorException("unsupported declaration type: " + propertyType.getClass().getName());
     }
 
+    /**
+     * Gets the Typescript name for a given user-defined RAML type.
+     *
+     * @param type
+     *            RAML type
+     * @return Typescript name
+     */
     public String getTypescriptType(TypeDeclaration type) {
         String typeName = type.name();
         if (type instanceof StringTypeDeclaration) {
@@ -191,7 +235,7 @@ public class TypescriptGeneratorContext {
         if (type instanceof ArrayTypeDeclaration) {
             return apiModel.getItemType(type) + "[]";
         }
-        return "__UNDEFINED__";
+        throw new GeneratorException("unsupported declaration type: " + type.getClass().getName());
     }
 
     private String getDeclaredName(String typeName, String fallback) {

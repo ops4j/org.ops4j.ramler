@@ -96,6 +96,11 @@ public enum Metatype {
         return literal;
     }
 
+    /**
+     * Checks if the given type is a built-in type.
+     * @param typeName type name
+     * @return true if type is built-in
+     */
     public static boolean isBuiltIn(String typeName) {
         return literalToTypeMap.containsKey(typeName);
     }

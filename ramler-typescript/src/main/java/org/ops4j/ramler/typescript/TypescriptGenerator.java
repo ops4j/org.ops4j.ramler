@@ -23,6 +23,11 @@ import org.ops4j.ramler.model.ApiModel;
 import org.ops4j.ramler.typescript.trimou.TypescriptTemplateEngine;
 
 /**
+ * Creates a Typescript model for a given RAML model. Entry point for code generation, the actual work is carried out
+ * by a number of API visitors.
+ * <p>
+ * Code generation is based on Trimou templates.
+ *
  * @author Harald Wellmann
  *
  */
@@ -31,16 +36,22 @@ public class TypescriptGenerator {
     private TypescriptConfiguration config;
     private TypescriptGeneratorContext context;
 
+    /**
+     * Creates a generator with the given configuration.
+     * @param config Typescript generator configuration
+     */
     public TypescriptGenerator(TypescriptConfiguration config) {
         this.config = config;
         this.context = new TypescriptGeneratorContext(config);
     }
 
+    /**
+     * Generates Typescript code.
+     */
     public void generate() {
         ApiModel apiModel = new ApiModelBuilder().buildApiModel(config.getSourceFile());
         context.setApiModel(apiModel);
         TypescriptTemplateEngine engine = new TypescriptTemplateEngine();
-        engine.setTemplateDir(config.getTemplateDir());
         context.setTemplateEngine(engine);
         config.getTargetDir().mkdirs();
 
@@ -48,5 +59,4 @@ public class TypescriptGenerator {
         ApiTraverser traverser = new ApiTraverser();
         traverser.traverse(context.getApiModel().getApi(), modelVisitor);
     }
-
 }

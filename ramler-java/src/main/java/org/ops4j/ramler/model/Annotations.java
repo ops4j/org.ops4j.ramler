@@ -63,8 +63,11 @@ public class Annotations {
 
     /**
      * Find all annotations with the given name on the given declaration.
-     * @param decl declaration
-     * @param name annotation name
+     *
+     * @param decl
+     *            declaration
+     * @param name
+     *            annotation name
      * @return stream of matching annotations
      */
     public static Stream<AnnotationRef> annotationsByName(Annotable decl, String name) {
@@ -73,7 +76,9 @@ public class Annotations {
 
     /**
      * Finds the value of the {@code (codeName)} annotation on the given declaration.
-     * @param decl declaration
+     *
+     * @param decl
+     *            declaration
      * @return annotation value, or null if annotation not present
      */
     public static String findCodeName(Annotable decl) {
@@ -81,11 +86,25 @@ public class Annotations {
             .map(Annotations::findStringAnnotationValue).orElse(null);
     }
 
+    /**
+     * Finds the value of the {@code (typeVar)} annotation on the given declaration.
+     *
+     * @param decl
+     *            declaration
+     * @return annotation value, or null if annotation not present
+     */
     public static String findTypeVar(Annotable decl) {
         return annotationsByName(decl, "typeVar").findFirst()
             .map(Annotations::findStringAnnotationValue).orElse(null);
     }
 
+    /**
+     * Checks if the given declaration has an {@code (id)} annotation.
+     *
+     * @param decl
+     *            declaration
+     * @return true if annotation is present
+     */
     public static boolean isIdentity(Annotable decl) {
         return annotationsByName(decl, "id").findFirst().isPresent();
     }
