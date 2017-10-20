@@ -28,7 +28,7 @@ public class GenericTest extends AbstractGeneratorTest {
 
     @Test
     public void shouldFindModules() {
-        assertModules("animal-response", "animal", "list-result", "person", "response", "result", "status");
+        assertModules("animal-response", "animal", "list-result", "response", "result", "status");
     }
 
     @Test
