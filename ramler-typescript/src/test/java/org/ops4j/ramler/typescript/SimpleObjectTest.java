@@ -27,7 +27,125 @@ public class SimpleObjectTest extends AbstractGeneratorTest {
     }
 
     @Test
-    public void shouldFindModelClasses() {
+    public void shouldFindModules() {
+        assertModules("address", "age", "colour", "employee", "integers", "manager", "name", "numbers",
+                "person", "temporals", "user-group", "user");
     }
 
+    @Test
+    public void shouldFindAddressInterface() {
+        expectInterface("Address");
+        assertImports();
+        assertProperty("city", "string");
+        assertProperty("street", "string");
+        verifyInterface();
+    }
+
+    @Test
+    public void shouldFindAgeAlias() {
+        expectTypeAlias("Age", "number");
+        assertImports();
+    }
+
+    @Test
+    public void shouldFindColourEnum() {
+        expectEnum("Colour");
+        assertImports();
+        assertEnumMember("LIGHT_BLUE","'lightBlue'");
+        assertEnumMember("RED","'red'");
+        assertEnumMember("YELLOW","'yellow'");
+        assertEnumMember("GREEN","'green'");
+        verifyEnum();
+    }
+
+    @Test
+    public void shouldFindEmployeeInterface() {
+        expectInterface("Employee", "Person");
+        assertImports("Person");
+        assertProperty("department", "string");
+        verifyInterface();
+    }
+
+    @Test
+    public void shouldFindIntegersInterface() {
+        expectInterface("Integers");
+        assertImports();
+        assertProperty("i8", "number");
+        assertProperty("i8o", "number");
+        assertProperty("i16", "number");
+        assertProperty("i16o", "number");
+        assertProperty("i32", "number");
+        assertProperty("i32o", "number");
+        assertProperty("i64", "number");
+        assertProperty("i64o", "number");
+        assertProperty("i", "number");
+        assertProperty("io", "number");
+        assertProperty("l", "number");
+        assertProperty("lo", "number");
+        verifyInterface();
+    }
+
+    @Test
+    public void shouldFindManagerInterface() {
+        expectInterface("Manager", "Employee");
+        assertImports("Employee");
+        assertProperty("numEmployees", "number");
+        verifyInterface();
+    }
+
+    @Test
+    public void shouldFindNumbersInterface() {
+        expectInterface("Numbers");
+        assertImports();
+        assertProperty("f", "number");
+        assertProperty("fo", "number");
+        assertProperty("d", "number");
+        assertProperty("dbl", "number");
+        verifyInterface();
+    }
+
+    @Test
+    public void shouldFindPersonInterface() {
+        expectInterface("Person");
+        assertImports("Address", "Age");
+        assertProperty("objectType", "string");
+        assertProperty("firstname", "string");
+        assertProperty("lastname", "string");
+        assertProperty("address", "Address");
+        assertProperty("age", "Age");
+        verifyInterface();
+    }
+
+    @Test
+    public void shouldFindTemporalsInterface() {
+        expectInterface("Temporals");
+        assertImports();
+        assertProperty("date", "string");
+        assertProperty("to", "string");
+        assertProperty("dto", "string");
+        assertProperty("dt", "string");
+        verifyInterface();
+    }
+
+    public void shouldFindUserGroupInterface() {
+        expectInterface("UserGroup");
+        assertImports("User");
+        assertProperty("name", "string");
+        assertProperty("users", "User[]");
+        verifyInterface();
+    }
+
+    public void shouldFindUserInterface() {
+        expectInterface("User");
+        assertImports("Age", "Address", "Colour", "Name");
+        assertProperty("firstname", "string");
+        assertProperty("lastname", "Name");
+        assertProperty("age", "Age");
+        assertProperty("address", "Address");
+        assertProperty("registered", "boolean");
+        assertProperty("favouriteColour", "Colour");
+        assertProperty("dateOfBirth", "string");
+        assertProperty("registrationDate", "string");
+        verifyInterface();
+    }
 }

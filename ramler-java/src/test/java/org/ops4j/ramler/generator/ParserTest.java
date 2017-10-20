@@ -42,15 +42,19 @@ import org.raml.v2.api.model.v10.datamodel.TypeInstanceProperty;
 import org.raml.v2.api.model.v10.declarations.AnnotationRef;
 import org.raml.v2.api.model.v10.methods.Method;
 import org.raml.v2.api.model.v10.resources.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ParserTest {
+
+    private static Logger log = LoggerFactory.getLogger(ParserTest.class);
 
     private ApiModel apiModel;
 
     private void parse(String simpleName) {
         RamlModelResult ramlModelResult = new RamlModelBuilder().buildApi("raml/" + simpleName);
         if (ramlModelResult.hasErrors()) {
-            System.out.println(ramlModelResult.getValidationResults());
+            log.error("Parse errors: {}",ramlModelResult.getValidationResults());
         }
         assertThat(ramlModelResult.hasErrors()).isFalse();
         Api api = ramlModelResult.getApiV10();

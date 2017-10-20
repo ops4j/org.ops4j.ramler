@@ -27,7 +27,62 @@ public class GenericTest extends AbstractGeneratorTest {
     }
 
     @Test
-    public void shouldFindModelClasses() {
+    public void shouldFindModules() {
+        assertModules("animal-response", "animal", "list-result", "person", "response", "result", "status");
+    }
+
+    @Test
+    public void shouldFindAnimalInterface() {
+        expectInterface("Animal");
+        assertImports();
+        assertProperty("species", "string");
+        assertProperty("numLegs", "number");
+        verifyInterface();
+    }
+
+    @Test
+    public void shouldFindAnimalResponseInterface() {
+        expectInterface("AnimalResponse", "Response<Animal>");
+        assertImports("Animal", "Response");
+        verifyInterface();
+    }
+
+    @Test
+    public void shouldFindListResultInterface() {
+        expectInterface("ListResult");
+        assertImports();
+        assertProperty("result", "T[]");
+        verifyInterface();
+    }
+
+    @Test
+    public void shouldFindResponseInterface() {
+        expectInterface("Response");
+        assertImports("Result", "Status");
+        assertProperty("data", "Result<T>");
+        assertProperty("status", "Status");
+        assertProperty("success", "boolean");
+        verifyInterface();
+    }
+
+    @Test
+    public void shouldFindResultInterface() {
+        expectInterface("Result");
+        assertImports();
+        assertProperty("result", "T");
+        verifyInterface();
+    }
+
+    @Test
+    public void shouldFindStatusInterface() {
+        expectInterface("Status");
+        assertImports();
+        assertProperty("code", "number");
+        assertProperty("httpStatus", "number");
+        assertProperty("requestId", "string");
+        assertProperty("text", "string");
+        assertProperty("success", "boolean");
+        verifyInterface();
     }
 
 }

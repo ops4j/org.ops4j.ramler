@@ -43,20 +43,6 @@ types:
     properties:
       species: string
       numLegs: integer
-  Person:
-    properties:
-      firstName: string
-      lastName: 
-        type: string
-        (notes):
-        - N1
-        - N2
-        - N3
-    example:
-       {
-          firstName: "Donald",
-          lastName: "Duck"
-       }
   AnimalResponse:
     type: Response
     (g.typeArgs): [Animal]
