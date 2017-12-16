@@ -57,24 +57,28 @@ public class TypescriptTemplateEngine {
     /**
      * Set the template directory.
      *
-     * @param templateDir template directory
+     * @param templateDir
+     *            template directory
      */
     public void setTemplateDir(String templateDir) {
         this.templateDir = templateDir;
     }
 
     /**
-     * Constructs a template engine with some additional helpers and lambdas for Typescript generation.
+     * Constructs a template engine with some additional helpers and lambdas for Typescript
+     * generation.
      */
     public MustacheEngine getEngine() {
         if (engine == null) {
             ClassPathTemplateLocator genericLocator = new ClassPathTemplateLocator(PRIO_CLASS_PATH,
-                    TEMPLATE_PATH, TEMPLATE_SUFFIX);
+                TEMPLATE_PATH, TEMPLATE_SUFFIX);
             MustacheEngineBuilder builder = MustacheEngineBuilder.newBuilder()
-                    .setProperty(EngineConfigurationKey.DEFAULT_FILE_ENCODING, StandardCharsets.UTF_8.name())
-                    .addTemplateLocator(genericLocator);
+                .setProperty(EngineConfigurationKey.DEFAULT_FILE_ENCODING,
+                    StandardCharsets.UTF_8.name())
+                .addTemplateLocator(genericLocator);
             if (templateDir != null) {
-                builder.addTemplateLocator(new FileSystemTemplateLocator(PRIO_FILE_SYSTEM, templateDir, TEMPLATE_SUFFIX));
+                builder.addTemplateLocator(
+                    new FileSystemTemplateLocator(PRIO_FILE_SYSTEM, templateDir, TEMPLATE_SUFFIX));
             }
             engine = builder.build();
         }

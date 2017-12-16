@@ -19,6 +19,10 @@ package org.ops4j.ramler.typescript;
 
 import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 import static java.time.temporal.ChronoUnit.SECONDS;
+import static org.ops4j.ramler.typescript.TypescriptConstants.ANY;
+import static org.ops4j.ramler.typescript.TypescriptConstants.BOOLEAN;
+import static org.ops4j.ramler.typescript.TypescriptConstants.NUMBER;
+import static org.ops4j.ramler.typescript.TypescriptConstants.STRING;
 
 import java.time.ZonedDateTime;
 import java.util.Map;
@@ -167,28 +171,28 @@ public class TypescriptGeneratorContext {
     public String getTypescriptPropertyType(TypeDeclaration propertyType) {
         String typeName = propertyType.type();
         if (propertyType instanceof StringTypeDeclaration) {
-            return getDeclaredName(typeName, "string");
+            return getDeclaredName(typeName, STRING);
         }
         if (propertyType instanceof NumberTypeDeclaration) {
-            return getDeclaredName(typeName, "number");
+            return getDeclaredName(typeName, NUMBER);
         }
         if (propertyType instanceof BooleanTypeDeclaration) {
-            return getDeclaredName(typeName, "boolean");
+            return getDeclaredName(typeName, BOOLEAN);
         }
         if (propertyType instanceof DateTimeTypeDeclaration) {
-            return getDeclaredName(typeName, "string");
+            return getDeclaredName(typeName, STRING);
         }
         if (propertyType instanceof DateTimeOnlyTypeDeclaration) {
-            return getDeclaredName(typeName, "string");
+            return getDeclaredName(typeName, STRING);
         }
         if (propertyType instanceof DateTypeDeclaration) {
-            return getDeclaredName(typeName, "string");
+            return getDeclaredName(typeName, STRING);
         }
         if (propertyType instanceof TimeOnlyTypeDeclaration) {
-            return getDeclaredName(typeName, "string");
+            return getDeclaredName(typeName, STRING);
         }
         if (propertyType instanceof AnyTypeDeclaration) {
-            return getDeclaredName(typeName, "any");
+            return getDeclaredName(typeName, ANY);
         }
         if (propertyType instanceof ObjectTypeDeclaration) {
             return typeName;
@@ -210,25 +214,25 @@ public class TypescriptGeneratorContext {
     public String getTypescriptType(TypeDeclaration type) {
         String typeName = type.name();
         if (type instanceof StringTypeDeclaration) {
-            return getDeclaredName(typeName, "string");
+            return getDeclaredName(typeName, STRING);
         }
         if (type instanceof NumberTypeDeclaration) {
-            return getDeclaredName(typeName, "number");
+            return getDeclaredName(typeName, NUMBER);
         }
         if (type instanceof BooleanTypeDeclaration) {
-            return getDeclaredName(typeName, "boolean");
+            return getDeclaredName(typeName, BOOLEAN);
         }
         if (type instanceof DateTimeTypeDeclaration) {
-            return getDeclaredName(typeName, "string");
+            return getDeclaredName(typeName, STRING);
         }
         if (type instanceof DateTimeOnlyTypeDeclaration) {
-            return getDeclaredName(typeName, "string");
+            return getDeclaredName(typeName, STRING);
         }
         if (type instanceof DateTypeDeclaration) {
-            return getDeclaredName(typeName, "string");
+            return getDeclaredName(typeName, STRING);
         }
         if (type instanceof TimeOnlyTypeDeclaration) {
-            return getDeclaredName(typeName, "string");
+            return getDeclaredName(typeName, STRING);
         }
         if (type instanceof ObjectTypeDeclaration) {
             return typeName;

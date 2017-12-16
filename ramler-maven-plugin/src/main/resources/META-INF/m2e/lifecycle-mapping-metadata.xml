@@ -6,6 +6,7 @@
           <goal>java</goal>
           <goal>java-test</goal>
           <goal>html</goal>
+          <goal>typescript</goal>
         </goals>
       </pluginExecutionFilter>
       <action>

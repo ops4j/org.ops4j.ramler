@@ -54,6 +54,8 @@
                         <id>generate</id>
                         <goals>
                             <goal>java-test</goal>
+                            <goal>html</goal>
+                            <goal>typescript</goal>
                         </goals>
                     </execution>
                 </executions>
