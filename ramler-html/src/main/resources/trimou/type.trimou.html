@@ -40,7 +40,7 @@
     <tbody>
         <tr>
             <td>{{name}}</td>
-            <td>{{description}}</td>
+            <td>{{#if this.description}}{{#markdown}}{{this.description}}{{/markdown}}{{/if}}</td>
         </tr>
     </tbody>
 {{/each}}
