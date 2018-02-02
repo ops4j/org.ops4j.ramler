@@ -36,7 +36,9 @@ import static org.ops4j.ramler.model.Metatype.TIME_ONLY;
 import static org.ops4j.ramler.model.Metatype.UNION;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -173,6 +175,17 @@ public class ApiModel {
      */
     public TypeDeclaration getDeclaredType(String typeName) {
         return types.get(typeName);
+    }
+
+    /**
+     * Returns the list of type arguments for the given type, defined in a custom annotation.
+     *
+     * @param type
+     *            type declaration
+     * @return list of type arguments, possibly empty
+     */
+    public List<String> getTypeArgs(TypeDeclaration type) {
+        return Annotations.getStringAnnotations(type, Constants.TYPE_ARGS);
     }
 
     /**

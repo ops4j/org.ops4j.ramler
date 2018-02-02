@@ -1,1 +1,1 @@
-<a href="{{typeLink type}}">{{type}}</a>
+<a href="{{typeLink type}}">{{type}}</a>{{#invoke on=apiModel m="getTypeArgs" this}}{{>typeArgs}}{{/invoke}}
