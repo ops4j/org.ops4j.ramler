@@ -17,8 +17,11 @@
  */
 package org.ops4j.ramler.typescript;
 
+import java.io.IOException;
+
 import org.ops4j.ramler.generator.ApiModelBuilder;
 import org.ops4j.ramler.generator.ApiTraverser;
+import org.ops4j.ramler.generator.FileHelper;
 import org.ops4j.ramler.model.ApiModel;
 import org.ops4j.ramler.typescript.trimou.TypescriptTemplateEngine;
 
@@ -49,13 +52,14 @@ public class TypescriptGenerator {
 
     /**
      * Generates Typescript code.
+     * @throws IOException 
      */
-    public void generate() {
+    public void generate() throws IOException {
         ApiModel apiModel = new ApiModelBuilder().buildApiModel(config.getSourceFile());
         context.setApiModel(apiModel);
         TypescriptTemplateEngine engine = new TypescriptTemplateEngine();
         context.setTemplateEngine(engine);
-        config.getTargetDir().mkdirs();
+        FileHelper.createDirectoryIfNeeded(config.getTargetDir());
 
         ModelCreatingApiVisitor modelVisitor = new ModelCreatingApiVisitor(context);
         ApiTraverser traverser = new ApiTraverser();

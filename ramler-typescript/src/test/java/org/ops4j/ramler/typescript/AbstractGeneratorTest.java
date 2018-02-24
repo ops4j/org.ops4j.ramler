@@ -82,7 +82,7 @@ public abstract class AbstractGeneratorTest {
     private Iterator<JsonObject> enumMemberIter;
 
     @BeforeAll
-    public void generateJavaModel() {
+    public void generateJavaModel() throws IOException {
         config = new TypescriptConfiguration();
         config.setSourceFile(String.format("raml/%s.raml", getBasename()));
         config.setTargetDir(new File("target/generated/ts/" + getBasename()));

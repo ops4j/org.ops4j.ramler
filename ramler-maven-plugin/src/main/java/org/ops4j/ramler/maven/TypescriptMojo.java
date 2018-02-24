@@ -18,6 +18,7 @@
 package org.ops4j.ramler.maven;
 
 import java.io.File;
+import java.io.IOException;
 
 import javax.inject.Inject;
 
@@ -69,7 +70,7 @@ public class TypescriptMojo extends AbstractMojo {
             try {
                 generator.generate();
             }
-            catch (RamlerException exc) {
+            catch (RamlerException | IOException exc) {
                 throw new MojoFailureException("HTML generation failed", exc);
             }
             refreshGeneratedSources();
