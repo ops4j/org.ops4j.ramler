@@ -54,9 +54,14 @@ public class Constants {
         .asList(DELETE.class, GET.class, HEAD.class, OPTIONS.class, POST.class, PUT.class);
 
     /**
-     * Name of value property of annotation types.
+     * Name of {@code value} property of annotation types.
      */
     public static final String VALUE = "value";
+
+    /**
+     * Name of {@code name} property of annotation types.
+     */
+    public static final String NAME = "name";
 
     /**
      * Name of Ramler {@code typeArgs} annotation.
