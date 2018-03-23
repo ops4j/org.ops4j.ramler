@@ -29,9 +29,6 @@ import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpression;
-
 /**
  * <p>
  * Abstract Constants class.
@@ -86,6 +83,7 @@ public class Constants {
      */
     public static final String DISCRIMINATOR = "DISCRIMINATOR";
 
+
     /**
      * Name of built-in RAML object type.
      */
@@ -100,28 +98,6 @@ public class Constants {
      * Name of built-in RAML integer type.
      */
     public static final String STRING = "string";
-
-    public static final String CONSTANTS = "Constants";
-
-    public static final String UNDEFINED_STRING = "UNDEFINED_STRING";
-
-    public static final String UNDEFINED_INTEGER = "UNDEFINED_INTEGER";
-
-    public static final String UNDEFINED_LONG = "UNDEFINED_LONG";
-
-    public static final String UNDEFINED_BOOLEAN = "UNDEFINED_BOOLEAN";
-
-    public static final String UNDEFINED_DATE = "UNDEFINED_DATE";
-
-    public static final String UNDEFINED_DATETIME = "UNDEFINED_DATETIME";
-
-    public static final String UNDEFINED_TIME_ONLY = "UNDEFINED_TIME_ONLY";
-
-    public static final String UNDEFINED_DATETIME_ONLY = "UNDEFINED_DATETIME_ONLY";
-
-    public static final JExpression ZERO = JExpr.lit(0);
-
-    public static final JExpression ONE = JExpr.lit(1);
 
     private Constants() {
         throw new UnsupportedOperationException();

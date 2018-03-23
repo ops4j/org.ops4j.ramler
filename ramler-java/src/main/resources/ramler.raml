@@ -28,13 +28,6 @@ annotationTypes:
     description: |
       Denotes a type reserved for internal use by Ramler. No code or documentation
       will be generated from internal types.
-  preserveNull:
-    type: nil
-    displayName: Preserve null values
-    allowedTargets: TypeDeclaration
-    description: |
-      Marks null values as significant, so that the Java equivalents of `{ "foo": null, "bar": false }`
-      and `{ "bar": false }` can be distinguished.   
   typeVar:
     displayName: Type variable
     type: string

@@ -38,7 +38,7 @@ public class SimpleObjectTest extends AbstractGeneratorTest {
 
     @Test
     public void shouldFindModelClasses() {
-        assertClasses("Address", "Colour", "Constants", "Employee", "FileResponse", "FunnyNames",
+        assertClasses("Address", "Colour", "Employee", "FileResponse", "FunnyNames",
             "Integers", "Manager", "Numbers", "Person", "Reference", "Temporals", "User", "UserGroup");
     }
 

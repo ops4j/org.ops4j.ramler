@@ -28,7 +28,7 @@ public class NestedArrayTest extends AbstractGeneratorTest {
 
     @Test
     public void shouldFindModelClasses() {
-        assertClasses("Constants", "PersonArrayList", "Person", "PersonList");
+        assertClasses("PersonArrayList", "Person", "PersonList");
     }
 
     @Test

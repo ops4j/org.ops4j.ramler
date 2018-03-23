@@ -108,9 +108,4 @@ public class Annotations {
     public static boolean isIdentity(Annotable decl) {
         return annotationsByName(decl, "id").findFirst().isPresent();
     }
-
-    public static boolean isPreserveNull(Annotable decl) {
-        return annotationsByName(decl, "preserveNull").findFirst().isPresent();
-    }
-
 }

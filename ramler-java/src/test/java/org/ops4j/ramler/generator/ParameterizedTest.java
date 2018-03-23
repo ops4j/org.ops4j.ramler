@@ -28,7 +28,7 @@ public class ParameterizedTest extends AbstractGeneratorTest {
 
     @Test
     public void shouldFindModelClasses() {
-        assertClasses("Animal", "AnimalResponse", "Constants", "IntegerResponse", "ListResult", "Person",
+        assertClasses("Animal", "AnimalResponse", "IntegerResponse", "ListResult", "Person",
             "Response", "Result", "Status", "StringResponse");
     }
 

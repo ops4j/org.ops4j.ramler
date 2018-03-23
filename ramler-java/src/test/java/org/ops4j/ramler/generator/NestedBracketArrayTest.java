@@ -28,7 +28,7 @@ public class NestedBracketArrayTest extends AbstractGeneratorTest {
 
     @Test
     public void shouldFindModelClasses() {
-        assertClasses("Constants", "PersonArrayList", "PersonArrayList2", "Person", "PersonList");
+        assertClasses("PersonArrayList", "PersonArrayList2", "Person", "PersonList");
     }
 
     @Test
