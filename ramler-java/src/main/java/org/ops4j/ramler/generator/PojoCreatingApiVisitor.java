@@ -18,6 +18,7 @@
 package org.ops4j.ramler.generator;
 
 import org.ops4j.ramler.exc.Exceptions;
+import org.raml.v2.api.model.v10.api.Api;
 import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.StringTypeDeclaration;
 
@@ -42,6 +43,8 @@ public class PojoCreatingApiVisitor implements ApiVisitor {
 
     private EnumGenerator enumGenerator;
 
+    private ConstantsGenerator constantsGenerator;
+
     /**
      * Creates a visitor for the given generator context.
      *
@@ -52,6 +55,12 @@ public class PojoCreatingApiVisitor implements ApiVisitor {
         this.context = context;
         this.pkg = context.getModelPackage();
         this.enumGenerator = new EnumGenerator(context);
+        this.constantsGenerator = new ConstantsGenerator(context);
+    }
+
+    @Override
+    public void visitApiStart(Api api) {
+        constantsGenerator.createConstantsClass();
     }
 
     @Override

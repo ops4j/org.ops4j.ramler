@@ -28,7 +28,7 @@ public class AdditionalPropertiesTest extends AbstractGeneratorTest {
 
     @Test
     public void shouldFindModelClasses() {
-        assertClasses("Person");
+        assertClasses("Constants", "Person");
     }
 
     @Test

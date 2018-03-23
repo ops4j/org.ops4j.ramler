@@ -39,7 +39,7 @@ public class EnumsTest extends AbstractGeneratorTest {
 
     @Test
     public void shouldFindModelClasses() {
-        assertClasses("Colour");
+        assertClasses("Colour", "Constants");
     }
 
     @SuppressWarnings("unchecked")

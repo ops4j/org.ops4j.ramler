@@ -32,6 +32,7 @@ import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 import org.ops4j.ramler.model.Annotations;
+import org.raml.v2.api.model.v10.api.Api;
 import org.raml.v2.api.model.v10.datamodel.AnyTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.ArrayTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.BooleanTypeDeclaration;
@@ -77,6 +78,8 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
 
     private DelegatorGenerator delegatorGenerator;
 
+    private ConstantsGenerator constantsGenerator;
+
     /**
      * Creates a visitor for the given generator context.
      *
@@ -89,6 +92,12 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         this.pkg = context.getModelPackage();
         this.enumGenerator = new EnumGenerator(context);
         this.delegatorGenerator = new DelegatorGenerator(context);
+        this.constantsGenerator = new ConstantsGenerator(context);
+    }
+
+    @Override
+    public void visitApiStart(Api api) {
+        constantsGenerator.generateConstantsClass();
     }
 
     @Override
@@ -317,6 +326,7 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         JType jtype = context.getJavaType(property);
         JFieldVar field = klass.field(JMod.PRIVATE, jtype, fieldName);
         annotateFieldWithPropertyName(field, property);
+        initializeFieldWithUndefinedValue(field, property);
 
         generateGetter(property, klass, field, this::getGetterName);
         generateSetter(klass, jtype, fieldName);
@@ -325,6 +335,12 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
     private void annotateFieldWithPropertyName(JFieldVar field, TypeDeclaration property) {
         if (context.getConfig().isJacksonPropertyName() && !field.name().equals(property.name())) {
             field.annotate(JsonProperty.class).param(VALUE, property.name());
+        }
+    }
+
+    private void initializeFieldWithUndefinedValue(JFieldVar field, TypeDeclaration property) {
+        if (Annotations.isPreserveNull(property)) {
+            field.init(constantsGenerator.getUndefinedValue(property));
         }
     }
 

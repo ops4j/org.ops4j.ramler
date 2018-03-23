@@ -28,7 +28,7 @@ public class ArrayTest extends AbstractGeneratorTest {
 
     @Test
     public void shouldFindModelClasses() {
-        assertClasses("BooleanList", "DigitList", "NameList", "ObjectList", "Person", "PersonList",
+        assertClasses("BooleanList", "Constants", "DigitList", "NameList", "ObjectList", "Person", "PersonList",
             "StringList");
     }
 

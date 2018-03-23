@@ -28,7 +28,7 @@ public class BracketArrayTest extends AbstractGeneratorTest {
 
     @Test
     public void shouldFindModelClasses() {
-        assertClasses("BooleanList", "DigitList", "NameList",
+        assertClasses("BooleanList", "Constants", "DigitList", "NameList",
             "ObjectList", "Person", "PersonList", "StringList", "Employee", "EmployeeList");
     }
 
