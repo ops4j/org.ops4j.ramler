@@ -18,7 +18,6 @@
 package org.ops4j.ramler.generator;
 
 import static org.ops4j.ramler.generator.Constants.DISCRIMINATOR;
-import static org.ops4j.ramler.generator.Constants.NAME;
 import static org.ops4j.ramler.generator.Constants.OBJECT;
 import static org.ops4j.ramler.generator.Constants.TYPE_ARGS;
 import static org.ops4j.ramler.generator.Constants.TYPE_VAR;
@@ -196,7 +195,7 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
 
         for (String derivedType : derivedTypes) {
             JDefinedClass subtype = pkg._getClass(derivedType);
-            typeArray.annotate(Type.class).param(VALUE, subtype).param(NAME, subtype.staticRef(DISCRIMINATOR));
+            typeArray.annotate(Type.class).param(VALUE, subtype);
         }
     }
 
