@@ -29,7 +29,7 @@ public class SimpleObjectTest extends AbstractGeneratorTest {
     @Test
     public void shouldFindModules() {
         assertModules("address", "age", "colour", "employee", "integers", "manager", "name", "numbers",
-                "person", "temporals", "user-group", "user");
+                "person", "persons", "temporals", "user-group", "user");
     }
 
     @Test
@@ -114,6 +114,12 @@ public class SimpleObjectTest extends AbstractGeneratorTest {
         assertProperty("address", "Address");
         assertProperty("age", "Age");
         verifyInterface();
+    }
+
+    @Test
+    public void shouldFindPersonsAlias() {
+        expectTypeAlias("Persons", "Person[]");
+        assertImports("Person");
     }
 
     @Test

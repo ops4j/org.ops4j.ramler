@@ -60,7 +60,7 @@ baseTypes
     ;
     
 member
-    : ID COLON typeRef SEMICOLON
+    : ID QUESTION? COLON typeRef SEMICOLON
     ;
     
 typeRefs
@@ -155,6 +155,10 @@ GT
     
 EQ
     : '='
+    ;
+    
+QUESTION
+    : '?'
     ;
     
 IMPORT

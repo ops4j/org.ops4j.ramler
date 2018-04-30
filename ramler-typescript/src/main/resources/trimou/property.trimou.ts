@@ -1,1 +1,1 @@
-    {{name}}: {{& tsPropType}};
+    {{name}}{{#if optional}}?{{/if}}: {{& tsPropType}};

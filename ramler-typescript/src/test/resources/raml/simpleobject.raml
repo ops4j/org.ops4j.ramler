@@ -102,6 +102,8 @@ types:
           type: Address
       age:
           type: Age
+  Persons:
+    type: Person[]        
   Employee:
     type: Person
     properties:
@@ -109,7 +111,7 @@ types:
   Manager:
     type: Employee
     properties:
-      numEmployees: integer
+      numEmployees: integer      
   User:
     properties:
       firstname:

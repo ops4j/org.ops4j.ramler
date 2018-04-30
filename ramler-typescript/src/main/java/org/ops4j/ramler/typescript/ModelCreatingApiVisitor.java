@@ -90,6 +90,9 @@ public class ModelCreatingApiVisitor implements ApiVisitor {
 
     @Override
     public void visitArrayType(ArrayTypeDeclaration type) {
+        if (context.getApiModel().getDeclaredName(type) == null) {
+            return;
+        }
         String itemTypeName = context.getApiModel().getItemType(type);
         Map<String, String> imports = addTypeToImports(itemTypeName);
 

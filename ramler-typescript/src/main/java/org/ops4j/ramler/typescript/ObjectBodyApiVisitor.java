@@ -104,8 +104,8 @@ public class ObjectBodyApiVisitor implements ApiVisitor {
             tsItemType = itemTypeName;
         }
         MustacheEngine engine = context.getTemplateEngine().getEngine();
-        Map<String, String> contextObject = ImmutableMap.of("name", fieldName, "tsPropType",
-            tsItemType + "[]");
+        Map<String, Object> contextObject = ImmutableMap.of("name", fieldName, "tsPropType",
+            tsItemType + "[]", "optional", !property.required());
         engine.getMustache("property").render(context.getOutput(), contextObject);
     }
 
@@ -124,8 +124,8 @@ public class ObjectBodyApiVisitor implements ApiVisitor {
             tsPropType = propertyTypeWithArgs(property);
         }
         MustacheEngine engine = context.getTemplateEngine().getEngine();
-        Map<String, String> contextObject = ImmutableMap.of("name", fieldName, "tsPropType",
-            tsPropType);
+        Map<String, Object> contextObject = ImmutableMap.of("name", fieldName, "tsPropType",
+            tsPropType, "optional", !property.required());
         engine.getMustache("property").render(context.getOutput(), contextObject);
     }
 
