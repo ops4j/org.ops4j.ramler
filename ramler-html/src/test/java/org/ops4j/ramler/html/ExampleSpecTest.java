@@ -22,6 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 
 import javax.json.JsonValue;
+import javax.json.JsonValue.ValueType;
 
 import org.junit.jupiter.api.Test;
 import org.ops4j.ramler.html.render.ExampleSpecJsonRenderer;
@@ -96,16 +97,13 @@ public class ExampleSpecTest {
         TypeDeclaration age = apiModel.getDeclaredType("Age");
         assertThat(age).isNotNull();
         ExampleSpec exampleSpec = getExample(age);
-        List<TypeInstanceProperty> props = exampleSpec.structuredValue().properties();
-        TypeInstanceProperty p0 = props.get(0);
-        assertThat(p0.isArray()).isFalse();
-        assertThat(p0.name()).isEqualTo("value");
-        assertThat(p0.value().isScalar()).isTrue();
-        Object scalar = p0.value().value();
-        assertThat(scalar).isEqualTo(37L);
+        TypeInstance instance = exampleSpec.structuredValue();
+        Object value = instance.value();
+        assertThat(value).isEqualTo(37L);
 
         ExampleSpecJsonRenderer renderer = new ExampleSpecJsonRenderer();
         JsonValue jsonValue = renderer.toJsonValue(age, exampleSpec);
+        assertThat(jsonValue.getValueType()).isEqualTo(ValueType.NUMBER);
         assertThat(jsonValue.toString()).isEqualTo("37");
     }
 }

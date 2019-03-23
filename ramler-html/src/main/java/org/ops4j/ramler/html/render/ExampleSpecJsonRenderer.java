@@ -1,6 +1,7 @@
 package org.ops4j.ramler.html.render;
 
 import java.io.StringWriter;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,6 +44,9 @@ public class ExampleSpecJsonRenderer {
         if (instance == null) {
             return JsonValue.NULL;
         }
+        if (instance.isScalar()) {
+            return createValue(instance);
+        }
         JsonObjectBuilder builder = createObject(instance);
         JsonObject jsonObject = builder.build();
         if (isArray(type)) {
@@ -52,6 +56,20 @@ public class ExampleSpecJsonRenderer {
             return jsonObject.get("value");
         }
         return jsonObject;
+    }
+
+    private JsonValue createValue(TypeInstance instance) {
+        Object value = instance.value();
+        if (value instanceof String) {
+            return Json.createValue((String) value);
+        }
+        if (value instanceof BigDecimal) {
+            return Json.createValue((BigDecimal) value);
+        }
+        if (value instanceof Long) {
+            return Json.createValue((Long) value);
+        }
+        throw new IllegalArgumentException("Unsupported value class: " + value.getClass().getName());
     }
 
     /**
