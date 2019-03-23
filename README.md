@@ -32,16 +32,6 @@ Run Build:
 
     mvn clean install
 
-## Building with Java 9
-
-Run the following command from the workspace root to enable additional VM properties for Java 9 which
-expose some JRE packages to the application:
-
-    ln -s .mvn/jvm.config.java9 .mvn/jvm.config
-
-Note that Ramler itself does not access any private JRE packages. These are currently required by
-third-party dependencies.
-
 ## Releases
 
 Releases go to Maven Central.
@@ -58,7 +48,7 @@ There is a Google Groups list for all OPS4J projects: `ops4j@googlegroups.com`.
 
 We have a continuous integration build set up here:
 
-* <http://ci.ops4j.org/jenkins/job/org.ops4j.ramler>
+* <https://travis-ci.org/ops4j/org.ops4j.ramler>
 
 Snapshot artifacts are being published to:
 
