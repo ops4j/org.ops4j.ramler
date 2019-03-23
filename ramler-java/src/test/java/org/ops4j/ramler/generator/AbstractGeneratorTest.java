@@ -73,12 +73,12 @@ public abstract class AbstractGeneratorTest {
     public abstract String getBasename();
 
     protected void assertClasses(String... classNames) {
-        assertThat(modelPackage.classes()).extracting(JDefinedClass::name)
+        assertThat(modelPackage.classes()).toIterable().extracting(JDefinedClass::name)
             .containsExactlyInAnyOrder(classNames);
     }
 
     protected void assertApiClasses(String... classNames) {
-        assertThat(apiPackage.classes()).extracting(JDefinedClass::name)
+        assertThat(apiPackage.classes()).toIterable().extracting(JDefinedClass::name)
             .containsExactlyInAnyOrder(classNames);
     }
 
