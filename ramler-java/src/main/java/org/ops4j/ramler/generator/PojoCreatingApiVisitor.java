@@ -20,6 +20,7 @@ package org.ops4j.ramler.generator;
 import org.ops4j.ramler.exc.Exceptions;
 import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.StringTypeDeclaration;
+import org.raml.v2.api.model.v10.datamodel.UnionTypeDeclaration;
 
 import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JDefinedClass;
@@ -57,6 +58,22 @@ public class PojoCreatingApiVisitor implements ApiVisitor {
     @Override
     public void visitObjectTypeStart(ObjectTypeDeclaration type) {
         if (context.getApiModel().isInternal(type)) {
+            return;
+        }
+        try {
+            JDefinedClass klass = pkg._class(type.name());
+            context.addType(type.type(), klass);
+            context.annotateAsGenerated(klass);
+        }
+        catch (JClassAlreadyExistsException exc) {
+            throw Exceptions.unchecked(exc);
+        }
+    }
+
+    @Override
+    public void visitUnionType(UnionTypeDeclaration type) {
+        String declaredName = context.getApiModel().getDeclaredName(type);
+        if (declaredName == null) {
             return;
         }
         try {

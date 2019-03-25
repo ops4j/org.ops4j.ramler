@@ -23,6 +23,8 @@ import static org.ops4j.ramler.generator.Constants.TYPE_ARGS;
 import static org.ops4j.ramler.generator.Constants.TYPE_VAR;
 import static org.ops4j.ramler.generator.Constants.TYPE_VARS;
 import static org.ops4j.ramler.generator.Constants.VALUE;
+import static org.ops4j.ramler.generator.Names.getGetterName;
+import static org.ops4j.ramler.generator.Names.getSetterName;
 
 import java.util.List;
 import java.util.Map;
@@ -37,6 +39,7 @@ import org.raml.v2.api.model.v10.datamodel.BooleanTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.StringTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
+import org.raml.v2.api.model.v10.datamodel.UnionTypeDeclaration;
 import org.raml.v2.api.model.v10.declarations.AnnotationRef;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -76,6 +79,8 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
 
     private DelegatorGenerator delegatorGenerator;
 
+    private UnionGenerator unionGenerator;
+
     /**
      * Creates a visitor for the given generator context.
      *
@@ -88,6 +93,7 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         this.pkg = context.getModelPackage();
         this.enumGenerator = new EnumGenerator(context);
         this.delegatorGenerator = new DelegatorGenerator(context);
+        this.unionGenerator = new UnionGenerator(context);
     }
 
     @Override
@@ -112,6 +118,15 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
                 generateDelegator(klass);
             }
         }
+    }
+
+    @Override
+    public void visitUnionType(UnionTypeDeclaration type) {
+        String declaredName = context.getApiModel().getDeclaredName(type);
+        if (declaredName == null) {
+            return ;
+        }
+        unionGenerator.generateUnionClass(type);
     }
 
     /**
@@ -317,7 +332,7 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         JFieldVar field = klass.field(JMod.PRIVATE, jtype, fieldName);
         annotateFieldWithPropertyName(field, property);
 
-        generateGetter(property, klass, field, this::getGetterName);
+        generateGetter(property, klass, field, Names::getGetterName);
         generateSetter(klass, jtype, fieldName);
     }
 
@@ -360,7 +375,7 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         JFieldVar field = klass.field(JMod.PRIVATE, jtype, fieldName);
         annotateFieldWithPropertyName(field, property);
 
-        generateGetter(property, klass, field, this::getGetterName);
+        generateGetter(property, klass, field, Names::getGetterName);
         generateSetter(klass, jtype, fieldName);
     }
 
@@ -406,7 +421,7 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         JFieldVar field = klass.field(JMod.PRIVATE, jtype, fieldName);
         annotateFieldWithPropertyName(field, property);
 
-        generateGetter(property, klass, field, this::getCheckerName);
+        generateGetter(property, klass, field, Names::getCheckerName);
         generateSetter(klass, jtype, fieldName);
     }
 
@@ -418,28 +433,5 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         if (type.description() != null) {
             getter.javadoc().add(type.description().value());
         }
-    }
-
-    private String getCheckerName(String fieldName) {
-        return getAccessorName("is", fieldName);
-    }
-
-    private String getGetterName(String fieldName) {
-        return getAccessorName("get", fieldName);
-    }
-
-    private String getSetterName(String fieldName) {
-        return getAccessorName("set", fieldName);
-    }
-
-    private String getAccessorName(String prefix, String fieldName) {
-        int start = 0;
-        if (fieldName.startsWith("$")) {
-            start++;
-        }
-        StringBuilder buffer = new StringBuilder(prefix);
-        buffer.append(fieldName.substring(start, start + 1).toUpperCase());
-        buffer.append(fieldName.substring(start + 1));
-        return buffer.toString();
     }
 }

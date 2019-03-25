@@ -220,4 +220,33 @@ public class Names {
         return true;
     }
 
+    public static String getCheckerName(String fieldName) {
+        return getAccessorName("is", fieldName);
+    }
+
+    public static String getGetterName(String fieldName) {
+        return getAccessorName("get", fieldName);
+    }
+
+    public static String getSetterName(String fieldName) {
+        return getAccessorName("set", fieldName);
+    }
+
+    /**
+     * Generates an accessor method name in with the given prefix and the given field name.
+     * Any leading "$" is stripped from the field name, and its first character is capitalized.
+     * @param prefix name prefix
+     * @param fieldName name of accessed field
+     * @return accessor name
+     */
+    public static String getAccessorName(String prefix, String fieldName) {
+        int start = 0;
+        if (fieldName.startsWith("$")) {
+            start++;
+        }
+        StringBuilder buffer = new StringBuilder(prefix);
+        buffer.append(fieldName.substring(start, start + 1).toUpperCase());
+        buffer.append(fieldName.substring(start + 1));
+        return buffer.toString();
+    }
 }

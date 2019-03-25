@@ -30,6 +30,7 @@ import org.raml.v2.api.model.v10.datamodel.NumberTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.StringTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
+import org.raml.v2.api.model.v10.datamodel.UnionTypeDeclaration;
 import org.raml.v2.api.model.v10.methods.Method;
 import org.raml.v2.api.model.v10.resources.Resource;
 
@@ -131,6 +132,9 @@ public class ApiTraverser {
         }
         else if (type instanceof ObjectTypeDeclaration) {
             traverse((ObjectTypeDeclaration) type, visitor);
+        }
+        else if (type instanceof UnionTypeDeclaration) {
+            visitor.visitUnionType((UnionTypeDeclaration) type);
         }
         else if (type instanceof StringTypeDeclaration) {
             visitor.visitStringType((StringTypeDeclaration) type);

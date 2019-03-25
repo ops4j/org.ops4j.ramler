@@ -26,6 +26,7 @@ import org.raml.v2.api.model.v10.datamodel.NumberTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.StringTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
+import org.raml.v2.api.model.v10.datamodel.UnionTypeDeclaration;
 import org.raml.v2.api.model.v10.methods.Method;
 import org.raml.v2.api.model.v10.resources.Resource;
 
@@ -150,6 +151,16 @@ public interface ApiVisitor {
      *            property of the given object type
      */
     default void visitObjectTypeProperty(ObjectTypeDeclaration type, TypeDeclaration property) {
+        // empty
+    }
+
+    /**
+     * Called for each union type declaration.
+     *
+     * @param type
+     *            union type
+     */
+    default void visitUnionType(UnionTypeDeclaration type) {
         // empty
     }
 

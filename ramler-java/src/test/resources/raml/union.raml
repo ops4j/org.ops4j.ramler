@@ -1,0 +1,15 @@
+#%RAML 1.0
+title: Union Type
+mediaType: application/json
+uses:
+  r: ../ramler.raml 
+types:
+  City:
+    properties:
+      name: string
+      population: integer
+  Dog:
+    properties:
+      name: string
+      furColour: string
+  Favourite: City | Dog

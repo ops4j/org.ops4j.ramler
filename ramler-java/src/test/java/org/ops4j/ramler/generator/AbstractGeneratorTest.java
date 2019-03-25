@@ -167,6 +167,48 @@ public abstract class AbstractGeneratorTest {
         methodNames.remove(setterName);
     }
 
+    protected void assertField(JDefinedClass klass, String memberName, String typeName) {
+        JFieldVar field = klass.fields().get(memberName);
+        assertThat(field).isNotNull();
+        assertThat(field.type().name()).isEqualTo(typeName);
+        fieldNames.remove(memberName);
+    }
+
+    protected void assertMethod(JDefinedClass klass, String memberName, String typeName) {
+        List<JMethod> methods = klass.methods().stream().filter(m -> m.name().equals(memberName)).collect(toList());
+        assertThat(methods).hasSize(1);
+        JMethod method = methods.get(0);
+        assertThat(method.type().name()).isEqualTo(typeName);
+        assertThat(method.hasSignature(new JType[0])).isEqualTo(true);
+        methodNames.remove(memberName);
+    }
+
+    protected void assertVariant(JDefinedClass klass, String memberName, String typeName, String checkerName, String getterName, String setterName) {
+        List<JMethod> checkers = klass.methods().stream().filter(m -> m.name().equals(checkerName)).collect(toList());
+        assertThat(checkers).hasSize(1);
+        JMethod checker = checkers.get(0);
+        assertThat(checker.type().name()).isEqualTo("boolean");
+        assertThat(checker.hasSignature(new JType[0])).isEqualTo(true);
+
+        List<JMethod> getters = klass.methods().stream().filter(m -> m.name().equals(getterName)).collect(toList());
+        assertThat(getters).hasSize(1);
+        JMethod getter = getters.get(0);
+        assertThat(getter.type().name()).isEqualTo(typeName);
+        assertThat(getter.hasSignature(new JType[0])).isEqualTo(true);
+
+        List<JMethod> setters = klass.methods().stream().filter(m -> m.name().equals(setterName)).collect(toList());
+        assertThat(setters).hasSize(1);
+        JMethod setter = setters.get(0);
+        assertThat(setter.type()).isEqualTo(codeModel.VOID);
+        assertThat(setter.hasSignature(new JType[]{modelPackage._getClass(typeName)})).isEqualTo(true);
+
+        methodNames.remove(checkerName);
+        methodNames.remove(getterName);
+        methodNames.remove(setterName);
+    }
+
+
+
     protected void assertDiscriminator(JDefinedClass klass, String memberName, String typeName, String getterName) {
         JFieldVar field = klass.fields().get(memberName);
         assertThat(field).isNotNull();
