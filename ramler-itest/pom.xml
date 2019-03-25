@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.ops4j</groupId>
@@ -47,20 +48,32 @@
                 <groupId>org.ops4j.ramler</groupId>
                 <artifactId>ramler-maven-plugin</artifactId>
                 <version>${project.version}</version>
-                <configuration>
-                    <package>org.ops4j.ramler.itest</package>
-                    <model>${basedir}/src/test/resources/raml/inheritance.raml</model>
-                    <jacksonTypeInfo>true</jacksonTypeInfo>
-                    <jacksonPropertyName>true</jacksonPropertyName>
-                </configuration>
                 <executions>
                     <execution>
-                        <id>generate</id>
+                        <id>inheritance</id>
                         <goals>
                             <goal>java-test</goal>
                             <goal>html</goal>
                             <goal>typescript</goal>
                         </goals>
+                        <configuration>
+                            <package>org.ops4j.ramler.itest.inheritance</package>
+                            <model>${basedir}/src/test/resources/raml/inheritance.raml</model>
+                            <jacksonTypeInfo>true</jacksonTypeInfo>
+                            <jacksonPropertyName>true</jacksonPropertyName>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>union</id>
+                        <goals>
+                            <goal>java-test</goal>
+                            <goal>html</goal>
+                            <goal>typescript</goal>
+                        </goals>
+                        <configuration>
+                            <package>org.ops4j.ramler.itest.union</package>
+                            <model>${basedir}/src/test/resources/raml/union.raml</model>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

@@ -108,7 +108,7 @@ public class JacksonUnionTest {
         @Override
         public Favourite deserialize(JsonParser p, DeserializationContext ctxt)
             throws IOException {
-            ObjectMapper mapper  = new ObjectMapper();
+            ObjectMapper mapper  = (ObjectMapper) p.getCodec();
 
             JsonNode node = mapper.readTree(p);
 
@@ -196,7 +196,7 @@ public class JacksonUnionTest {
         @Override
         public StringOrNumber deserialize(JsonParser p, DeserializationContext ctxt)
             throws IOException, JsonProcessingException {
-            ObjectMapper mapper  = new ObjectMapper();
+            ObjectMapper mapper = (ObjectMapper) p.getCodec();
             JsonNode node = mapper.readTree(p);
 
             StringOrNumber stringOrNumber = new StringOrNumber();

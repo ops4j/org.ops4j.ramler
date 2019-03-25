@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 
 import org.junit.jupiter.api.Test;
-import org.ops4j.ramler.itest.model.FunnyNames;
+import org.ops4j.ramler.itest.inheritance.model.FunnyNames;
 
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;

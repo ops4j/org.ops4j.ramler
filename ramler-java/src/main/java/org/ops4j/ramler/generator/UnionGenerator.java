@@ -146,7 +146,7 @@ public class UnionGenerator {
 
         JMethod deserialize = deserializer.method(JMod.PUBLIC, unionClass, "deserialize");
         deserialize.annotate(Override.class);
-        JVar p1 = deserialize.param(JsonParser.class, "parser");
+        JVar parser = deserialize.param(JsonParser.class, "parser");
         deserialize.param(DeserializationContext.class, "context");
         deserialize._throws(IOException.class);
 
@@ -154,8 +154,8 @@ public class UnionGenerator {
         JClass jsonNode = codeModel.ref(JsonNode.class);
         JBlock body = deserialize.body();
 
-        JVar mapper = body.decl(objectMapper, "mapper", JExpr._new(objectMapper));
-        JVar node = body.decl(jsonNode, "node", mapper.invoke("readTree").arg(p1));
+        JVar mapper = body.decl(objectMapper, "mapper", JExpr.cast(objectMapper, parser.invoke("getCodec")));
+        JVar node = body.decl(jsonNode, "node", mapper.invoke("readTree").arg(parser));
         JVar result = body.decl(unionClass, "result", JExpr._new(unionClass));
 
         for (TypeDeclaration variant : type.of()) {

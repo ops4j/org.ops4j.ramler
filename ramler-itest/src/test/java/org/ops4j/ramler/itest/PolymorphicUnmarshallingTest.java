@@ -23,11 +23,11 @@ import java.io.IOException;
 import java.io.StringWriter;
 
 import org.junit.jupiter.api.Test;
-import org.ops4j.ramler.itest.model.Address;
-import org.ops4j.ramler.itest.model.Colour;
-import org.ops4j.ramler.itest.model.Employee;
-import org.ops4j.ramler.itest.model.Manager;
-import org.ops4j.ramler.itest.model.Person;
+import org.ops4j.ramler.itest.inheritance.model.Address;
+import org.ops4j.ramler.itest.inheritance.model.Colour;
+import org.ops4j.ramler.itest.inheritance.model.Employee;
+import org.ops4j.ramler.itest.inheritance.model.Manager;
+import org.ops4j.ramler.itest.inheritance.model.Person;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
