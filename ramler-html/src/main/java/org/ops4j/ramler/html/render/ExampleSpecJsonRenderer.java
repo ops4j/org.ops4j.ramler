@@ -84,14 +84,15 @@ public class ExampleSpecJsonRenderer {
     public String prettyPrint(TypeDeclaration type, ExampleSpec example) {
         JsonValue json = toJsonValue(type, example);
 
-        Map<String, Boolean> config = new HashMap<>();
-        config.put(JsonGenerator.PRETTY_PRINTING, true);
-        JsonWriterFactory jwf = Json.createWriterFactory(config);
-        StringWriter sw = new StringWriter();
-        JsonWriter writer = jwf.createWriter(sw);
         if (json instanceof JsonStructure) {
-            writer.write((JsonStructure) json);
-            return sw.toString();
+            Map<String, Boolean> config = new HashMap<>();
+            config.put(JsonGenerator.PRETTY_PRINTING, true);
+            JsonWriterFactory jwf = Json.createWriterFactory(config);
+            StringWriter sw = new StringWriter();
+            try (JsonWriter writer = jwf.createWriter(sw)) {
+                writer.write((JsonStructure) json);
+                return sw.toString();
+            }
         }
         else {
             return json.toString();
