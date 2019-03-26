@@ -18,6 +18,7 @@
 package org.ops4j.ramler.typescript;
 
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.ops4j.ramler.generator.ApiTraverser;
@@ -29,6 +30,7 @@ import org.raml.v2.api.model.v10.datamodel.NumberTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.StringTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
+import org.raml.v2.api.model.v10.datamodel.UnionTypeDeclaration;
 import org.trimou.engine.MustacheEngine;
 import org.trimou.util.ImmutableMap;
 
@@ -63,6 +65,20 @@ public class ModelCreatingApiVisitor implements ApiVisitor {
     }
 
     @Override
+    public void visitUnionType(UnionTypeDeclaration type) {
+        String declaredName = context.getApiModel().getDeclaredName(type);
+        if (declaredName == null) {
+            return ;
+        }
+
+        Map<String, String> imports = new LinkedHashMap<>();
+        for (TypeDeclaration variant : type.of()) {
+            addTypeToImports(imports, variant.name());
+        }
+        createUnionType(type, imports);
+    }
+
+    @Override
     public void visitNumberType(NumberTypeDeclaration type) {
         createTypeAlias(type, "number");
     }
@@ -85,21 +101,21 @@ public class ModelCreatingApiVisitor implements ApiVisitor {
             return;
         }
         String itemTypeName = context.getApiModel().getItemType(type);
-        Map<String, String> imports = addTypeToImports(itemTypeName);
+        Map<String, String> imports = new LinkedHashMap<>();
+        addTypeToImports(imports, itemTypeName);
 
         createTypeAlias(type, itemTypeName + "[]", imports);
     }
 
-    private Map<String, String> addTypeToImports(String typeName) {
+    private void addTypeToImports(Map<String, String> imports, String typeName) {
         String tsType = typeName;
         while (tsType.endsWith("[]")) {
             tsType = tsType.substring(0, tsType.length() - 2);
         }
         if (!Metatype.isBuiltIn(tsType)) {
             String tsFile = Names.buildLowerKebabCaseName(tsType);
-            return ImmutableMap.of(tsType, tsFile);
+            imports.put(tsType, tsFile);
         }
-        return Collections.emptyMap();
     }
 
     private void createTypeAlias(TypeDeclaration type, String targetType) {
@@ -128,4 +144,24 @@ public class ModelCreatingApiVisitor implements ApiVisitor {
 
         context.writeToFile(output.toString(), type.name());
     }
+
+    private void createUnionType(UnionTypeDeclaration type, Map<String, String> imports) {
+        MustacheEngine engine = context.getTemplateEngine().getEngine();
+        StringBuilder output = context.startOutput();
+
+        if (!imports.isEmpty()) {
+            imports.forEach((k, v) -> {
+                Map<String, String> contextObject = ImmutableMap.of("tsType", k, "tsFile", v);
+                engine.getMustache("import").render(output, contextObject);
+            });
+            output.append("\n");
+        }
+
+        Map<String, Object> contextObject = ImmutableMap.of("name", type.name(), "type",
+            type);
+        engine.getMustache("union").render(output, contextObject);
+
+        context.writeToFile(output.toString(), type.name());
+    }
+
 }

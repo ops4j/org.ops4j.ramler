@@ -25,6 +25,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -102,7 +104,7 @@ public abstract class AbstractGeneratorTest {
 
             listener = new JsonGeneratingListener();
             ParseTreeWalker.DEFAULT.walk(listener, module);
-            log.debug(listener.getJson());
+            log.info(listener.getJson());
 
         } catch (IOException exc) {
             throw Exceptions.unchecked(exc);
@@ -260,7 +262,7 @@ public abstract class AbstractGeneratorTest {
         assertThat(enumMemberIter.hasNext()).isFalse();
     }
 
-    protected void expectTypeAlias(String aliasName, String type) {
+    protected void expectTypeAlias(String aliasName, String type, String... types) {
         String baseName = Names.buildLowerKebabCaseName(aliasName);
         parseTypescriptModule(baseName);
         String json = listener.getJson();
@@ -272,6 +274,20 @@ public abstract class AbstractGeneratorTest {
         JsonObject export = exports.getJsonObject(0);
         assertThat(export.getString("discriminator")).isEqualTo("alias");
         assertThat(export.getString("name")).isEqualTo(aliasName);
-        assertType(export.getJsonObject("type"), type);
+
+        if (types.length == 0) {
+            assertType(export.getJsonObject("type"), type);
+        } else {
+            JsonObject union = export.getJsonObject("type");
+            assertThat(union.getString("discriminator")).isEqualTo("union");
+            JsonArray variants = union.getJsonArray("variants");
+            List<String> typeNames = new ArrayList<>();
+            typeNames.add(type);
+            typeNames.addAll(Arrays.asList(types));
+            for (int i = 0; i < typeNames.size(); i++) {
+                JsonObject variant = variants.getJsonObject(i);
+                assertThat(variant.getString("name")).isEqualTo(typeNames.get(i));
+            }
+        }
     }
 }

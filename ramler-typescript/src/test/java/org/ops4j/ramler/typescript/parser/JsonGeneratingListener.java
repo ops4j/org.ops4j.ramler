@@ -42,6 +42,8 @@ import org.ops4j.ramler.typescript.parser.TypescriptParser.TypeDeclContext;
 import org.ops4j.ramler.typescript.parser.TypescriptParser.TypeRefElemContext;
 import org.ops4j.ramler.typescript.parser.TypescriptParser.TypeRefsContext;
 import org.ops4j.ramler.typescript.parser.TypescriptParser.TypeVarsContext;
+import org.ops4j.ramler.typescript.parser.TypescriptParser.UnionTypeContext;
+import org.ops4j.ramler.typescript.parser.TypescriptParser.VariantContext;
 import org.trimou.util.ImmutableMap;
 
 /**
@@ -206,6 +208,27 @@ public class JsonGeneratingListener extends TypescriptBaseListener {
     public void enterParamType(ParamTypeContext ctx) {
         generator.write("discriminator", "param");
         generator.write("name", ctx.ID().getText());
+    }
+
+    @Override
+    public void enterUnionType(UnionTypeContext ctx) {
+        generator.write("discriminator", "union");
+        generator.writeStartArray("variants");
+    }
+
+    @Override
+    public void exitUnionType(UnionTypeContext ctx) {
+        generator.writeEnd();
+    }
+
+    @Override
+    public void enterVariant(VariantContext ctx) {
+        generator.writeStartObject();
+    }
+
+    @Override
+    public void exitVariant(VariantContext ctx) {
+        generator.writeEnd();
     }
 
     @Override

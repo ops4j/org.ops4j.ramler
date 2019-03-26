@@ -75,6 +75,7 @@ typeRef
     : simpleType
     | arrayType
     | paramType
+    | unionType
     ;
     
 baseType
@@ -88,13 +89,20 @@ arrayType
 
 paramType
     : ID typeArgs
-    ;            
+    ;
 
 simpleType
     : ID
     ;
-        
-    
+
+unionType
+    : variant (BAR variant)+
+    ;
+
+variant
+    : simpleType
+    ;
+
 typeAlias
     : TYPE ID EQ typeRef SEMICOLON
     ;
@@ -157,6 +165,10 @@ EQ
     : '='
     ;
     
+BAR
+    : '|'
+    ;
+
 QUESTION
     : '?'
     ;
