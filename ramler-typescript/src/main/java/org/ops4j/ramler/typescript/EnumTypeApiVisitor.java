@@ -19,19 +19,12 @@ package org.ops4j.ramler.typescript;
 
 import static java.util.stream.Collectors.toList;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
 
-import org.ops4j.ramler.exc.GeneratorException;
 import org.ops4j.ramler.generator.ApiVisitor;
 import org.ops4j.ramler.generator.Names;
 import org.raml.v2.api.model.v10.datamodel.StringTypeDeclaration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.trimou.engine.MustacheEngine;
 import org.trimou.util.ImmutableMap;
 
@@ -42,8 +35,6 @@ import org.trimou.util.ImmutableMap;
  *
  */
 public class EnumTypeApiVisitor implements ApiVisitor {
-
-    private static Logger log = LoggerFactory.getLogger(EnumTypeApiVisitor.class);
 
     private TypescriptGeneratorContext context;
 
@@ -114,19 +105,6 @@ public class EnumTypeApiVisitor implements ApiVisitor {
         MustacheEngine engine = context.getTemplateEngine().getEngine();
         engine.getMustache("enum").render(output, contextObject);
 
-        String moduleName = Names.buildLowerKebabCaseName(type.name());
-        writeToFile(output.toString(), moduleName);
-    }
-
-    private void writeToFile(String content, String moduleName) {
-        String tsFileName = moduleName + ".ts";
-        File tsFile = new File(context.getConfig().getTargetDir(), tsFileName);
-        log.debug("generating {}\n{}", tsFileName, content);
-        try {
-            Files.write(tsFile.toPath(), content.getBytes(StandardCharsets.UTF_8));
-        }
-        catch (IOException exc) {
-            throw new GeneratorException(exc);
-        }
+        context.writeToFile(output.toString(), type.name());
     }
 }

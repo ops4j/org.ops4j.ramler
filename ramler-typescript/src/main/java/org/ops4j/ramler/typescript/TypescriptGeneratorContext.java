@@ -24,10 +24,15 @@ import static org.ops4j.ramler.typescript.TypescriptConstants.BOOLEAN;
 import static org.ops4j.ramler.typescript.TypescriptConstants.NUMBER;
 import static org.ops4j.ramler.typescript.TypescriptConstants.STRING;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.time.ZonedDateTime;
 import java.util.Map;
 
 import org.ops4j.ramler.exc.GeneratorException;
+import org.ops4j.ramler.generator.Names;
 import org.ops4j.ramler.generator.Version;
 import org.ops4j.ramler.model.ApiModel;
 import org.ops4j.ramler.typescript.trimou.TypescriptTemplateEngine;
@@ -42,6 +47,8 @@ import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.StringTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.TimeOnlyTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.trimou.util.ImmutableMap;
 
 /**
@@ -51,6 +58,8 @@ import org.trimou.util.ImmutableMap;
  *
  */
 public class TypescriptGeneratorContext {
+
+    private static Logger log = LoggerFactory.getLogger(TypescriptGeneratorContext.class);
 
     private TypescriptConfiguration config;
 
@@ -251,4 +260,18 @@ public class TypescriptGeneratorContext {
             return typeName;
         }
     }
+
+    public void writeToFile(String content, String typeName) {
+        String moduleName = Names.buildLowerKebabCaseName(typeName);
+        String tsFileName = moduleName + ".ts";
+        File tsFile = new File(config.getTargetDir(), tsFileName);
+        log.debug("generating {}\n{}", tsFileName, content);
+        try {
+            Files.write(tsFile.toPath(), content.getBytes(StandardCharsets.UTF_8));
+        }
+        catch (IOException exc) {
+            throw new GeneratorException(exc);
+        }
+    }
+
 }
