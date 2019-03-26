@@ -161,8 +161,7 @@ public class ApiTraverser {
     }
 
     private boolean hasProperty(ObjectTypeDeclaration parent, String name) {
-        return parent.properties().stream().filter(p -> p.name().equals(name)).findFirst()
-            .isPresent();
+        return parent.properties().stream().anyMatch(p -> p.name().equals(name));
     }
 
     private void traverse(Resource resource, ApiVisitor visitor) {
@@ -174,8 +173,8 @@ public class ApiTraverser {
 
     private void traverse(Method method, ApiVisitor visitor) {
         visitor.visitMethodStart(method);
-        method.headers().forEach(header -> visitor.visitHeader(header));
-        method.queryParameters().forEach(param -> visitor.visitQueryParameter(param));
+        method.headers().forEach(visitor::visitHeader);
+        method.queryParameters().forEach(visitor::visitQueryParameter);
         visitor.visitMethodEnd(method);
     }
 }

@@ -367,7 +367,7 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         if (!args.isEmpty()) {
             JClass jclass = (JClass) jtype;
             for (String arg : args) {
-                JType typeArg = findTypeParam(klass, arg).get();
+                JType typeArg = findTypeParam(klass, arg).orElseThrow(() -> new IllegalArgumentException());
                 jclass = jclass.narrow(typeArg);
             }
             jtype = jclass;

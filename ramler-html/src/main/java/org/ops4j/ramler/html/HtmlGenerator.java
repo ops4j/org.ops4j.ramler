@@ -18,6 +18,7 @@
 package org.ops4j.ramler.html;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import static org.ops4j.ramler.generator.FileHelper.createDirectoryIfNeeded;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,7 +30,6 @@ import java.util.stream.Stream;
 
 import org.ops4j.ramler.exc.Exceptions;
 import org.ops4j.ramler.generator.ApiModelBuilder;
-import static org.ops4j.ramler.generator.FileHelper.*;
 import org.ops4j.ramler.html.trimou.TemplateEngine;
 import org.ops4j.ramler.model.ApiModel;
 import org.slf4j.Logger;
@@ -108,9 +108,9 @@ public class HtmlGenerator {
     }
 
     private void copyCustomWebResources(File sourceDir, File targetDir) {
-        try {
-            Path sourcePath = sourceDir.toPath();
-            Files.walk(sourcePath).forEach(p -> copyTo(p, sourcePath, targetDir.toPath()));
+        Path sourcePath = sourceDir.toPath();
+        try (Stream<Path> files = Files.walk(sourcePath)) {
+            files.forEach(p -> copyTo(p, sourcePath, targetDir.toPath()));
         }
         catch (IOException exc) {
             throw Exceptions.unchecked(exc);
