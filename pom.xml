@@ -292,7 +292,8 @@
             <id>sonar</id>
             <activation>
                 <property>
-                    <name>sonar</name>
+                    <name>env.TRAVIS_JDK_VERSION</name>
+                    <value>oraclejdk8</value>
                 </property>
             </activation>
             <properties>
