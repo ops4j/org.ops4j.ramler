@@ -116,10 +116,7 @@ public class GeneratorContext {
     private JType getReferencedJavaType(TypeDeclaration decl) {
         JType jtype = null;
         if (decl instanceof StringTypeDeclaration) {
-            jtype = typeMap.get(decl.type());
-            if (jtype == null) {
-                jtype = codeModel.ref(String.class);
-            }
+            jtype = getStringType((StringTypeDeclaration) decl);
         }
         else if (decl instanceof IntegerTypeDeclaration) {
             jtype = getNumberType((IntegerTypeDeclaration) decl);
@@ -131,14 +128,10 @@ public class GeneratorContext {
             jtype = getBooleanType((BooleanTypeDeclaration) decl);
         }
         else if (decl instanceof ObjectTypeDeclaration) {
-            // special case for nested arrays
-            String ref = decl.name().equals("object") ? decl.type() : decl.name();
-            jtype = getModelPackage()._getClass(ref);
+            jtype = getObjectType((ObjectTypeDeclaration) decl);
         }
         else if (decl instanceof ArrayTypeDeclaration) {
-            ArrayTypeDeclaration array = (ArrayTypeDeclaration) decl;
-            JType itemType = getReferencedJavaType(array.items());
-            jtype = codeModel.ref(List.class).narrow(itemType);
+            jtype = getArrayType((ArrayTypeDeclaration) decl);
         }
         else if (decl instanceof DateTypeDeclaration) {
             jtype = codeModel.ref(LocalDate.class);
@@ -161,6 +154,17 @@ public class GeneratorContext {
         return jtype;
     }
 
+    private JType getObjectType(ObjectTypeDeclaration decl) {
+        // special case for nested arrays
+        String ref = decl.name().equals("object") ? decl.type() : decl.name();
+        return getModelPackage()._getClass(ref);
+    }
+
+    private JType getArrayType(ArrayTypeDeclaration decl) {
+        JType itemType = getReferencedJavaType(decl.items());
+        return codeModel.ref(List.class).narrow(itemType);
+    }
+
     private JType getBooleanType(BooleanTypeDeclaration decl) {
         if (decl.required()) {
             return codeModel.BOOLEAN;
@@ -168,6 +172,14 @@ public class GeneratorContext {
         else {
             return codeModel.ref(Boolean.class);
         }
+    }
+
+    private JType getStringType(StringTypeDeclaration decl) {
+        JType jtype = typeMap.get(decl.type());
+        if (jtype == null) {
+            jtype = codeModel.ref(String.class);
+        }
+        return jtype;
     }
 
     private JType getNumberType(NumberTypeDeclaration decl) {

@@ -24,6 +24,7 @@ import java.util.stream.Stream;
 
 import org.raml.v2.api.model.v10.common.Annotable;
 import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
+import org.raml.v2.api.model.v10.datamodel.TypeInstance;
 import org.raml.v2.api.model.v10.datamodel.TypeInstanceProperty;
 import org.raml.v2.api.model.v10.declarations.AnnotationRef;
 
@@ -48,13 +49,13 @@ public class Annotations {
      * @return list of annotation values (never null)
      */
     public static List<String> getStringAnnotations(TypeDeclaration decl, String name) {
-        return annotationsByName(decl, name).flatMap(a -> findStringAnnotationValues(a))
+        return annotationsByName(decl, name).flatMap(Annotations::findStringAnnotationValues)
             .collect(toList());
     }
 
     private static Stream<String> findStringAnnotationValues(AnnotationRef ref) {
         TypeInstanceProperty tip = ref.structuredValue().properties().get(0);
-        return tip.values().stream().map(ti -> ti.value()).map(String.class::cast);
+        return tip.values().stream().map(TypeInstance::value).map(String.class::cast);
     }
 
     private static String findStringAnnotationValue(AnnotationRef ref) {

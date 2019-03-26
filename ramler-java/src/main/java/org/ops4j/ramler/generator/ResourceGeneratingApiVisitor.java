@@ -43,6 +43,7 @@ import org.ops4j.ramler.exc.Exceptions;
 import org.ops4j.ramler.exc.GeneratorException;
 import org.ops4j.ramler.model.Annotations;
 import org.raml.v2.api.model.v10.api.Api;
+import org.raml.v2.api.model.v10.bodies.MimeType;
 import org.raml.v2.api.model.v10.bodies.Response;
 import org.raml.v2.api.model.v10.datamodel.FileTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;
@@ -107,7 +108,7 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
 
     @Override
     public void visitApiStart(Api api) {
-        mediaTypes = api.mediaType().stream().map(m -> m.value()).collect(toList());
+        mediaTypes = api.mediaType().stream().map(MimeType::value).collect(toList());
     }
 
     @Override
