@@ -17,11 +17,11 @@
  */
 package org.ops4j.ramler.typescript.trimou;
 
-import java.nio.charset.StandardCharsets;
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.trimou.engine.config.EngineConfigurationKey.DEFAULT_FILE_ENCODING;
 
 import org.trimou.engine.MustacheEngine;
 import org.trimou.engine.MustacheEngineBuilder;
-import org.trimou.engine.config.EngineConfigurationKey;
 import org.trimou.engine.locator.ClassPathTemplateLocator;
 import org.trimou.engine.locator.FileSystemTemplateLocator;
 
@@ -73,8 +73,7 @@ public class TypescriptTemplateEngine {
             ClassPathTemplateLocator genericLocator = new ClassPathTemplateLocator(PRIO_CLASS_PATH,
                 TEMPLATE_PATH, TEMPLATE_SUFFIX);
             MustacheEngineBuilder builder = MustacheEngineBuilder.newBuilder()
-                .setProperty(EngineConfigurationKey.DEFAULT_FILE_ENCODING,
-                    StandardCharsets.UTF_8.name())
+                .setProperty(DEFAULT_FILE_ENCODING, UTF_8.name())
                 .addTemplateLocator(genericLocator);
             if (templateDir != null) {
                 builder.addTemplateLocator(
