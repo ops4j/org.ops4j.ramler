@@ -76,7 +76,7 @@ public class UnionGenerator {
             generateDeserializer(type);
         }
         JDefinedClass klass = pkg._getClass(type.name());
-        addJavadoc(klass, type);
+        context.addJavadoc(klass, type);
         if (jacksonEnabled) {
             addJacksonAnnotations(klass, type);
         }
@@ -209,15 +209,6 @@ public class UnionGenerator {
             }
         }
         return conjunction;
-    }
-
-    private void addJavadoc(JDefinedClass klass, UnionTypeDeclaration type) {
-        if (type.description() == null) {
-            klass.javadoc().add("Generated from a RAML specification.");
-        }
-        else {
-            klass.javadoc().add(type.description().value());
-        }
     }
 
     private void addJacksonAnnotations(JDefinedClass klass, UnionTypeDeclaration type) {

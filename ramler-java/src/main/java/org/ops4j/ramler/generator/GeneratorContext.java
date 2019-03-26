@@ -296,6 +296,26 @@ public class GeneratorContext {
     }
 
     /**
+     * Adds RAML description as Javadoc to the given class. A default text is added when to
+     * description is present.
+     *
+     * @param klass
+     *            generated Java class
+     * @param type
+     *            RAML type
+     */
+    public void addJavadoc(JDefinedClass klass, TypeDeclaration type) {
+        if (type.description() == null) {
+            klass.javadoc().add("Generated from a RAML specification.");
+        }
+        else {
+            klass.javadoc().add(type.description().value());
+        }
+    }
+
+
+
+    /**
      * Gets the configuration of this generator.
      *
      * @return the config

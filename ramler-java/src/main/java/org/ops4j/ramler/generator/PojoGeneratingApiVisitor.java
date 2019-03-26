@@ -102,7 +102,7 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
             return;
         }
         JDefinedClass klass = pkg._getClass(type.name());
-        addJavadoc(klass, type);
+        context.addJavadoc(klass, type);
         addTypeParameters(klass, type);
         addBaseClass(klass, type);
         addDiscriminator(klass, type);
@@ -134,15 +134,6 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
      */
     private void generateDelegator(JDefinedClass klass) {
         delegatorGenerator.generateDelegator(klass);
-    }
-
-    private void addJavadoc(JDefinedClass klass, ObjectTypeDeclaration type) {
-        if (type.description() == null) {
-            klass.javadoc().add("Generated from a RAML specification.");
-        }
-        else {
-            klass.javadoc().add(type.description().value());
-        }
     }
 
     private void addBaseClass(JDefinedClass klass, ObjectTypeDeclaration type) {
