@@ -74,8 +74,8 @@ public class UnionGenerator {
         JDefinedClass klass = pkg._getClass(type.name());
         addJavadoc(klass, type);
         addJacksonAnnotations(klass, type);
-        addValueField(klass, type);
-        addValueGetter(klass, type);
+        addValueField(klass);
+        addValueGetter(klass);
         for (TypeDeclaration variant : type.of()) {
             addVariantChecker(klass, variant);
             addVariantGetter(klass, variant);
@@ -221,11 +221,11 @@ public class UnionGenerator {
         klass.annotate(JsonDeserialize.class).param("using", deserializer);
     }
 
-    private void addValueField(JDefinedClass klass, UnionTypeDeclaration type) {
+    private void addValueField(JDefinedClass klass) {
         klass.field(JMod.PRIVATE, codeModel._ref(Object.class), VALUE);
     }
 
-    private void addValueGetter(JDefinedClass klass, UnionTypeDeclaration type) {
+    private void addValueGetter(JDefinedClass klass) {
         JMethod getter = klass.method(JMod.PUBLIC, codeModel._ref(Object.class), VALUE);
         getter.body()._return(klass.fields().get(VALUE));
     }
