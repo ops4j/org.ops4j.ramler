@@ -301,6 +301,7 @@
             <properties>
                 <sonar.host.url>https://sonarcloud.io</sonar.host.url>
                 <sonar.jacoco.reportPath>${user.dir}/target/jacoco.exec</sonar.jacoco.reportPath>
+                <sonar.login>${env.SONAR_LOGIN}</sonar.login>
                 <sonar.organization>ops4j</sonar.organization>
                 <sonar.skip>false</sonar.skip>
             </properties>
