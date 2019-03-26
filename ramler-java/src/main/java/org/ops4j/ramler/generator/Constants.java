@@ -50,8 +50,9 @@ public class Constants {
             "transient", "true", "try", "void", "volatile", "while")));
 
     /** Constant <code>JAXRS_HTTP_METHODS</code> */
-    public static final List<Class<? extends Annotation>> JAXRS_HTTP_METHODS = Arrays
-        .asList(DELETE.class, GET.class, HEAD.class, OPTIONS.class, POST.class, PUT.class);
+    public static final List<Class<? extends Annotation>> JAXRS_HTTP_METHODS = Collections
+        .unmodifiableList(Arrays.asList(DELETE.class, GET.class, HEAD.class, OPTIONS.class,
+            POST.class, PUT.class));
 
     /**
      * Name of value property of annotation types.
