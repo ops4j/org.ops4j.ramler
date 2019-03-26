@@ -61,6 +61,7 @@ public abstract class AbstractGeneratorTest {
         config.setBasePackage(String.format("org.ops4j.raml.%s", getBasename()));
         config.setTargetDir(new File("target/generated/raml"));
         config.setDelegators(true);
+        config.setJacksonUnion(true);
 
         generator = new Generator(config);
         generator.generate();

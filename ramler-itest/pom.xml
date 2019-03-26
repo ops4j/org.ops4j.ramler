@@ -73,6 +73,7 @@
                         <configuration>
                             <package>org.ops4j.ramler.itest.union</package>
                             <model>${basedir}/src/test/resources/raml/union.raml</model>
+                            <jacksonUnion>true</jacksonUnion>
                         </configuration>
                     </execution>
                 </executions>

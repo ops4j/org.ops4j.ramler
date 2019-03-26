@@ -55,6 +55,7 @@ public class UnionGenerator {
     private GeneratorContext context;
     private JPackage pkg;
     private JCodeModel codeModel;
+    private boolean jacksonEnabled;
 
     /**
      * Creates a union generator with the given context.
@@ -66,14 +67,19 @@ public class UnionGenerator {
         this.context = context;
         this.codeModel = context.getCodeModel();
         this.pkg = context.getModelPackage();
+        this.jacksonEnabled = context.getConfig().isJacksonUnion();
     }
 
     public void generateUnionClass(UnionTypeDeclaration type) {
-        generateSerializer(type);
-        generateDeserializer(type);
+        if (jacksonEnabled) {
+            generateSerializer(type);
+            generateDeserializer(type);
+        }
         JDefinedClass klass = pkg._getClass(type.name());
         addJavadoc(klass, type);
-        addJacksonAnnotations(klass, type);
+        if (jacksonEnabled) {
+            addJacksonAnnotations(klass, type);
+        }
         addValueField(klass);
         addValueGetter(klass);
         for (TypeDeclaration variant : type.of()) {

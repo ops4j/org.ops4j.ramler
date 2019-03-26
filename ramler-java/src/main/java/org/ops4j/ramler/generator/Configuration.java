@@ -48,6 +48,8 @@ public class Configuration {
 
     private boolean jacksonPropertyName;
 
+    private boolean jacksonUnion;
+
     private boolean delegators;
 
     private String delegatorSuffix;
@@ -300,5 +302,23 @@ public class Configuration {
      */
     public void setDelegateFieldName(String delegateFieldName) {
         this.delegateFieldName = delegateFieldName;
+    }
+
+
+    /**
+     * Should Jackson annotations {@code @JsonSerializer} etc. be used for union types?
+     * @return true annotations should be added to generated code
+     */
+    public boolean isJacksonUnion() {
+        return jacksonUnion;
+    }
+
+
+    /**
+     * Should Jackson annotations {@code @JsonSerializer} etc. be used for union types?
+     * @param jacksonPropertyName desired setting
+     */
+    public void setJacksonUnion(boolean jacksonUnion) {
+        this.jacksonUnion = jacksonUnion;
     }
 }

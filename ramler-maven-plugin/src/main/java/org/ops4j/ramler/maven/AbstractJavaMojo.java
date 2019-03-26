@@ -76,6 +76,12 @@ public abstract class AbstractJavaMojo extends AbstractMojo {
     @Parameter(defaultValue = "false")
     private boolean jacksonPropertyName;
 
+    /**
+     * Should Jackson annotations {@code @JsonSerializer} etc. be used for union types?
+     */
+    @Parameter(defaultValue = "false")
+    private boolean jacksonUnion;
+
     @Parameter(defaultValue = "false")
     private boolean delegators;
 
@@ -106,6 +112,7 @@ public abstract class AbstractJavaMojo extends AbstractMojo {
             config.setInterfaceNameSuffix(interfaceNameSuffix);
             config.setJacksonTypeInfo(jacksonTypeInfo);
             config.setJacksonPropertyName(jacksonPropertyName);
+            config.setJacksonUnion(jacksonUnion);
             config.setDelegators(delegators);
             config.setDelegateFieldName(delegateFieldName);
             config.setDelegatorSuffix(delegatorSuffix);
