@@ -23,6 +23,7 @@
         <org.junit.jupiter.version>5.4.1</org.junit.jupiter.version>
         <org.junit.platform.version>1.4.1</org.junit.platform.version>
         <org.ow2.asm.version>7.1</org.ow2.asm.version>
+        <sonar.skip>true</sonar.skip>
     </properties>
 
     <scm>
@@ -286,6 +287,7 @@
             </activation>
             <properties>
                 <jacoco.argLine />
+                <sonar.skip>true</sonar.skip>
             </properties>
         </profile>
         <profile>
@@ -302,6 +304,7 @@
                 <sonar.jacoco.reportPath>${user.dir}/target/jacoco.exec</sonar.jacoco.reportPath>
                 <sonar.login>${env.SONAR_LOGIN}</sonar.login>
                 <sonar.organization>ops4j</sonar.organization>
+                <sonar.skip>false</sonar.skip>
             </properties>
             <build>
                 <plugins>

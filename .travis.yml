@@ -5,7 +5,7 @@ jdk:
   - oraclejdk11
 
 script: 
-  - mvn -B clean install sonar:sonar -Dsonar -Dsonar.projectKey=ops4j_org.ops4j.ramler
+  - mvn -B clean install sonar:sonar -Dsonar.projectKey=ops4j_org.ops4j.ramler
 
 install: true
 
