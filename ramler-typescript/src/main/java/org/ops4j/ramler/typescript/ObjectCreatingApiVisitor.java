@@ -17,18 +17,9 @@
  */
 package org.ops4j.ramler.typescript;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-
-import org.ops4j.ramler.exc.GeneratorException;
 import org.ops4j.ramler.generator.ApiTraverser;
 import org.ops4j.ramler.generator.ApiVisitor;
-import org.ops4j.ramler.generator.Names;
 import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Generates a Typescript interface for a given RAML object type.
@@ -37,8 +28,6 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class ObjectCreatingApiVisitor implements ApiVisitor {
-
-    private static Logger log = LoggerFactory.getLogger(ObjectCreatingApiVisitor.class);
 
     private TypescriptGeneratorContext context;
     private StringBuilder output;
@@ -75,15 +64,6 @@ public class ObjectCreatingApiVisitor implements ApiVisitor {
         if (context.getApiModel().isInternal(type)) {
             return;
         }
-
-        String tsFileName = Names.buildLowerKebabCaseName(type.name()) + ".ts";
-        log.debug("generating {}\n{}", tsFileName, output);
-        File tsFile = new File(context.getConfig().getTargetDir(), tsFileName);
-        try {
-            Files.write(tsFile.toPath(), output.toString().getBytes(StandardCharsets.UTF_8));
-        }
-        catch (IOException exc) {
-            throw new GeneratorException(exc);
-        }
+        context.writeToFile(output.toString(), type.name());
     }
 }

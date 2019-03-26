@@ -104,7 +104,7 @@ public abstract class AbstractGeneratorTest {
 
             listener = new JsonGeneratingListener();
             ParseTreeWalker.DEFAULT.walk(listener, module);
-            log.info(listener.getJson());
+            log.debug(listener.getJson());
 
         } catch (IOException exc) {
             throw Exceptions.unchecked(exc);

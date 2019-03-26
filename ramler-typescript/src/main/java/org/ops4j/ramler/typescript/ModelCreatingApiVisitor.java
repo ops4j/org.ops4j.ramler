@@ -130,17 +130,10 @@ public class ModelCreatingApiVisitor implements ApiVisitor {
         MustacheEngine engine = context.getTemplateEngine().getEngine();
         StringBuilder output = context.startOutput();
 
-        if (!imports.isEmpty()) {
-            imports.forEach((k, v) -> {
-                Map<String, String> contextObject = ImmutableMap.of("tsType", k, "tsFile", v);
-                engine.getMustache("import").render(output, contextObject);
-            });
-            output.append("\n");
-        }
+        renderImports(engine, imports, output);
 
-        Map<String, String> contextObject = ImmutableMap.of("name", type.name(), "tsType",
-            targetType);
-        engine.getMustache("typeAlias").render(output, contextObject);
+        engine.getMustache("typeAlias")
+            .render(output, ImmutableMap.of("name", type.name(), "tsType", targetType));
 
         context.writeToFile(output.toString(), type.name());
     }
@@ -149,19 +142,18 @@ public class ModelCreatingApiVisitor implements ApiVisitor {
         MustacheEngine engine = context.getTemplateEngine().getEngine();
         StringBuilder output = context.startOutput();
 
-        if (!imports.isEmpty()) {
-            imports.forEach((k, v) -> {
-                Map<String, String> contextObject = ImmutableMap.of("tsType", k, "tsFile", v);
-                engine.getMustache("import").render(output, contextObject);
-            });
-            output.append("\n");
-        }
+        renderImports(engine, imports, output);
 
-        Map<String, Object> contextObject = ImmutableMap.of("name", type.name(), "type",
-            type);
-        engine.getMustache("union").render(output, contextObject);
+        engine.getMustache("union").render(output, ImmutableMap.of("name", type.name(), "type", type));
 
         context.writeToFile(output.toString(), type.name());
     }
 
+    private void renderImports(MustacheEngine engine, Map<String, String> imports, StringBuilder output) {
+        if (!imports.isEmpty()) {
+            imports.forEach((k, v) -> engine.getMustache("import")
+                    .render(output, ImmutableMap.of("tsType", k, "tsFile", v)));
+            output.append("\n");
+        }
+    }
 }
