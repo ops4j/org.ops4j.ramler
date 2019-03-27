@@ -44,6 +44,7 @@ public class ApiModelBuilder {
      */
     public ApiModel buildApiModel(String sourceFileName) {
         RamlModelResult ramlModelResult = new RamlModelBuilder().buildApi(sourceFileName);
+        log.debug("Finished parsing");
         if (ramlModelResult.hasErrors()) {
             for (ValidationResult result : ramlModelResult.getValidationResults()) {
                 log.error("{}: {}", result.getPath(), result.getMessage());

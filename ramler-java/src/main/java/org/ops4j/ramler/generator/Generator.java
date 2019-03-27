@@ -23,6 +23,8 @@ import java.util.stream.Stream;
 
 import org.ops4j.ramler.exc.Exceptions;
 import org.ops4j.ramler.model.ApiModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.sun.codemodel.writer.FileCodeWriter;
 
@@ -35,6 +37,8 @@ import com.sun.codemodel.writer.FileCodeWriter;
  *
  */
 public class Generator {
+
+    private static Logger log = LoggerFactory.getLogger(Generator.class);
 
     private Configuration config;
 
@@ -59,10 +63,13 @@ public class Generator {
      * Generates code for the given configuration.
      */
     public void generate() {
+        log.debug("Building API model");
         ApiModel apiModel = new ApiModelBuilder().buildApiModel(config.getSourceFile());
         context.setApiModel(apiModel);
 
+        log.debug("Building Java code model");
         buildCodeModel();
+        log.debug("Writing Java code model");
         writeCodeModel();
     }
 
