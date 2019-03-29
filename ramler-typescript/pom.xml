@@ -9,7 +9,7 @@
     <groupId>org.ops4j.ramler</groupId>
     <artifactId>ramler-typescript</artifactId>
 
-    <name>OPS4J Ramler Typescript Generator</name>
+    <name>OPS4J Ramler TypeScript Generator</name>
 
     <dependencies>
         <dependency>

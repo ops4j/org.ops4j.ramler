@@ -19,10 +19,10 @@ package org.ops4j.ramler.typescript;
 
 import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 import static java.time.temporal.ChronoUnit.SECONDS;
-import static org.ops4j.ramler.typescript.TypescriptConstants.ANY;
-import static org.ops4j.ramler.typescript.TypescriptConstants.BOOLEAN;
-import static org.ops4j.ramler.typescript.TypescriptConstants.NUMBER;
-import static org.ops4j.ramler.typescript.TypescriptConstants.STRING;
+import static org.ops4j.ramler.typescript.TypeScriptConstants.ANY;
+import static org.ops4j.ramler.typescript.TypeScriptConstants.BOOLEAN;
+import static org.ops4j.ramler.typescript.TypeScriptConstants.NUMBER;
+import static org.ops4j.ramler.typescript.TypeScriptConstants.STRING;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,7 +35,7 @@ import org.ops4j.ramler.exc.GeneratorException;
 import org.ops4j.ramler.generator.Names;
 import org.ops4j.ramler.generator.Version;
 import org.ops4j.ramler.model.ApiModel;
-import org.ops4j.ramler.typescript.trimou.TypescriptTemplateEngine;
+import org.ops4j.ramler.typescript.trimou.TypeScriptTemplateEngine;
 import org.raml.v2.api.model.v10.datamodel.AnyTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.ArrayTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.BooleanTypeDeclaration;
@@ -52,20 +52,20 @@ import org.slf4j.LoggerFactory;
 import org.trimou.util.ImmutableMap;
 
 /**
- * Context information shared by all API visitors generating Typescript code.
+ * Context information shared by all API visitors generating TypeScript code.
  *
  * @author Harald Wellmann
  *
  */
-public class TypescriptGeneratorContext {
+public class TypeScriptGeneratorContext {
 
-    private static Logger log = LoggerFactory.getLogger(TypescriptGeneratorContext.class);
+    private static Logger log = LoggerFactory.getLogger(TypeScriptGeneratorContext.class);
 
-    private TypescriptConfiguration config;
+    private TypeScriptConfiguration config;
 
     private ApiModel apiModel;
 
-    private TypescriptTemplateEngine templateEngine;
+    private TypeScriptTemplateEngine templateEngine;
 
     private Appendable output;
 
@@ -73,9 +73,9 @@ public class TypescriptGeneratorContext {
      * Creates a generator context for the given configuration.
      *
      * @param config
-     *            Typescript generator configuration
+     *            TypeScript generator configuration
      */
-    public TypescriptGeneratorContext(TypescriptConfiguration config) {
+    public TypeScriptGeneratorContext(TypeScriptConfiguration config) {
         this.config = config;
     }
 
@@ -84,7 +84,7 @@ public class TypescriptGeneratorContext {
      *
      * @return generator configuration
      */
-    public TypescriptConfiguration getConfig() {
+    public TypeScriptConfiguration getConfig() {
         return config;
     }
 
@@ -94,7 +94,7 @@ public class TypescriptGeneratorContext {
      * @param config
      *            generator configuration
      */
-    public void setConfig(TypescriptConfiguration config) {
+    public void setConfig(TypeScriptConfiguration config) {
         this.config = config;
     }
 
@@ -122,7 +122,7 @@ public class TypescriptGeneratorContext {
      *
      * @return template engine
      */
-    public TypescriptTemplateEngine getTemplateEngine() {
+    public TypeScriptTemplateEngine getTemplateEngine() {
         return templateEngine;
     }
 
@@ -132,7 +132,7 @@ public class TypescriptGeneratorContext {
      * @param templateEngine
      *            template engine
      */
-    public void setTemplateEngine(TypescriptTemplateEngine templateEngine) {
+    public void setTemplateEngine(TypeScriptTemplateEngine templateEngine) {
         this.templateEngine = templateEngine;
     }
 
@@ -171,13 +171,13 @@ public class TypescriptGeneratorContext {
     }
 
     /**
-     * Gets the Typescript name for a given RAML property type.
+     * Gets the TypeScript name for a given RAML property type.
      *
      * @param propertyType
      *            property type
-     * @return Typescript name
+     * @return TypeScript name
      */
-    public String getTypescriptPropertyType(TypeDeclaration propertyType) {
+    public String getTypeScriptPropertyType(TypeDeclaration propertyType) {
         String typeName = propertyType.type();
         if (propertyType instanceof StringTypeDeclaration) {
             return getDeclaredName(typeName, STRING);
@@ -214,13 +214,13 @@ public class TypescriptGeneratorContext {
     }
 
     /**
-     * Gets the Typescript name for a given user-defined RAML type.
+     * Gets the TypeScript name for a given user-defined RAML type.
      *
      * @param type
      *            RAML type
-     * @return Typescript name
+     * @return TypeScript name
      */
-    public String getTypescriptType(TypeDeclaration type) {
+    public String getTypeScriptType(TypeDeclaration type) {
         String typeName = type.name();
         if (type instanceof StringTypeDeclaration) {
             return getDeclaredName(typeName, STRING);

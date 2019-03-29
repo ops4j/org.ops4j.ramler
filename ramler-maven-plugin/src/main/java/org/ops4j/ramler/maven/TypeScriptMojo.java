@@ -29,25 +29,25 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.ops4j.ramler.exc.RamlerException;
-import org.ops4j.ramler.typescript.TypescriptConfiguration;
-import org.ops4j.ramler.typescript.TypescriptGenerator;
+import org.ops4j.ramler.typescript.TypeScriptConfiguration;
+import org.ops4j.ramler.typescript.TypeScriptGenerator;
 import org.sonatype.plexus.build.incremental.BuildContext;
 
 /**
- * Generates HTML documentation from a RAML model.
+ * Generates TypeScript code from a RAML model.
  *
  * @author Harald Wellmann
  *
  */
 @Mojo(name = "typescript", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
-public class TypescriptMojo extends AbstractMojo {
+public class TypeScriptMojo extends AbstractMojo {
 
     /** RAML specification file. */
     @Parameter(required = true)
     protected String model;
 
     /**
-     * Output directory for generated Typescript sources.
+     * Output directory for generated TypeScript sources.
      */
     @Parameter(defaultValue = "${project.build.directory}/ramler/ts")
     private File outputDir;
@@ -60,13 +60,13 @@ public class TypescriptMojo extends AbstractMojo {
 
     protected void generateSources() throws MojoFailureException {
         if (buildContext.hasDelta(model)) {
-            getLog().info("Generating Typescript sources from " + model);
+            getLog().info("Generating TypeScript sources from " + model);
 
-            TypescriptConfiguration config = new TypescriptConfiguration();
+            TypeScriptConfiguration config = new TypeScriptConfiguration();
             config.setSourceFile(model);
             config.setTargetDir(getOutputDir());
 
-            TypescriptGenerator generator = new TypescriptGenerator(config);
+            TypeScriptGenerator generator = new TypeScriptGenerator(config);
             try {
                 generator.generate();
             }
@@ -76,7 +76,7 @@ public class TypescriptMojo extends AbstractMojo {
             refreshGeneratedSources();
         }
         else {
-            getLog().info("Typescript model is up-to-date");
+            getLog().info("TypeScript model is up-to-date");
         }
     }
 

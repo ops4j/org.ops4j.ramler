@@ -52,9 +52,9 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.ops4j.ramler.exc.Exceptions;
 import org.ops4j.ramler.generator.Names;
 import org.ops4j.ramler.typescript.parser.JsonGeneratingListener;
-import org.ops4j.ramler.typescript.parser.TypescriptLexer;
-import org.ops4j.ramler.typescript.parser.TypescriptParser;
-import org.ops4j.ramler.typescript.parser.TypescriptParser.ModuleContext;
+import org.ops4j.ramler.typescript.parser.TypeScriptLexer;
+import org.ops4j.ramler.typescript.parser.TypeScriptParser;
+import org.ops4j.ramler.typescript.parser.TypeScriptParser.ModuleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,13 +63,13 @@ public abstract class AbstractGeneratorTest {
 
     protected static Logger log = LoggerFactory.getLogger(AbstractGeneratorTest.class);
 
-    protected TypescriptGenerator generator;
+    protected TypeScriptGenerator generator;
 
     protected Set<String> methodNames;
 
     protected Set<String> fieldNames;
 
-    private TypescriptConfiguration config;
+    private TypeScriptConfiguration config;
 
     private JsonGeneratingListener listener;
 
@@ -85,21 +85,21 @@ public abstract class AbstractGeneratorTest {
 
     @BeforeAll
     public void generateJavaModel() throws IOException {
-        config = new TypescriptConfiguration();
+        config = new TypeScriptConfiguration();
         config.setSourceFile(String.format("raml/%s.raml", getBasename()));
         config.setTargetDir(new File("target/generated/ts/" + getBasename()));
 
-        generator = new TypescriptGenerator(config);
+        generator = new TypeScriptGenerator(config);
         generator.generate();
 
     }
 
     public abstract String getBasename();
 
-    public void parseTypescriptModule(String baseName) {
+    public void parseTypeScriptModule(String baseName) {
         File source = new File(config.getTargetDir(), baseName + ".ts");
         try {
-            TypescriptParser parser = buildParser(source);
+            TypeScriptParser parser = buildParser(source);
             ModuleContext module = parser.module();
 
             listener = new JsonGeneratingListener();
@@ -111,11 +111,11 @@ public abstract class AbstractGeneratorTest {
         }
     }
 
-    private TypescriptParser buildParser(File source) throws IOException {
+    private TypeScriptParser buildParser(File source) throws IOException {
         CharStream inputCharStream = CharStreams.fromPath(source.toPath());
-        TokenSource tokenSource = new TypescriptLexer(inputCharStream);
+        TokenSource tokenSource = new TypeScriptLexer(inputCharStream);
         TokenStream inputTokenStream = new CommonTokenStream(tokenSource);
-        TypescriptParser parser = new TypescriptParser(inputTokenStream);
+        TypeScriptParser parser = new TypeScriptParser(inputTokenStream);
 
         // make parser throw exception on first error
         parser.setErrorHandler(new BailErrorStrategy());
@@ -133,7 +133,7 @@ public abstract class AbstractGeneratorTest {
 
     protected void expectInterface(String interfaceName, String... baseClasses) {
         String baseName = Names.buildLowerKebabCaseName(interfaceName);
-        parseTypescriptModule(baseName);
+        parseTypeScriptModule(baseName);
         String json = listener.getJson();
 
         module = Json.createReader(new StringReader(json)).readObject();
@@ -237,7 +237,7 @@ public abstract class AbstractGeneratorTest {
 
     protected void expectEnum(String enumName) {
         String baseName = Names.buildLowerKebabCaseName(enumName);
-        parseTypescriptModule(baseName);
+        parseTypeScriptModule(baseName);
         String json = listener.getJson();
 
         module = Json.createReader(new StringReader(json)).readObject();
@@ -264,7 +264,7 @@ public abstract class AbstractGeneratorTest {
 
     protected void expectTypeAlias(String aliasName, String type, String... types) {
         String baseName = Names.buildLowerKebabCaseName(aliasName);
-        parseTypescriptModule(baseName);
+        parseTypeScriptModule(baseName);
         String json = listener.getJson();
 
         module = Json.createReader(new StringReader(json)).readObject();

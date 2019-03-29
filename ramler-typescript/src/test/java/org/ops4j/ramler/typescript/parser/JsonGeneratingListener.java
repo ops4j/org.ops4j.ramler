@@ -22,35 +22,35 @@ import java.io.StringWriter;
 import javax.json.Json;
 import javax.json.stream.JsonGenerator;
 
-import org.ops4j.ramler.typescript.parser.TypescriptParser.ArrayTypeContext;
-import org.ops4j.ramler.typescript.parser.TypescriptParser.BaseTypeContext;
-import org.ops4j.ramler.typescript.parser.TypescriptParser.EnumDeclContext;
-import org.ops4j.ramler.typescript.parser.TypescriptParser.EnumMemberContext;
-import org.ops4j.ramler.typescript.parser.TypescriptParser.ExportsContext;
-import org.ops4j.ramler.typescript.parser.TypescriptParser.ExtendsDeclContext;
-import org.ops4j.ramler.typescript.parser.TypescriptParser.IdentifiersContext;
-import org.ops4j.ramler.typescript.parser.TypescriptParser.ImportDeclContext;
-import org.ops4j.ramler.typescript.parser.TypescriptParser.ImportsContext;
-import org.ops4j.ramler.typescript.parser.TypescriptParser.InterfaceDeclContext;
-import org.ops4j.ramler.typescript.parser.TypescriptParser.MemberContext;
-import org.ops4j.ramler.typescript.parser.TypescriptParser.MembersContext;
-import org.ops4j.ramler.typescript.parser.TypescriptParser.ModuleContext;
-import org.ops4j.ramler.typescript.parser.TypescriptParser.ParamTypeContext;
-import org.ops4j.ramler.typescript.parser.TypescriptParser.SimpleTypeContext;
-import org.ops4j.ramler.typescript.parser.TypescriptParser.TypeAliasContext;
-import org.ops4j.ramler.typescript.parser.TypescriptParser.TypeDeclContext;
-import org.ops4j.ramler.typescript.parser.TypescriptParser.TypeRefElemContext;
-import org.ops4j.ramler.typescript.parser.TypescriptParser.TypeRefsContext;
-import org.ops4j.ramler.typescript.parser.TypescriptParser.TypeVarsContext;
-import org.ops4j.ramler.typescript.parser.TypescriptParser.UnionTypeContext;
-import org.ops4j.ramler.typescript.parser.TypescriptParser.VariantContext;
+import org.ops4j.ramler.typescript.parser.TypeScriptParser.ArrayTypeContext;
+import org.ops4j.ramler.typescript.parser.TypeScriptParser.BaseTypeContext;
+import org.ops4j.ramler.typescript.parser.TypeScriptParser.EnumDeclContext;
+import org.ops4j.ramler.typescript.parser.TypeScriptParser.EnumMemberContext;
+import org.ops4j.ramler.typescript.parser.TypeScriptParser.ExportsContext;
+import org.ops4j.ramler.typescript.parser.TypeScriptParser.ExtendsDeclContext;
+import org.ops4j.ramler.typescript.parser.TypeScriptParser.IdentifiersContext;
+import org.ops4j.ramler.typescript.parser.TypeScriptParser.ImportDeclContext;
+import org.ops4j.ramler.typescript.parser.TypeScriptParser.ImportsContext;
+import org.ops4j.ramler.typescript.parser.TypeScriptParser.InterfaceDeclContext;
+import org.ops4j.ramler.typescript.parser.TypeScriptParser.MemberContext;
+import org.ops4j.ramler.typescript.parser.TypeScriptParser.MembersContext;
+import org.ops4j.ramler.typescript.parser.TypeScriptParser.ModuleContext;
+import org.ops4j.ramler.typescript.parser.TypeScriptParser.ParamTypeContext;
+import org.ops4j.ramler.typescript.parser.TypeScriptParser.SimpleTypeContext;
+import org.ops4j.ramler.typescript.parser.TypeScriptParser.TypeAliasContext;
+import org.ops4j.ramler.typescript.parser.TypeScriptParser.TypeDeclContext;
+import org.ops4j.ramler.typescript.parser.TypeScriptParser.TypeRefElemContext;
+import org.ops4j.ramler.typescript.parser.TypeScriptParser.TypeRefsContext;
+import org.ops4j.ramler.typescript.parser.TypeScriptParser.TypeVarsContext;
+import org.ops4j.ramler.typescript.parser.TypeScriptParser.UnionTypeContext;
+import org.ops4j.ramler.typescript.parser.TypeScriptParser.VariantContext;
 import org.trimou.util.ImmutableMap;
 
 /**
  * @author Harald Wellmann
  *
  */
-public class JsonGeneratingListener extends TypescriptBaseListener {
+public class JsonGeneratingListener extends TypeScriptBaseListener {
 
     private StringWriter stringWriter;
 

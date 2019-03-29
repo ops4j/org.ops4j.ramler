@@ -29,14 +29,14 @@ import org.trimou.engine.MustacheEngine;
 import org.trimou.util.ImmutableMap;
 
 /**
- * Generates a Typescript enum class for a RAML enumeration type.
+ * Generates a TypeScript enum class for a RAML enumeration type.
  *
  * @author Harald Wellmann
  *
  */
 public class EnumTypeApiVisitor implements ApiVisitor {
 
-    private TypescriptGeneratorContext context;
+    private TypeScriptGeneratorContext context;
 
     private StringBuilder output;
 
@@ -88,7 +88,7 @@ public class EnumTypeApiVisitor implements ApiVisitor {
      * @param context
      *            generation context
      */
-    public EnumTypeApiVisitor(TypescriptGeneratorContext context) {
+    public EnumTypeApiVisitor(TypeScriptGeneratorContext context) {
         this.context = context;
         this.output = context.startOutput();
     }

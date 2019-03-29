@@ -35,7 +35,7 @@ import org.trimou.engine.MustacheEngine;
 import org.trimou.util.ImmutableMap;
 
 /**
- * Creates a Typescript model for a given RAML model. Visits all top-level types and delegates to
+ * Creates a TypeScript model for a given RAML model. Visits all top-level types and delegates to
  * type-specific visitors.
  * <p>
  * Code generation is based on Trimou templates.
@@ -45,7 +45,7 @@ import org.trimou.util.ImmutableMap;
  */
 public class ModelCreatingApiVisitor implements ApiVisitor {
 
-    private TypescriptGeneratorContext context;
+    private TypeScriptGeneratorContext context;
 
     /**
      * Creates a visitor with the given generator context.
@@ -53,7 +53,7 @@ public class ModelCreatingApiVisitor implements ApiVisitor {
      * @param context
      *            generator context
      */
-    public ModelCreatingApiVisitor(TypescriptGeneratorContext context) {
+    public ModelCreatingApiVisitor(TypeScriptGeneratorContext context) {
         this.context = context;
     }
 

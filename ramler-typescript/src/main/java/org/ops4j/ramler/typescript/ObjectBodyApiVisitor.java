@@ -37,7 +37,7 @@ import org.trimou.engine.MustacheEngine;
 import org.trimou.util.ImmutableMap;
 
 /**
- * Creates the exported interface declaration of a Typescript module corresponding to a RAML object
+ * Creates the exported interface declaration of a TypeScript module corresponding to a RAML object
  * type.
  *
  * @author Harald Wellmann
@@ -45,7 +45,7 @@ import org.trimou.util.ImmutableMap;
  */
 public class ObjectBodyApiVisitor implements ApiVisitor {
 
-    private TypescriptGeneratorContext context;
+    private TypeScriptGeneratorContext context;
 
     /**
      * Creates a visitor with the given generator context.
@@ -53,7 +53,7 @@ public class ObjectBodyApiVisitor implements ApiVisitor {
      * @param context
      *            generator context
      */
-    public ObjectBodyApiVisitor(TypescriptGeneratorContext context) {
+    public ObjectBodyApiVisitor(TypeScriptGeneratorContext context) {
         this.context = context;
     }
 
@@ -135,7 +135,7 @@ public class ObjectBodyApiVisitor implements ApiVisitor {
      */
     private String propertyTypeWithArgs(TypeDeclaration property) {
         String tsPropType;
-        tsPropType = context.getTypescriptPropertyType(property);
+        tsPropType = context.getTypeScriptPropertyType(property);
         List<String> typeArgs = Annotations.getStringAnnotations(property, TYPE_ARGS);
         if (!typeArgs.isEmpty()) {
             StringBuilder builder = new StringBuilder(tsPropType);
@@ -149,7 +149,7 @@ public class ObjectBodyApiVisitor implements ApiVisitor {
 
     private String typeWithArgs(TypeDeclaration annotated, TypeDeclaration type) {
         String tsPropType;
-        tsPropType = context.getTypescriptType(type);
+        tsPropType = context.getTypeScriptType(type);
         List<String> typeArgs = Annotations.getStringAnnotations(annotated, TYPE_ARGS);
         if (!typeArgs.isEmpty()) {
             StringBuilder builder = new StringBuilder(tsPropType);

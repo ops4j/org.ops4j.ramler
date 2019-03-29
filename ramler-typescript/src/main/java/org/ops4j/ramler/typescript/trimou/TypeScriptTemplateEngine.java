@@ -26,12 +26,12 @@ import org.trimou.engine.locator.ClassPathTemplateLocator;
 import org.trimou.engine.locator.FileSystemTemplateLocator;
 
 /**
- * A Trimou template engine configured for Typescript generation.
+ * A Trimou template engine configured for TypeScript generation.
  *
  * @author Harald Wellmann
  *
  */
-public class TypescriptTemplateEngine {
+public class TypeScriptTemplateEngine {
 
     public static final String TEMPLATE_SUFFIX = "trimou.ts";
 
@@ -65,7 +65,7 @@ public class TypescriptTemplateEngine {
     }
 
     /**
-     * Constructs a template engine with some additional helpers and lambdas for Typescript
+     * Constructs a template engine with some additional helpers and lambdas for TypeScript
      * generation.
      */
     public MustacheEngine getEngine() {

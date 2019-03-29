@@ -32,14 +32,14 @@ import org.trimou.engine.MustacheEngine;
 import org.trimou.util.ImmutableMap;
 
 /**
- * Creates the import statements of a Typescript module corresponding to a RAML object type.
+ * Creates the import statements of a TypeScript module corresponding to a RAML object type.
  *
  * @author Harald Wellmann
  *
  */
 public class ObjectImportApiVisitor implements ApiVisitor {
 
-    private TypescriptGeneratorContext context;
+    private TypeScriptGeneratorContext context;
     private Map<String, String> typeToModuleMap = new TreeMap<>();
 
     /**
@@ -48,7 +48,7 @@ public class ObjectImportApiVisitor implements ApiVisitor {
      * @param context
      *            generator context
      */
-    public ObjectImportApiVisitor(TypescriptGeneratorContext context) {
+    public ObjectImportApiVisitor(TypeScriptGeneratorContext context) {
         this.context = context;
     }
 
@@ -60,7 +60,7 @@ public class ObjectImportApiVisitor implements ApiVisitor {
 
     @Override
     public void visitObjectTypeProperty(ObjectTypeDeclaration type, TypeDeclaration property) {
-        String tsPropType = context.getTypescriptPropertyType(property);
+        String tsPropType = context.getTypeScriptPropertyType(property);
         if (typeToModuleMap.containsKey(tsPropType) || Annotations.findTypeVar(property) != null) {
             return;
         }

@@ -20,12 +20,12 @@ package org.ops4j.ramler.typescript;
 import java.io.File;
 
 /**
- * Configuration of the Typescript code generator.
+ * Configuration of the TypeScript code generator.
  *
  * @author Harald Wellmann
  *
  */
-public class TypescriptConfiguration {
+public class TypeScriptConfiguration {
 
     private String sourceFile;
 
@@ -48,7 +48,7 @@ public class TypescriptConfiguration {
     }
 
     /**
-     * Gets the target directory for the generated Typescript files.
+     * Gets the target directory for the generated TypeScript files.
      * @return target directory
      */
     public File getTargetDir() {

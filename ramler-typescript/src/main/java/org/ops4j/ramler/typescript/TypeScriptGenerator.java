@@ -23,10 +23,10 @@ import org.ops4j.ramler.generator.ApiModelBuilder;
 import org.ops4j.ramler.generator.ApiTraverser;
 import org.ops4j.ramler.generator.FileHelper;
 import org.ops4j.ramler.model.ApiModel;
-import org.ops4j.ramler.typescript.trimou.TypescriptTemplateEngine;
+import org.ops4j.ramler.typescript.trimou.TypeScriptTemplateEngine;
 
 /**
- * Creates a Typescript model for a given RAML model. Entry point for code generation, the actual
+ * Creates a TypeScript model for a given RAML model. Entry point for code generation, the actual
  * work is carried out by a number of API visitors.
  * <p>
  * Code generation is based on Trimou templates.
@@ -34,30 +34,30 @@ import org.ops4j.ramler.typescript.trimou.TypescriptTemplateEngine;
  * @author Harald Wellmann
  *
  */
-public class TypescriptGenerator {
+public class TypeScriptGenerator {
 
-    private TypescriptConfiguration config;
-    private TypescriptGeneratorContext context;
+    private TypeScriptConfiguration config;
+    private TypeScriptGeneratorContext context;
 
     /**
      * Creates a generator with the given configuration.
      *
      * @param config
-     *            Typescript generator configuration
+     *            TypeScript generator configuration
      */
-    public TypescriptGenerator(TypescriptConfiguration config) {
+    public TypeScriptGenerator(TypeScriptConfiguration config) {
         this.config = config;
-        this.context = new TypescriptGeneratorContext(config);
+        this.context = new TypeScriptGeneratorContext(config);
     }
 
     /**
-     * Generates Typescript code.
+     * Generates TypeScript code.
      * @throws IOException 
      */
     public void generate() throws IOException {
         ApiModel apiModel = new ApiModelBuilder().buildApiModel(config.getSourceFile());
         context.setApiModel(apiModel);
-        TypescriptTemplateEngine engine = new TypescriptTemplateEngine();
+        TypeScriptTemplateEngine engine = new TypeScriptTemplateEngine();
         context.setTemplateEngine(engine);
         FileHelper.createDirectoryIfNeeded(config.getTargetDir());
 

@@ -22,7 +22,7 @@ package org.ops4j.ramler.typescript;
  * @author Harald Wellmann
  *
  */
-public class TypescriptConstants {
+public class TypeScriptConstants {
 
     public static final String NUMBER = "number";
     public static final String BOOLEAN = "boolean";
@@ -30,7 +30,7 @@ public class TypescriptConstants {
     public static final String ANY = "any";
 
 
-    private TypescriptConstants() {
+    private TypeScriptConstants() {
         // hidden utility class constructor
     }
 }

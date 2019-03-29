@@ -1,7 +1,7 @@
 // This is a toy grammar for a subset of TypeScript that allows us to verify the generated
 // TypeScript code.
 
-grammar Typescript;
+grammar TypeScript;
 
 // The EOF token is required to make sure we parse the complete input
 module

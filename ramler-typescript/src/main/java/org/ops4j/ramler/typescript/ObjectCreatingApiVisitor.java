@@ -22,14 +22,14 @@ import org.ops4j.ramler.generator.ApiVisitor;
 import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;
 
 /**
- * Generates a Typescript interface for a given RAML object type.
+ * Generates a TypeScript interface for a given RAML object type.
  *
  * @author Harald Wellmann
  *
  */
 public class ObjectCreatingApiVisitor implements ApiVisitor {
 
-    private TypescriptGeneratorContext context;
+    private TypeScriptGeneratorContext context;
     private StringBuilder output;
 
     /**
@@ -38,7 +38,7 @@ public class ObjectCreatingApiVisitor implements ApiVisitor {
      * @param context
      *            generator context
      */
-    public ObjectCreatingApiVisitor(TypescriptGeneratorContext context) {
+    public ObjectCreatingApiVisitor(TypeScriptGeneratorContext context) {
         this.context = context;
         this.output = context.startOutput();
     }
