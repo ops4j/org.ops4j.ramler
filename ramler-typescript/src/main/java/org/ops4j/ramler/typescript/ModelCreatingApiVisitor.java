@@ -21,9 +21,9 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.ops4j.ramler.generator.ApiTraverser;
-import org.ops4j.ramler.generator.ApiVisitor;
 import org.ops4j.ramler.generator.Names;
+import org.ops4j.ramler.model.ApiTraverser;
+import org.ops4j.ramler.model.ApiVisitor;
 import org.ops4j.ramler.model.Metatype;
 import org.raml.v2.api.model.v10.datamodel.ArrayTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.NumberTypeDeclaration;

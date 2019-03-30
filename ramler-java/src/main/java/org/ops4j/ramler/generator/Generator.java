@@ -21,8 +21,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.stream.Stream;
 
+import org.ops4j.ramler.common.helper.FileHelper;
 import org.ops4j.ramler.exc.Exceptions;
 import org.ops4j.ramler.model.ApiModel;
+import org.ops4j.ramler.model.ApiModelBuilder;
+import org.ops4j.ramler.model.ApiTraverser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

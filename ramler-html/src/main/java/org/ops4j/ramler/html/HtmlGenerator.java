@@ -18,7 +18,7 @@
 package org.ops4j.ramler.html;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
-import static org.ops4j.ramler.generator.FileHelper.createDirectoryIfNeeded;
+import static org.ops4j.ramler.common.helper.FileHelper.createDirectoryIfNeeded;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,9 +29,9 @@ import java.nio.file.Path;
 import java.util.stream.Stream;
 
 import org.ops4j.ramler.exc.Exceptions;
-import org.ops4j.ramler.generator.ApiModelBuilder;
 import org.ops4j.ramler.html.trimou.TemplateEngine;
 import org.ops4j.ramler.model.ApiModel;
+import org.ops4j.ramler.model.ApiModelBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

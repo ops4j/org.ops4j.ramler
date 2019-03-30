@@ -22,9 +22,9 @@ import static org.ops4j.ramler.generator.Constants.TYPE_ARGS;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.ops4j.ramler.generator.ApiVisitor;
 import org.ops4j.ramler.generator.Names;
 import org.ops4j.ramler.model.Annotations;
+import org.ops4j.ramler.model.ApiVisitor;
 import org.ops4j.ramler.model.Metatype;
 import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;

@@ -14,7 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>org.ops4j.ramler</groupId>
-            <artifactId>ramler-java</artifactId>
+            <artifactId>ramler-common</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

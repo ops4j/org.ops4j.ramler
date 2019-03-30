@@ -28,6 +28,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.ops4j.ramler.model.ApiModel;
+import org.ops4j.ramler.model.ApiTraverser;
 import org.ops4j.ramler.model.EnumValue;
 import org.ops4j.ramler.model.Metatype;
 import org.raml.v2.api.RamlModelBuilder;

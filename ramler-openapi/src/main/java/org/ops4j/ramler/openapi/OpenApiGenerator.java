@@ -3,10 +3,10 @@ package org.ops4j.ramler.openapi;
 import java.io.IOException;
 
 import org.eclipse.microprofile.openapi.models.OpenAPI;
-import org.ops4j.ramler.generator.ApiModelBuilder;
-import org.ops4j.ramler.generator.ApiTraverser;
-import org.ops4j.ramler.generator.FileHelper;
+import org.ops4j.ramler.common.helper.FileHelper;
 import org.ops4j.ramler.model.ApiModel;
+import org.ops4j.ramler.model.ApiModelBuilder;
+import org.ops4j.ramler.model.ApiTraverser;
 
 import io.smallrye.openapi.runtime.io.OpenApiSerializer;
 import io.smallrye.openapi.runtime.io.OpenApiSerializer.Format;

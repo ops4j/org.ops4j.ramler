@@ -15,12 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ops4j.ramler.generator;
+package org.ops4j.ramler.model;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.ops4j.ramler.model.Metatype;
 import org.raml.v2.api.model.v10.api.Api;
 import org.raml.v2.api.model.v10.api.Library;
 import org.raml.v2.api.model.v10.datamodel.AnyTypeDeclaration;
