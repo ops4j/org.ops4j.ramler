@@ -58,7 +58,7 @@
                         </goals>
                         <configuration>
                             <package>org.ops4j.ramler.itest.inheritance</package>
-                            <model>${basedir}/src/test/resources/raml/inheritance.raml</model>
+                            <model>src/test/resources/raml/inheritance.raml</model>
                             <jacksonTypeInfo>true</jacksonTypeInfo>
                             <jacksonPropertyName>true</jacksonPropertyName>
                         </configuration>
@@ -72,7 +72,7 @@
                         </goals>
                         <configuration>
                             <package>org.ops4j.ramler.itest.union</package>
-                            <model>${basedir}/src/test/resources/raml/union.raml</model>
+                            <model>src/test/resources/raml/union.raml</model>
                             <jacksonUnion>true</jacksonUnion>
                         </configuration>
                     </execution>

@@ -103,9 +103,10 @@ public abstract class AbstractJavaMojo extends AbstractMojo {
     protected void generateJavaSources() throws MojoFailureException {
         if (buildContext.hasDelta(model)) {
             getLog().info("Generating Java model from " + model);
+            String sourceFile = new File(project.getBasedir(), model).getPath();
 
             Configuration config = new Configuration();
-            config.setSourceFile(model);
+            config.setSourceFile(sourceFile);
             config.setBasePackage(packageName);
             config.setTargetDir(getOutputDir());
             config.setDiscriminatorMutable(discriminatorMutable);

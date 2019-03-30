@@ -75,9 +75,10 @@ public class HtmlMojo extends AbstractMojo {
     protected void generateWebResources() throws MojoFailureException {
         if (buildContext.hasDelta(model)) {
             getLog().info("Generating HTML documentation from " + model);
+            String sourceFile = new File(project.getBasedir(), model).getPath();
 
             HtmlConfiguration config = new HtmlConfiguration();
-            config.setSourceFile(model);
+            config.setSourceFile(sourceFile);
             config.setTargetDir(getOutputDir().getAbsolutePath());
             if (templateDir != null) {
                 config.setTemplateDir(templateDir.getAbsolutePath());

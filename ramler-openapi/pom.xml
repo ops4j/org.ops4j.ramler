@@ -10,7 +10,7 @@
     <groupId>org.ops4j.ramler</groupId>
     <artifactId>ramler-openapi</artifactId>
 
-    <name>OPS4J Ramler Java Code Generator</name>
+    <name>OPS4J Ramler OpenAPI Generator</name>
 
     <dependencies>
         <dependency>

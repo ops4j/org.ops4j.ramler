@@ -61,9 +61,10 @@ public class TypeScriptMojo extends AbstractMojo {
     protected void generateSources() throws MojoFailureException {
         if (buildContext.hasDelta(model)) {
             getLog().info("Generating TypeScript sources from " + model);
+            String sourceFile = new File(project.getBasedir(), model).getPath();
 
             TypeScriptConfiguration config = new TypeScriptConfiguration();
-            config.setSourceFile(model);
+            config.setSourceFile(sourceFile);
             config.setTargetDir(getOutputDir());
 
             TypeScriptGenerator generator = new TypeScriptGenerator(config);
