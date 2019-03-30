@@ -35,14 +35,15 @@
     </scm>
 
     <modules>
+        <module>ramler-common</module>
         <module>ramler-java</module>
         <module>ramler-maven-plugin</module>
         <module>ramler-html</module>
+        <module>ramler-openapi</module>
         <module>ramler-typescript</module>
         <module>ramler-itest</module>
         <module>ramler-manual</module>
         <module>samples</module>
-        <module>ramler-common</module>
     </modules>
 
     <dependencyManagement>
@@ -156,6 +157,11 @@
                 <groupId>org.junit.platform</groupId>
                 <artifactId>junit-platform-launcher</artifactId>
                 <version>${org.junit.platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.leadpony.justify</groupId>
+                <artifactId>justify</artifactId>
+                <version>0.14.0</version>
             </dependency>
             <dependency>
                 <groupId>org.ow2.asm</groupId>

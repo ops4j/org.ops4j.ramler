@@ -7,14 +7,19 @@ import org.eclipse.microprofile.openapi.models.info.Info;
 import org.eclipse.microprofile.openapi.models.media.Schema;
 import org.eclipse.microprofile.openapi.models.media.Schema.SchemaType;
 import org.ops4j.ramler.model.ApiVisitor;
+import org.ops4j.ramler.model.CommonConstants;
 import org.raml.v2.api.model.v10.api.Api;
 import org.raml.v2.api.model.v10.datamodel.AnyTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.ArrayTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.BooleanTypeDeclaration;
+import org.raml.v2.api.model.v10.datamodel.DateTimeOnlyTypeDeclaration;
+import org.raml.v2.api.model.v10.datamodel.DateTimeTypeDeclaration;
+import org.raml.v2.api.model.v10.datamodel.DateTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.IntegerTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.NumberTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.StringTypeDeclaration;
+import org.raml.v2.api.model.v10.datamodel.TimeOnlyTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
 
 import io.smallrye.openapi.api.models.ComponentsImpl;
@@ -31,7 +36,7 @@ public class OpenApiCreatingApiVisitor implements ApiVisitor {
 
     private Components components;
 
-    private Schema schema;
+    private Schema objectSchema;
 
     /**
      * Creates a visitor with the given generator context.
@@ -70,25 +75,39 @@ public class OpenApiCreatingApiVisitor implements ApiVisitor {
         if (context.getApiModel().isInternal(type)) {
             return;
         }
-        schema = new SchemaImpl();
-        components.addSchema(type.name(), schema);
-        schema.setTitle(type.name());
-        schema.setType(SchemaType.OBJECT);
+        objectSchema = new SchemaImpl();
+        components.addSchema(type.name(), objectSchema);
+        objectSchema.setTitle(type.name());
+        TypeDeclaration parentType = type.parentTypes().get(0);
+        if (parentType.name().equals(CommonConstants.OBJECT)) {
+            objectSchema.setType(SchemaType.OBJECT);
+        } else {
+            Schema base = new SchemaImpl();
+            base.setRef(parentType.name());
+            objectSchema.addAllOf(base);
+            Schema derived = new SchemaImpl();
+            derived.setType(SchemaType.OBJECT);
+            objectSchema.addAllOf(derived);
+            objectSchema = derived;
+        }
     }
 
     @Override
     public void visitObjectTypeEnd(ObjectTypeDeclaration type) {
-        schema = null;
+        objectSchema = null;
     }
 
     @Override
     public void visitObjectTypeProperty(ObjectTypeDeclaration type, TypeDeclaration property) {
-        if (schema == null) {
+        if (objectSchema == null) {
             return;
         }
         SchemaImpl propertySchema = toSchema(property);
 
-        schema.addProperty(property.name(), propertySchema);
+        objectSchema.addProperty(property.name(), propertySchema);
+        if (Boolean.TRUE.equals(property.required())) {
+            objectSchema.addRequired(property.name());
+        }
     }
 
     private SchemaImpl toSchema(TypeDeclaration property) {
@@ -109,13 +128,25 @@ public class OpenApiCreatingApiVisitor implements ApiVisitor {
             addAnyProperty(propertySchema, property);
         }
         else if (property instanceof IntegerTypeDeclaration) {
-            addIntegerProperty(propertySchema, property);
+            addIntegerProperty(propertySchema, (IntegerTypeDeclaration) property);
         }
         else if (property instanceof NumberTypeDeclaration) {
-            addNumberProperty(propertySchema, property);
+            addNumberProperty(propertySchema, (NumberTypeDeclaration) property);
         }
         else if (property instanceof StringTypeDeclaration) {
             addStringProperty(propertySchema, property);
+        }
+        else if (property instanceof DateTimeOnlyTypeDeclaration) {
+            addDateTimeOnlyProperty(propertySchema, (DateTimeOnlyTypeDeclaration) property);
+        }
+        else if (property instanceof DateTimeTypeDeclaration) {
+            addDateTimeProperty(propertySchema, (DateTimeTypeDeclaration) property);
+        }
+        else if (property instanceof DateTypeDeclaration) {
+            addDateProperty(propertySchema, (DateTypeDeclaration) property);
+        }
+        else if (property instanceof TimeOnlyTypeDeclaration) {
+            addTimeOnlyProperty(propertySchema, (TimeOnlyTypeDeclaration) property);
         }
         else {
             // throw new UnsupportedOperationException("unsupported type " + property.type());
@@ -123,12 +154,53 @@ public class OpenApiCreatingApiVisitor implements ApiVisitor {
         return propertySchema;
     }
 
-    private void addIntegerProperty(SchemaImpl propertySchema, TypeDeclaration property) {
-        propertySchema.setType(SchemaType.INTEGER);
+    private void addDateTimeOnlyProperty(SchemaImpl propertySchema, DateTimeOnlyTypeDeclaration property) {
+        propertySchema.setType(SchemaType.STRING);
     }
 
-    private void addNumberProperty(SchemaImpl propertySchema, TypeDeclaration property) {
+    private void addDateTimeProperty(SchemaImpl propertySchema, DateTimeTypeDeclaration property) {
+        propertySchema.setType(SchemaType.STRING);
+        propertySchema.setFormat("date-time");
+    }
+
+    private void addDateProperty(SchemaImpl propertySchema, DateTypeDeclaration property) {
+        propertySchema.setType(SchemaType.STRING);
+        propertySchema.setFormat("date");
+    }
+
+    private void addTimeOnlyProperty(SchemaImpl propertySchema, TimeOnlyTypeDeclaration property) {
+        propertySchema.setType(SchemaType.STRING);
+    }
+
+    private void addIntegerProperty(SchemaImpl propertySchema, IntegerTypeDeclaration property) {
+        propertySchema.setType(SchemaType.INTEGER);
+        if (property.format() == null) {
+            return;
+        }
+        switch (property.format()) {
+        case "int64":
+        case "long":
+            propertySchema.setFormat("int64");
+            break;
+        case "int32":
+            propertySchema.setFormat("int32");
+            break;
+        }
+    }
+
+    private void addNumberProperty(SchemaImpl propertySchema, NumberTypeDeclaration property) {
         propertySchema.setType(SchemaType.NUMBER);
+        if (property.format() == null) {
+            return;
+        }
+        switch (property.format()) {
+        case "float":
+            propertySchema.setFormat("float");
+            break;
+        case "double":
+            propertySchema.setFormat("double");
+            break;
+        }
     }
 
     private void addStringProperty(SchemaImpl propertySchema, TypeDeclaration property) {
@@ -151,7 +223,9 @@ public class OpenApiCreatingApiVisitor implements ApiVisitor {
 
     private void addArrayProperty(SchemaImpl propertySchema, ArrayTypeDeclaration property) {
         propertySchema.setType(SchemaType.ARRAY);
-        Schema itemSchema = toSchema(property.items());
+        String itemType = context.getApiModel().getItemType(property);
+        Schema itemSchema = new SchemaImpl();
+        itemSchema.setRef(itemType);
         propertySchema.setItems(itemSchema);
     }
 

@@ -10,7 +10,7 @@ public class SimpleObjectTest extends AbstractOpenApiTest {
     }
 
     @Test
-    public void foo() {
+    public void shouldValidate() {
 
     }
 }

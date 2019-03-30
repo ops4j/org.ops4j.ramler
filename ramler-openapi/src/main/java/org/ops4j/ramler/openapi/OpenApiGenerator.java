@@ -19,8 +19,7 @@ public class OpenApiGenerator {
     /**
      * Creates a generator with the given configuration.
      *
-     * @param config
-     *            OpenApi generator configuration
+     * @param config OpenApi generator configuration
      */
     public OpenApiGenerator(OpenApiConfiguration config) {
         this.config = config;
@@ -29,6 +28,7 @@ public class OpenApiGenerator {
 
     /**
      * Generates OpenApi spec.
+     *
      * @throws IOException
      */
     public void generate() throws IOException {
@@ -42,8 +42,14 @@ public class OpenApiGenerator {
 
         OpenAPI openApi = visitor.getOpenApi();
 
-        String content = OpenApiSerializer.serialize(openApi, Format.YAML);
-        context.writeToFile(content, "openapi.yaml");
+        if (context.getConfig().isGenerateYaml()) {
+            String yaml = OpenApiSerializer.serialize(openApi, Format.YAML);
+            context.writeToFile(yaml, "openapi.yaml");
+        }
 
+        if (context.getConfig().isGenerateJson()) {
+            String json = OpenApiSerializer.serialize(openApi, Format.JSON);
+            context.writeToFile(json, "openapi.json");
+        }
     }
 }

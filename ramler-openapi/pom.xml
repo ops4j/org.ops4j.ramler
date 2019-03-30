@@ -10,19 +10,18 @@
     <groupId>org.ops4j.ramler</groupId>
     <artifactId>ramler-openapi</artifactId>
 
-    <dependencies>
+    <name>OPS4J Ramler Java Code Generator</name>
 
+    <dependencies>
         <dependency>
             <groupId>org.ops4j.ramler</groupId>
             <artifactId>ramler-common</artifactId>
             <version>${project.version}</version>
         </dependency>
-
         <dependency>
             <groupId>io.smallrye</groupId>
             <artifactId>smallrye-open-api</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
@@ -51,6 +50,11 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.leadpony.justify</groupId>
+            <artifactId>justify</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

@@ -10,6 +10,8 @@
     <groupId>org.ops4j.ramler</groupId>
     <artifactId>ramler-common</artifactId>
 
+    <name>OPS4J Ramler Common Utilities</name>
+
     <dependencies>
         <dependency>
             <groupId>org.raml</groupId>

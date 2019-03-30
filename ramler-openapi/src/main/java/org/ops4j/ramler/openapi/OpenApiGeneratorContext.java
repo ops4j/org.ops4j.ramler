@@ -41,8 +41,6 @@ public class OpenApiGeneratorContext {
 
     private ApiModel apiModel;
 
-    private Appendable output;
-
     /**
      * Creates a generator context for the given configuration.
      *

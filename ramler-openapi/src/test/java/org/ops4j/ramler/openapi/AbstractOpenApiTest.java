@@ -17,13 +17,24 @@
  */
 package org.ops4j.ramler.openapi;
 
+import static org.assertj.core.api.Assertions.fail;
+
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
+
+import javax.json.JsonReader;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
+import org.leadpony.justify.api.JsonSchema;
+import org.leadpony.justify.api.JsonValidationService;
+import org.leadpony.justify.api.Problem;
+import org.leadpony.justify.api.ProblemHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,15 +52,39 @@ public abstract class AbstractOpenApiTest {
     private OpenApiConfiguration config;
 
     @BeforeAll
-    public void generateOpenApi() throws IOException {
+    public void setUp() throws IOException {
+        generateOpenApi();
+        validateJson();
+    }
+
+    private void generateOpenApi() throws IOException {
         config = new OpenApiConfiguration();
         config.setSourceFile(String.format("raml/%s.raml", getBasename()));
-        config.setTargetDir(new File("target/generated/ts/" + getBasename()));
+        config.setTargetDir(new File("target/generated/openapi/" + getBasename()));
+        config.setGenerateJson(true);
+        config.setGenerateYaml(true);
 
         generator = new OpenApiGenerator(config);
         generator.generate();
-
     }
+
+    private void validateJson() {
+        JsonValidationService service = JsonValidationService.newInstance();
+        JsonSchema schema = service.readSchema(getClass().getResourceAsStream("/schema/openapi-v3-schema.json"));
+        List<Problem> problems = new ArrayList<>();
+
+        Path path = config.getTargetDir().toPath().resolve("openapi.json");
+        try (JsonReader reader = service.createReader(path, schema, ProblemHandler.collectingTo(problems))) {
+            reader.readValue();
+        }
+
+        if (problems.isEmpty()) {
+            return;
+        }
+        problems.forEach(p -> log.error(p.toString()));
+        fail("There are JSON schema validation problems.");
+    }
+
 
     public abstract String getBasename();
 

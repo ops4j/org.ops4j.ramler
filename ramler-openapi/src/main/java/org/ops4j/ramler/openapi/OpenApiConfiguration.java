@@ -31,6 +31,10 @@ public class OpenApiConfiguration {
 
     private File targetDir;
 
+    private boolean generateJson;
+
+    private boolean generateYaml;
+
     /**
      * Gets the RAML source file name.
      * @return source file name
@@ -62,5 +66,41 @@ public class OpenApiConfiguration {
      */
     public void setTargetDir(File targetDir) {
         this.targetDir = targetDir;
+    }
+
+    /**
+     * Should the generator create JSON output?
+     *
+     * @return true if JSON will be created
+     */
+    public boolean isGenerateJson() {
+        return generateJson;
+    }
+
+    /**
+     * Sets the flag for generating JSON output
+     *
+     * @param generateJson true if JSON will be created
+     */
+    public void setGenerateJson(boolean generateJson) {
+        this.generateJson = generateJson;
+    }
+
+    /**
+     * Should the generator create YAML output?
+     *
+     * @return true if YAML will be created
+     */
+    public boolean isGenerateYaml() {
+        return generateYaml;
+    }
+
+    /**
+     * Sets the flag for generating YAML output
+     *
+     * @param generateJson true if YAML will be created
+     */
+    public void setGenerateYaml(boolean generateYaml) {
+        this.generateYaml = generateYaml;
     }
 }
