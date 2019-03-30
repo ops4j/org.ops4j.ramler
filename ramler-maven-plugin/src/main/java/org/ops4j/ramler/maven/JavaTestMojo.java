@@ -19,15 +19,13 @@ package org.ops4j.ramler.maven;
 
 import java.io.File;
 
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 /**
  * Generates test sources from a RAML model.
- * 
+ *
  * @author Harald Wellmann
  *
  */
@@ -41,11 +39,10 @@ public class JavaTestMojo extends AbstractJavaMojo {
     private File outputDir;
 
     @Override
-    public void execute() throws MojoExecutionException, MojoFailureException {
+    protected void extendProject() {
         String outputRoot = getOutputDir().getAbsolutePath();
-        getLog().info("Generating additional test source directory " + outputRoot);
+        getLog().info("Adding test source directory " + outputRoot);
         project.addTestCompileSourceRoot(outputRoot);
-        generateJavaSources();
     }
 
     @Override

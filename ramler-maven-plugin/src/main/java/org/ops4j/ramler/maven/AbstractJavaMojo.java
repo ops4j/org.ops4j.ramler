@@ -19,28 +19,19 @@ package org.ops4j.ramler.maven;
 
 import java.io.File;
 
-import javax.inject.Inject;
-
-import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.project.MavenProject;
 import org.ops4j.ramler.exc.RamlerException;
 import org.ops4j.ramler.generator.Configuration;
 import org.ops4j.ramler.generator.Generator;
-import org.sonatype.plexus.build.incremental.BuildContext;
 
 /**
- * Generates Java sources from a RAML model.
+ * Base class for {@code java} and {@code java-test} goals.
  *
  * @author Harald Wellmann
  *
  */
-public abstract class AbstractJavaMojo extends AbstractMojo {
-
-    /** RAML specification file, relative to <code>${project.basedir}</code>. */
-    @Parameter(required = true)
-    protected String model;
+public abstract class AbstractJavaMojo extends AbstractRamlerMojo {
 
     /**
      * Fully qualified package name for generated Java sources. The generated classes will be
@@ -91,52 +82,37 @@ public abstract class AbstractJavaMojo extends AbstractMojo {
     @Parameter(defaultValue = "delegate")
     private String delegateFieldName;
 
-    @Parameter(readonly = true, defaultValue = "${project}")
-    protected MavenProject project;
-
-    @Inject
-    private BuildContext buildContext;
-
     /**
      * @throws MojoFailureException
      */
-    protected void generateJavaSources() throws MojoFailureException {
-        if (buildContext.hasDelta(model)) {
-            getLog().info("Generating Java model from " + model);
-            String sourceFile = new File(project.getBasedir(), model).getPath();
+    @Override
+    protected void generateOutput() throws MojoFailureException {
+        getLog().info("Generating Java model from " + model);
+        String sourceFile = new File(project.getBasedir(), model).getPath();
 
-            Configuration config = new Configuration();
-            config.setSourceFile(sourceFile);
-            config.setBasePackage(packageName);
-            config.setTargetDir(getOutputDir());
-            config.setDiscriminatorMutable(discriminatorMutable);
-            config.setInterfaceNameSuffix(interfaceNameSuffix);
-            config.setJacksonTypeInfo(jacksonTypeInfo);
-            config.setJacksonPropertyName(jacksonPropertyName);
-            config.setJacksonUnion(jacksonUnion);
-            config.setDelegators(delegators);
-            config.setDelegateFieldName(delegateFieldName);
-            config.setDelegatorSuffix(delegatorSuffix);
+        Configuration config = new Configuration();
+        config.setSourceFile(sourceFile);
+        config.setBasePackage(packageName);
+        config.setTargetDir(getOutputDir());
+        config.setDiscriminatorMutable(discriminatorMutable);
+        config.setInterfaceNameSuffix(interfaceNameSuffix);
+        config.setJacksonTypeInfo(jacksonTypeInfo);
+        config.setJacksonPropertyName(jacksonPropertyName);
+        config.setJacksonUnion(jacksonUnion);
+        config.setDelegators(delegators);
+        config.setDelegateFieldName(delegateFieldName);
+        config.setDelegatorSuffix(delegatorSuffix);
 
-            try {
-                Generator generator = new Generator(config);
-                generator.generate();
-            }
-            catch (RamlerException exc) {
-                throw new MojoFailureException("code generation failed", exc);
-            }
-            refreshGeneratedSources();
+        try {
+            Generator generator = new Generator(config);
+            generator.generate();
         }
-        else {
-            getLog().info("Java model is up-to-date");
+        catch (RamlerException exc) {
+            throw new MojoFailureException("code generation failed", exc);
         }
     }
 
-    private void refreshGeneratedSources() {
-        getLog().debug("refreshing " + getOutputDir());
-        buildContext.refresh(getOutputDir());
-    }
-
+    @Override
     public abstract File getOutputDir();
 
     /**

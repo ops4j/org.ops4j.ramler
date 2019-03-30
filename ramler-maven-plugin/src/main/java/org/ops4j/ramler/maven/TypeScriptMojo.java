@@ -20,18 +20,13 @@ package org.ops4j.ramler.maven;
 import java.io.File;
 import java.io.IOException;
 
-import javax.inject.Inject;
-
-import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.project.MavenProject;
 import org.ops4j.ramler.exc.RamlerException;
 import org.ops4j.ramler.typescript.TypeScriptConfiguration;
 import org.ops4j.ramler.typescript.TypeScriptGenerator;
-import org.sonatype.plexus.build.incremental.BuildContext;
 
 /**
  * Generates TypeScript code from a RAML model.
@@ -40,11 +35,7 @@ import org.sonatype.plexus.build.incremental.BuildContext;
  *
  */
 @Mojo(name = "typescript", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
-public class TypeScriptMojo extends AbstractMojo {
-
-    /** RAML specification file. */
-    @Parameter(required = true)
-    protected String model;
+public class TypeScriptMojo extends AbstractRamlerMojo {
 
     /**
      * Output directory for generated TypeScript sources.
@@ -52,46 +43,26 @@ public class TypeScriptMojo extends AbstractMojo {
     @Parameter(defaultValue = "${project.build.directory}/ramler/ts")
     private File outputDir;
 
-    @Parameter(readonly = true, defaultValue = "${project}")
-    protected MavenProject project;
+    @Override
+    protected void generateOutput() throws MojoFailureException {
+        getLog().info("Generating TypeScript sources from " + model);
+        String sourceFile = new File(project.getBasedir(), model).getPath();
 
-    @Inject
-    private BuildContext buildContext;
+        TypeScriptConfiguration config = new TypeScriptConfiguration();
+        config.setSourceFile(sourceFile);
+        config.setTargetDir(getOutputDir());
 
-    protected void generateSources() throws MojoFailureException {
-        if (buildContext.hasDelta(model)) {
-            getLog().info("Generating TypeScript sources from " + model);
-            String sourceFile = new File(project.getBasedir(), model).getPath();
-
-            TypeScriptConfiguration config = new TypeScriptConfiguration();
-            config.setSourceFile(sourceFile);
-            config.setTargetDir(getOutputDir());
-
-            TypeScriptGenerator generator = new TypeScriptGenerator(config);
-            try {
-                generator.generate();
-            }
-            catch (RamlerException | IOException exc) {
-                throw new MojoFailureException("HTML generation failed", exc);
-            }
-            refreshGeneratedSources();
+        TypeScriptGenerator generator = new TypeScriptGenerator(config);
+        try {
+            generator.generate();
         }
-        else {
-            getLog().info("TypeScript model is up-to-date");
+        catch (RamlerException | IOException exc) {
+            throw new MojoFailureException("HTML generation failed", exc);
         }
-    }
-
-    private void refreshGeneratedSources() {
-        getLog().debug("refreshing " + getOutputDir());
-        buildContext.refresh(getOutputDir());
-    }
-
-    public File getOutputDir() {
-        return outputDir;
     }
 
     @Override
-    public void execute() throws MojoFailureException {
-        generateSources();
+    public File getOutputDir() {
+        return outputDir;
     }
 }

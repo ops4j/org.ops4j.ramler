@@ -20,19 +20,14 @@ package org.ops4j.ramler.maven;
 import java.io.File;
 import java.io.IOException;
 
-import javax.inject.Inject;
-
-import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.project.MavenProject;
 import org.ops4j.ramler.exc.Exceptions;
 import org.ops4j.ramler.exc.RamlerException;
 import org.ops4j.ramler.html.HtmlConfiguration;
 import org.ops4j.ramler.html.HtmlGenerator;
-import org.sonatype.plexus.build.incremental.BuildContext;
 
 /**
  * Generates HTML documentation from a RAML model.
@@ -41,11 +36,7 @@ import org.sonatype.plexus.build.incremental.BuildContext;
  *
  */
 @Mojo(name = "html", defaultPhase = LifecyclePhase.GENERATE_RESOURCES)
-public class HtmlMojo extends AbstractMojo {
-
-    /** RAML specification file. */
-    @Parameter(required = true)
-    protected String model;
+public class HtmlMojo extends AbstractRamlerMojo {
 
     /**
      * Output directory for generated HTML and other web resources.
@@ -60,61 +51,41 @@ public class HtmlMojo extends AbstractMojo {
     private File webResourceDir;
 
     /**
-     * Directory with Trimou templates which take precedence over the built-in templates.
-     * The entry template is named {@code api.trimou.html}.
+     * Directory with Trimou templates which take precedence over the built-in templates. The entry
+     * template is named {@code api.trimou.html}.
      */
     @Parameter
     private File templateDir;
 
-    @Parameter(readonly = true, defaultValue = "${project}")
-    protected MavenProject project;
+    @Override
+    protected void generateOutput() throws MojoFailureException {
+        getLog().info("Generating HTML documentation from " + model);
+        String sourceFile = new File(project.getBasedir(), model).getPath();
 
-    @Inject
-    private BuildContext buildContext;
-
-    protected void generateWebResources() throws MojoFailureException {
-        if (buildContext.hasDelta(model)) {
-            getLog().info("Generating HTML documentation from " + model);
-            String sourceFile = new File(project.getBasedir(), model).getPath();
-
-            HtmlConfiguration config = new HtmlConfiguration();
-            config.setSourceFile(sourceFile);
-            config.setTargetDir(getOutputDir().getAbsolutePath());
-            if (templateDir != null) {
-                config.setTemplateDir(templateDir.getAbsolutePath());
-            }
-            if (webResourceDir != null) {
-                config.setWebResourceDir(webResourceDir.getAbsolutePath());
-            }
-
-            HtmlGenerator generator = new HtmlGenerator(config);
-            try {
-                generator.generate();
-            }
-            catch (RamlerException exc) {
-                throw new MojoFailureException("HTML generation failed", exc);
-            }
-            catch (IOException exc) {
-                throw Exceptions.unchecked(exc);
-            }
-            refreshGeneratedSources();
+        HtmlConfiguration config = new HtmlConfiguration();
+        config.setSourceFile(sourceFile);
+        config.setTargetDir(getOutputDir().getAbsolutePath());
+        if (templateDir != null) {
+            config.setTemplateDir(templateDir.getAbsolutePath());
         }
-        else {
-            getLog().info("Java model is up-to-date");
+        if (webResourceDir != null) {
+            config.setWebResourceDir(webResourceDir.getAbsolutePath());
         }
-    }
 
-    private void refreshGeneratedSources() {
-        getLog().debug("refreshing " + getOutputDir());
-        buildContext.refresh(getOutputDir());
-    }
-
-    public File getOutputDir() {
-        return outputDir;
+        HtmlGenerator generator = new HtmlGenerator(config);
+        try {
+            generator.generate();
+        }
+        catch (RamlerException exc) {
+            throw new MojoFailureException("HTML generation failed", exc);
+        }
+        catch (IOException exc) {
+            throw Exceptions.unchecked(exc);
+        }
     }
 
     @Override
-    public void execute() throws MojoFailureException {
-        generateWebResources();
+    public File getOutputDir() {
+        return outputDir;
     }
 }
