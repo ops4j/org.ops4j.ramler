@@ -42,6 +42,7 @@
         <module>ramler-itest</module>
         <module>ramler-manual</module>
         <module>samples</module>
+        <module>ramler-common</module>
     </modules>
 
     <dependencyManagement>

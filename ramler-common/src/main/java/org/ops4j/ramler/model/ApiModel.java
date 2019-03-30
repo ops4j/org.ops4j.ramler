@@ -43,7 +43,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.ops4j.ramler.generator.Constants;
 import org.raml.v2.api.model.v08.parameters.NumberTypeDeclaration;
 import org.raml.v2.api.model.v10.api.Api;
 import org.raml.v2.api.model.v10.datamodel.AnyTypeDeclaration;
@@ -110,7 +109,7 @@ public class ApiModel {
         for (TypeDeclaration type : api.types()) {
             for (TypeDeclaration baseType : type.parentTypes()) {
                 String baseTypeName = baseType.name();
-                if (!baseTypeName.equals(Constants.OBJECT)) {
+                if (!baseTypeName.equals(CommonConstants.OBJECT)) {
                     derivedTypes.merge(baseTypeName, singletonList(type.name()), this::join);
                 }
             }
@@ -183,7 +182,7 @@ public class ApiModel {
      * @return list of type arguments, possibly empty
      */
     public List<String> getTypeArgs(TypeDeclaration type) {
-        return Annotations.getStringAnnotations(type, Constants.TYPE_ARGS);
+        return Annotations.getStringAnnotations(type, CommonConstants.TYPE_ARGS);
     }
 
     /**

@@ -13,6 +13,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.ops4j.ramler</groupId>
+            <artifactId>ramler-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.glassfish.jaxb</groupId>
             <artifactId>codemodel</artifactId>
         </dependency>
