@@ -38,7 +38,7 @@ import org.sonatype.plexus.build.incremental.BuildContext;
  */
 public abstract class AbstractJavaMojo extends AbstractMojo {
 
-    /** RAML specification file. */
+    /** RAML specification file, relative to <code>${project.basedir}</code>. */
     @Parameter(required = true)
     protected String model;
 
