@@ -1,0 +1,215 @@
+#%RAML 1.0
+title: API with Types
+mediaType: application/json
+uses:
+  r: ../ramler.raml 
+types:
+  Address:
+    properties:
+      city: string
+      street: string
+  Age:
+    type: integer
+    format: int16
+    minimum: 0
+    maximum: 120
+  Colour:
+    type: string
+    enum:
+    - lightBlue
+    - red
+    - yellow
+    - green
+  FileResponse:
+    properties:
+      fileName : string
+      token: string
+  Name:
+    maxLength: 80
+  Integers:
+    properties:
+      i8:
+        type: integer
+        format: int8
+      i8o:
+        type: integer
+        format: int8
+        required: false
+      i16:
+        type: integer
+        format: int16
+      i16o:
+        type: integer
+        format: int16
+        required: false
+      i32:
+        type: integer
+        format: int32
+      i32o:
+        type: integer
+        format: int32
+        required: false
+      i64:
+        type: integer
+        format: int64
+      i64o:
+        type: integer
+        format: int64
+        required: false
+      i:
+        type: integer
+        format: int
+      io:
+        type: integer
+        format: int
+        required: false
+      l:
+        type: integer
+        format: long
+      lo:
+        type: integer
+        format: long
+        required: false        
+  Numbers:
+    properties:
+      f:
+        type: number
+        format: float
+      fo:
+        type: number
+        format: float
+        required: false  
+      d:
+        type: number
+        format: double
+      dbl:
+        type: number
+        format: double
+        required: false  
+  Temporals:
+    properties:
+      date:
+        type: date-only
+      to:
+        type: time-only
+      dto:
+        type: datetime-only
+      dt:
+        type: datetime
+  Person:
+    discriminator: objectType
+    properties:
+      objectType: string
+      firstname:
+        type: string
+      lastname:
+          type: string
+      address:
+          type: Address
+      age:
+          type: Age
+  Employee:
+    type: Person
+    properties:
+      department: string
+  Manager:
+    type: Employee
+    properties:
+      numEmployees: integer
+  User:
+    properties:
+      firstname:
+        type: string
+      lastname:
+        type: Name
+      age:
+        type: Age
+      address:
+        type: Address
+      favouriteColour?: Colour
+      registered:
+        type: boolean
+      dateOfBirth:
+        type: date-only
+      registrationDate:
+        type: datetime
+  UserGroup:
+    properties:
+      name: string
+      users : User[]
+  Reference:
+    properties:
+      id:
+        (r.id):
+        type: string
+      target: string
+  FunnyNames:
+    properties:
+      static: boolean
+      customer.name : string
+      interface: integer
+      rawName:
+        type: string
+        (r.codeName): someOtherName    
+/user:
+  get:
+    displayName: find all users
+    queryParameters:
+      q :
+        type: string
+        default: ""
+      sort:
+        type: string
+        required: false
+    responses:
+      200:
+        body:
+          type: User[]
+  post:
+    displayName: create user
+    body:
+      type : User
+    responses:
+      200:
+        body:
+          type: User
+  /{id}:
+    uriParameters:
+      id:
+        type : integer
+    get:
+      displayName: find user by id
+      responses:
+        200:
+          body:
+            type: User
+    delete:
+      displayName: delete user by id
+      responses:
+        204:
+/file:
+  post:
+    body:
+      multipart/form-data:
+        properties:
+          fileName: string
+          file: file
+    responses:
+      200:
+        body:
+          application/json:
+            type: FileResponse
+          text/csv:
+            (r.codeName): asCsv
+            type: string
+/anything:
+  post:
+    body:
+      type: object
+    responses:
+      200:
+  get:
+      responses:
+        200:
+          body:
+            type: object
