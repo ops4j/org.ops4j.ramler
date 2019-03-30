@@ -38,6 +38,8 @@ public class OpenApiCreatingApiVisitor implements ApiVisitor {
 
     private Schema objectSchema;
 
+    private boolean generateAny;
+
     /**
      * Creates a visitor with the given generator context.
      *
@@ -68,6 +70,16 @@ public class OpenApiCreatingApiVisitor implements ApiVisitor {
         components = new ComponentsImpl();
         openApi.setComponents(components);
 
+    }
+
+    @Override
+    public void visitApiEnd(Api api) {
+        if (generateAny) {
+            Schema anySchema = new SchemaImpl();
+            anySchema.setTitle("Any");
+            anySchema.setDescription("Can be any simple or complex type");
+            components.addSchema("Any", anySchema);
+        }
     }
 
     @Override
@@ -149,7 +161,7 @@ public class OpenApiCreatingApiVisitor implements ApiVisitor {
             addTimeOnlyProperty(propertySchema, (TimeOnlyTypeDeclaration) property);
         }
         else {
-            // throw new UnsupportedOperationException("unsupported type " + property.type());
+            throw new UnsupportedOperationException("unsupported type " + property.type());
         }
         return propertySchema;
     }
@@ -185,6 +197,8 @@ public class OpenApiCreatingApiVisitor implements ApiVisitor {
         case "int32":
             propertySchema.setFormat("int32");
             break;
+        default:
+            // ignore
         }
     }
 
@@ -200,6 +214,8 @@ public class OpenApiCreatingApiVisitor implements ApiVisitor {
         case "double":
             propertySchema.setFormat("double");
             break;
+        default:
+            // ignore
         }
     }
 
@@ -208,13 +224,14 @@ public class OpenApiCreatingApiVisitor implements ApiVisitor {
     }
 
     private boolean isAdditionalProperties(TypeDeclaration property) {
-        // TODO Auto-generated method stub
-        return false;
+        return property.name().startsWith("/");
     }
 
     private void addAdditionalProperties(SchemaImpl propertySchema, TypeDeclaration property) {
-        // TODO Auto-generated method stub
-
+        String pattern = property.name().substring(1, property.name().length() - 1);
+        SchemaImpl additionalPropertiesSchema = new SchemaImpl();
+        additionalPropertiesSchema.setPattern(pattern);
+        propertySchema.additionalPropertiesSchema(additionalPropertiesSchema);
     }
 
     private void addObjectProperty(SchemaImpl propertySchema, TypeDeclaration property) {
@@ -234,7 +251,7 @@ public class OpenApiCreatingApiVisitor implements ApiVisitor {
     }
 
     private void addAnyProperty(SchemaImpl propertySchema, TypeDeclaration property) {
-        // TODO Auto-generated method stub
-
+        generateAny = true;
+        propertySchema.setRef("Any");
     }
 }
