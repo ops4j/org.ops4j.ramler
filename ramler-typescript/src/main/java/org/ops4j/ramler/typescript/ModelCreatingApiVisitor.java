@@ -24,6 +24,7 @@ import java.util.Map;
 import org.ops4j.ramler.generator.Names;
 import org.ops4j.ramler.model.ApiTraverser;
 import org.ops4j.ramler.model.ApiVisitor;
+import org.ops4j.ramler.model.EnumValue;
 import org.ops4j.ramler.model.Metatype;
 import org.raml.v2.api.model.v10.datamodel.ArrayTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.NumberTypeDeclaration;
@@ -46,6 +47,7 @@ import org.trimou.util.ImmutableMap;
 public class ModelCreatingApiVisitor implements ApiVisitor {
 
     private TypeScriptGeneratorContext context;
+    private EnumTypeApiVisitor enumVisitor;
 
     /**
      * Creates a visitor with the given generator context.
@@ -55,6 +57,7 @@ public class ModelCreatingApiVisitor implements ApiVisitor {
      */
     public ModelCreatingApiVisitor(TypeScriptGeneratorContext context) {
         this.context = context;
+        this.enumVisitor = new EnumTypeApiVisitor(context);
     }
 
     @Override
@@ -85,14 +88,17 @@ public class ModelCreatingApiVisitor implements ApiVisitor {
 
     @Override
     public void visitStringType(StringTypeDeclaration type) {
-        if (context.getApiModel().isEnum(type)) {
-            EnumTypeApiVisitor visitor = new EnumTypeApiVisitor(context);
-            ApiTraverser traverser = new ApiTraverser(context.getApiModel());
-            traverser.traverse(type, visitor);
-        }
-        else {
-            createTypeAlias(type, "string");
-        }
+        createTypeAlias(type, "string");
+    }
+
+    @Override
+    public void visitEnumValue(StringTypeDeclaration type, EnumValue enumValue) {
+        enumVisitor.visitEnumValue(type, enumValue);
+    }
+
+    @Override
+    public void visitEnumTypeEnd(StringTypeDeclaration type) {
+        enumVisitor.visitEnumTypeEnd(type);
     }
 
     @Override

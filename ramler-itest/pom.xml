@@ -54,6 +54,7 @@
                         <goals>
                             <goal>java-test</goal>
                             <goal>html</goal>
+                            <goal>openapi</goal>
                             <goal>typescript</goal>
                         </goals>
                         <configuration>

@@ -17,13 +17,13 @@
  */
 package org.ops4j.ramler.typescript;
 
-import static java.util.stream.Collectors.toList;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.ops4j.ramler.generator.Names;
 import org.ops4j.ramler.model.ApiVisitor;
+import org.ops4j.ramler.model.EnumValue;
 import org.raml.v2.api.model.v10.datamodel.StringTypeDeclaration;
 import org.trimou.engine.MustacheEngine;
 import org.trimou.util.ImmutableMap;
@@ -39,6 +39,8 @@ public class EnumTypeApiVisitor implements ApiVisitor {
     private TypeScriptGeneratorContext context;
 
     private StringBuilder output;
+
+    private List<EnumSymbol> enumSymbols = new ArrayList<>();
 
     /**
      * Represents an enumeration member.
@@ -94,17 +96,21 @@ public class EnumTypeApiVisitor implements ApiVisitor {
     }
 
     @Override
-    public void visitStringType(StringTypeDeclaration type) {
+    public void visitEnumTypeEnd(StringTypeDeclaration type) {
         String name = type.name();
-        List<EnumSymbol> enumValues = context.getApiModel().getEnumValues(type).stream()
-            .map(v -> new EnumSymbol(Names.buildConstantName(v.getName()), v.getName()))
-            .collect(toList());
 
-        Map<String, Object> contextObject = ImmutableMap.of("name", name, "enumValues", enumValues);
+        Map<String, Object> contextObject = ImmutableMap.of("name", name, "enumValues", enumSymbols);
 
         MustacheEngine engine = context.getTemplateEngine().getEngine();
         engine.getMustache("enum").render(output, contextObject);
 
         context.writeToFile(output.toString(), type.name());
+        enumSymbols.clear();
+    }
+
+    @Override
+    public void visitEnumValue(StringTypeDeclaration type, EnumValue enumValue) {
+        EnumSymbol enumSymbol = new EnumSymbol(Names.buildConstantName(enumValue.getName()), enumValue.getName());
+        enumSymbols.add(enumSymbol);
     }
 }
