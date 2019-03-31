@@ -18,6 +18,7 @@
 package org.ops4j.ramler.html;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -34,6 +35,14 @@ public class HtmlGeneratorTest {
         config.setTargetDir("target/html/simpleobject");
         HtmlGenerator generator = new HtmlGenerator(config);
         generator.generate();
+
+        verifyTargetDir(config);
+    }
+
+    private void verifyTargetDir(HtmlConfiguration config) {
+        File outputDir = new File(config.getTargetDir());
+        assertThat(outputDir.isDirectory()).isTrue();
+        assertThat(outputDir.list()).isNotEmpty();
     }
 
     @Test
@@ -43,6 +52,8 @@ public class HtmlGeneratorTest {
         config.setTargetDir("target/html/registry");
         HtmlGenerator generator = new HtmlGenerator(config);
         generator.generate();
+
+        verifyTargetDir(config);
     }
 
     @Test

@@ -17,10 +17,17 @@
  */
 package org.ops4j.ramler.java;
 
+import org.junit.jupiter.api.Test;
+
 public class RegistryTest extends AbstractGeneratorTest {
 
     @Override
     public String getBasename() {
         return "registry";
+    }
+
+    @Test
+    public void shouldFindModelClasses() {
+        assertClasses("Configuration", "Error", "ErrorCode", "Errors", "Layer", "Manifest", "Repositories", "Tags");
     }
 }
