@@ -44,9 +44,8 @@ public class FileHelper {
      * Checks is the given directory exists and creates it otherwise.
      *
      * @param dir required directory
-     * @throws IOException if directory cannot be created
      */
-    public static void createDirectoryIfNeeded(File dir) throws IOException {
+    public static void createDirectoryIfNeeded(File dir) {
         boolean success;
         if (dir.exists()) {
             success = dir.isDirectory();
@@ -55,7 +54,7 @@ public class FileHelper {
             success = dir.mkdirs();
         }
         if (!success) {
-            throw new IOException("could not create " + dir);
+            throw new GeneratorException("could not create " + dir);
         }
     }
 

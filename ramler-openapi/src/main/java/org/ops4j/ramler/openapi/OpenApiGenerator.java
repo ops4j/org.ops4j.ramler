@@ -1,5 +1,6 @@
 package org.ops4j.ramler.openapi;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.eclipse.microprofile.openapi.models.OpenAPI;
@@ -48,14 +49,20 @@ public class OpenApiGenerator {
 
         OpenAPI openApi = visitor.getOpenApi();
 
+        String fileName = new File(config.getSourceFile()).getName();
+        String baseName = fileName;
+        int lastDot = fileName.lastIndexOf('.');
+        if (lastDot > 0) {
+            baseName = fileName.substring(0, lastDot);
+        }
         if (context.getConfig().isGenerateYaml()) {
             String yaml = OpenApiSerializer.serialize(openApi, Format.YAML);
-            context.writeToFile(yaml, "openapi.yaml");
+            context.writeToFile(yaml, baseName + ".yaml");
         }
 
         if (context.getConfig().isGenerateJson()) {
             String json = OpenApiSerializer.serialize(openApi, Format.JSON);
-            context.writeToFile(json, "openapi.json");
+            context.writeToFile(json, baseName + ".json");
         }
     }
 }
