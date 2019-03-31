@@ -50,6 +50,12 @@ import com.sun.codemodel.JMod;
 import com.sun.codemodel.JPackage;
 import com.sun.codemodel.JVar;
 
+/**
+ * Generates Java class for a RAML union type.
+ *
+ * @author hwellmann
+ *
+ */
 public class UnionGenerator {
 
     private JavaGeneratorContext context;
@@ -70,6 +76,10 @@ public class UnionGenerator {
         this.jacksonEnabled = context.getConfig().isJacksonUnion();
     }
 
+    /**
+     * Generates a Java class for the given union type.
+     * @param type union type
+     */
     public void generateUnionClass(UnionTypeDeclaration type) {
         if (jacksonEnabled) {
             generateSerializer(type);

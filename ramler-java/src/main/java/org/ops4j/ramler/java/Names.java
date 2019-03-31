@@ -220,14 +220,29 @@ public class Names {
         return true;
     }
 
+    /**
+     * Gets the name of the checker method for a given boolean field. Example: {@code fooBar -> isFooBar}
+     * @param fieldName field name
+     * @return checker method name
+     */
     public static String getCheckerName(String fieldName) {
         return getAccessorName("is", fieldName);
     }
 
+    /**
+     * Gets the name of the getter method for a given field. Example: {@code fooBar -> getFooBar}
+     * @param fieldName field name
+     * @return getter method name
+     */
     public static String getGetterName(String fieldName) {
         return getAccessorName("get", fieldName);
     }
 
+    /**
+     * Gets the name of the setter method for a given field. Example: {@code fooBar -> setFooBar}
+     * @param fieldName field name
+     * @return setter method name
+     */
     public static String getSetterName(String fieldName) {
         return getAccessorName("set", fieldName);
     }

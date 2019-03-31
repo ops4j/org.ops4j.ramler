@@ -65,7 +65,7 @@ public class HtmlGenerator {
 
     /**
      * Generates HTML documentation for the given configuration.
-     * @throws IOException
+     * @throws IOException if generated files cannot be written
      */
     public void generate() throws IOException {
         ApiModel apiModel = new ApiModelBuilder().buildApiModel(config.getSourceFile());
