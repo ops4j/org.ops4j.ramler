@@ -24,8 +24,8 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
-import org.ops4j.ramler.exc.Exceptions;
-import org.ops4j.ramler.exc.RamlerException;
+import org.ops4j.ramler.common.exc.Exceptions;
+import org.ops4j.ramler.common.exc.RamlerException;
 import org.ops4j.ramler.html.HtmlConfiguration;
 import org.ops4j.ramler.html.HtmlGenerator;
 

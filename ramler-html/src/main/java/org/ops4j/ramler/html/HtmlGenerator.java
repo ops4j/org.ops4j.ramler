@@ -28,10 +28,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.stream.Stream;
 
-import org.ops4j.ramler.exc.Exceptions;
+import org.ops4j.ramler.common.exc.Exceptions;
+import org.ops4j.ramler.common.model.ApiModel;
+import org.ops4j.ramler.common.model.ApiModelBuilder;
 import org.ops4j.ramler.html.trimou.TemplateEngine;
-import org.ops4j.ramler.model.ApiModel;
-import org.ops4j.ramler.model.ApiModelBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

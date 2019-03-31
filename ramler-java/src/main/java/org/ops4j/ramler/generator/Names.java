@@ -25,7 +25,7 @@ import static org.apache.commons.lang.math.NumberUtils.isDigits;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.ops4j.ramler.model.Annotations;
+import org.ops4j.ramler.common.model.Annotations;
 import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
 import org.raml.v2.api.model.v10.resources.Resource;
 

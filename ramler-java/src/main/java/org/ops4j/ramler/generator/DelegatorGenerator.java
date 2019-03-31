@@ -19,7 +19,7 @@ package org.ops4j.ramler.generator;
 
 import java.util.stream.Stream;
 
-import org.ops4j.ramler.exc.Exceptions;
+import org.ops4j.ramler.common.exc.Exceptions;
 
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JClassAlreadyExistsException;

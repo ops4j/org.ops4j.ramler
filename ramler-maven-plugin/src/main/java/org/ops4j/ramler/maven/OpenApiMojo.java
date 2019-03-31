@@ -25,7 +25,7 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
-import org.ops4j.ramler.exc.RamlerException;
+import org.ops4j.ramler.common.exc.RamlerException;
 import org.ops4j.ramler.openapi.OpenApiConfiguration;
 import org.ops4j.ramler.openapi.OpenApiGenerator;
 

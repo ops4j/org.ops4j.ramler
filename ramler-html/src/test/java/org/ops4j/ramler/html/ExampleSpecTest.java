@@ -25,8 +25,8 @@ import javax.json.JsonValue;
 import javax.json.JsonValue.ValueType;
 
 import org.junit.jupiter.api.Test;
+import org.ops4j.ramler.common.model.ApiModel;
 import org.ops4j.ramler.html.render.ExampleSpecJsonRenderer;
-import org.ops4j.ramler.model.ApiModel;
 import org.raml.v2.api.RamlModelBuilder;
 import org.raml.v2.api.RamlModelResult;
 import org.raml.v2.api.model.v10.api.Api;

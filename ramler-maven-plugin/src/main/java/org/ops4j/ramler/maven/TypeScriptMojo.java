@@ -24,7 +24,7 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
-import org.ops4j.ramler.exc.RamlerException;
+import org.ops4j.ramler.common.exc.RamlerException;
 import org.ops4j.ramler.typescript.TypeScriptConfiguration;
 import org.ops4j.ramler.typescript.TypeScriptGenerator;
 

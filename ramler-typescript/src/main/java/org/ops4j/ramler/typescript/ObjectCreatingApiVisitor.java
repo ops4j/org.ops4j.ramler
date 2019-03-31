@@ -17,8 +17,8 @@
  */
 package org.ops4j.ramler.typescript;
 
-import org.ops4j.ramler.model.ApiTraverser;
-import org.ops4j.ramler.model.ApiVisitor;
+import org.ops4j.ramler.common.model.ApiTraverser;
+import org.ops4j.ramler.common.model.ApiVisitor;
 import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;
 
 /**

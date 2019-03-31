@@ -1,4 +1,4 @@
-package org.ops4j.ramler.exc;
+package org.ops4j.ramler.common.exc;
 
 /**
  * Wraps a syntax exception caused by the RAML parser or by Ramler itself.

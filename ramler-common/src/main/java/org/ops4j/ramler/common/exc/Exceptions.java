@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ops4j.ramler.exc;
+package org.ops4j.ramler.common.exc;
 
 /**
  * Helper class for rethrowing a checked exception as runtime exception.

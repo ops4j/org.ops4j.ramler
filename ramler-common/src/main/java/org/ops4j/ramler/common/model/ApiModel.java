@@ -15,25 +15,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ops4j.ramler.model;
+package org.ops4j.ramler.common.model;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
-import static org.ops4j.ramler.model.Metatype.ANY;
-import static org.ops4j.ramler.model.Metatype.ARRAY;
-import static org.ops4j.ramler.model.Metatype.BOOLEAN;
-import static org.ops4j.ramler.model.Metatype.DATETIME;
-import static org.ops4j.ramler.model.Metatype.DATETIME_ONLY;
-import static org.ops4j.ramler.model.Metatype.DATE_ONLY;
-import static org.ops4j.ramler.model.Metatype.FILE;
-import static org.ops4j.ramler.model.Metatype.INTEGER;
-import static org.ops4j.ramler.model.Metatype.NULL;
-import static org.ops4j.ramler.model.Metatype.NUMBER;
-import static org.ops4j.ramler.model.Metatype.OBJECT;
-import static org.ops4j.ramler.model.Metatype.STRING;
-import static org.ops4j.ramler.model.Metatype.TIME_ONLY;
-import static org.ops4j.ramler.model.Metatype.UNION;
+import static org.ops4j.ramler.common.model.Metatype.ANY;
+import static org.ops4j.ramler.common.model.Metatype.ARRAY;
+import static org.ops4j.ramler.common.model.Metatype.BOOLEAN;
+import static org.ops4j.ramler.common.model.Metatype.DATETIME;
+import static org.ops4j.ramler.common.model.Metatype.DATETIME_ONLY;
+import static org.ops4j.ramler.common.model.Metatype.DATE_ONLY;
+import static org.ops4j.ramler.common.model.Metatype.FILE;
+import static org.ops4j.ramler.common.model.Metatype.INTEGER;
+import static org.ops4j.ramler.common.model.Metatype.NULL;
+import static org.ops4j.ramler.common.model.Metatype.NUMBER;
+import static org.ops4j.ramler.common.model.Metatype.OBJECT;
+import static org.ops4j.ramler.common.model.Metatype.STRING;
+import static org.ops4j.ramler.common.model.Metatype.TIME_ONLY;
+import static org.ops4j.ramler.common.model.Metatype.UNION;
 
 import java.util.ArrayList;
 import java.util.Collection;

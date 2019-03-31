@@ -17,7 +17,7 @@
  */
 package org.ops4j.ramler.generator;
 
-import org.ops4j.ramler.model.ApiVisitor;
+import org.ops4j.ramler.common.model.ApiVisitor;
 import org.raml.v2.api.model.v10.bodies.Response;
 import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;

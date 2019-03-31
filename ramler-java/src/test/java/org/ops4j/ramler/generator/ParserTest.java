@@ -18,19 +18,19 @@
 package org.ops4j.ramler.generator;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.ops4j.ramler.model.Metatype.ARRAY;
-import static org.ops4j.ramler.model.Metatype.BOOLEAN;
-import static org.ops4j.ramler.model.Metatype.INTEGER;
-import static org.ops4j.ramler.model.Metatype.OBJECT;
-import static org.ops4j.ramler.model.Metatype.STRING;
+import static org.ops4j.ramler.common.model.Metatype.ARRAY;
+import static org.ops4j.ramler.common.model.Metatype.BOOLEAN;
+import static org.ops4j.ramler.common.model.Metatype.INTEGER;
+import static org.ops4j.ramler.common.model.Metatype.OBJECT;
+import static org.ops4j.ramler.common.model.Metatype.STRING;
 
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
-import org.ops4j.ramler.model.ApiModel;
-import org.ops4j.ramler.model.ApiTraverser;
-import org.ops4j.ramler.model.EnumValue;
-import org.ops4j.ramler.model.Metatype;
+import org.ops4j.ramler.common.model.ApiModel;
+import org.ops4j.ramler.common.model.ApiTraverser;
+import org.ops4j.ramler.common.model.EnumValue;
+import org.ops4j.ramler.common.model.Metatype;
 import org.raml.v2.api.RamlModelBuilder;
 import org.raml.v2.api.RamlModelResult;
 import org.raml.v2.api.model.v10.api.Api;

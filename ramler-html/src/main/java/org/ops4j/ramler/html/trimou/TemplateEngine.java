@@ -19,7 +19,7 @@ package org.ops4j.ramler.html.trimou;
 
 import java.nio.charset.StandardCharsets;
 
-import org.ops4j.ramler.model.ApiModel;
+import org.ops4j.ramler.common.model.ApiModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trimou.Mustache;

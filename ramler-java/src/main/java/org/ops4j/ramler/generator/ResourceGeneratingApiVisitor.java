@@ -39,10 +39,10 @@ import javax.ws.rs.core.MediaType;
 
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
-import org.ops4j.ramler.exc.Exceptions;
-import org.ops4j.ramler.exc.GeneratorException;
-import org.ops4j.ramler.model.Annotations;
-import org.ops4j.ramler.model.ApiVisitor;
+import org.ops4j.ramler.common.exc.Exceptions;
+import org.ops4j.ramler.common.exc.GeneratorException;
+import org.ops4j.ramler.common.model.Annotations;
+import org.ops4j.ramler.common.model.ApiVisitor;
 import org.raml.v2.api.model.v10.api.Api;
 import org.raml.v2.api.model.v10.bodies.MimeType;
 import org.raml.v2.api.model.v10.bodies.Response;

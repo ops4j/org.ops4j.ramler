@@ -20,9 +20,9 @@ package org.ops4j.ramler.typescript;
 import java.io.IOException;
 
 import org.ops4j.ramler.common.helper.FileHelper;
-import org.ops4j.ramler.model.ApiModel;
-import org.ops4j.ramler.model.ApiModelBuilder;
-import org.ops4j.ramler.model.ApiTraverser;
+import org.ops4j.ramler.common.model.ApiModel;
+import org.ops4j.ramler.common.model.ApiModelBuilder;
+import org.ops4j.ramler.common.model.ApiTraverser;
 import org.ops4j.ramler.typescript.trimou.TypeScriptTemplateEngine;
 
 /**

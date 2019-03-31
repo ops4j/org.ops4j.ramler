@@ -49,7 +49,7 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
-import org.ops4j.ramler.exc.Exceptions;
+import org.ops4j.ramler.common.exc.Exceptions;
 import org.ops4j.ramler.generator.Names;
 import org.ops4j.ramler.typescript.parser.JsonGeneratingListener;
 import org.ops4j.ramler.typescript.parser.TypeScriptLexer;

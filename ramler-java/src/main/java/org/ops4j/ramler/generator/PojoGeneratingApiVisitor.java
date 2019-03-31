@@ -32,9 +32,9 @@ import java.util.Optional;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
-import org.ops4j.ramler.model.Annotations;
-import org.ops4j.ramler.model.ApiVisitor;
-import org.ops4j.ramler.model.EnumValue;
+import org.ops4j.ramler.common.model.Annotations;
+import org.ops4j.ramler.common.model.ApiVisitor;
+import org.ops4j.ramler.common.model.EnumValue;
 import org.raml.v2.api.model.v10.datamodel.AnyTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.ArrayTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.BooleanTypeDeclaration;

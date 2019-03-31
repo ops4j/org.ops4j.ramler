@@ -1,4 +1,4 @@
-package org.ops4j.ramler.exc;
+package org.ops4j.ramler.common.exc;
 
 /**
  * Exception caused by Ramler during code or HTML generation.

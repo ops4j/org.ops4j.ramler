@@ -1,4 +1,4 @@
-package org.ops4j.ramler.exc;
+package org.ops4j.ramler.common.exc;
 
 /**
  * Base class for all exceptions thrown by Ramler.

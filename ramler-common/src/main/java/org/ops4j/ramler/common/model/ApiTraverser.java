@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ops4j.ramler.model;
+package org.ops4j.ramler.common.model;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

@@ -19,8 +19,8 @@ package org.ops4j.ramler.generator;
 
 import static org.ops4j.ramler.generator.Constants.VALUE;
 
-import org.ops4j.ramler.exc.Exceptions;
-import org.ops4j.ramler.model.EnumValue;
+import org.ops4j.ramler.common.exc.Exceptions;
+import org.ops4j.ramler.common.model.EnumValue;
 import org.raml.v2.api.model.v10.datamodel.StringTypeDeclaration;
 
 import com.fasterxml.jackson.annotation.JsonProperty;

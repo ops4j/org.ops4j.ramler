@@ -22,8 +22,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
-import org.ops4j.ramler.exc.GeneratorException;
-import org.ops4j.ramler.model.ApiModel;
+import org.ops4j.ramler.common.exc.GeneratorException;
+import org.ops4j.ramler.common.model.ApiModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

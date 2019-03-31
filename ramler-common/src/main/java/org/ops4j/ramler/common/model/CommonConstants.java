@@ -1,4 +1,4 @@
-package org.ops4j.ramler.model;
+package org.ops4j.ramler.common.model;
 
 public class CommonConstants {
 
