@@ -327,32 +327,12 @@ public class JavaGeneratorContext {
     }
 
     /**
-     * Sets the configuration of this generator.
-     *
-     * @param config
-     *            the config to set
-     */
-    public void setConfig(JavaConfiguration config) {
-        this.config = config;
-    }
-
-    /**
      * Gets the Java code model produced by this generator.
      *
      * @return the codeModel
      */
     public JCodeModel getCodeModel() {
         return codeModel;
-    }
-
-    /**
-     * Sets the Java code model produced by this generator.
-     *
-     * @param codeModel
-     *            the codeModel to set
-     */
-    public void setCodeModel(JCodeModel codeModel) {
-        this.codeModel = codeModel;
     }
 
     /**
