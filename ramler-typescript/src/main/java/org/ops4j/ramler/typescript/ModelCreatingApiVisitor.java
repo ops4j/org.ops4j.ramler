@@ -60,7 +60,7 @@ public class ModelCreatingApiVisitor implements ApiVisitor {
     @Override
     public void visitObjectTypeStart(ObjectTypeDeclaration type) {
         ObjectCreatingApiVisitor visitor = new ObjectCreatingApiVisitor(context);
-        ApiTraverser traverser = new ApiTraverser();
+        ApiTraverser traverser = new ApiTraverser(context.getApiModel());
         traverser.traverse(type, visitor);
     }
 
@@ -87,7 +87,7 @@ public class ModelCreatingApiVisitor implements ApiVisitor {
     public void visitStringType(StringTypeDeclaration type) {
         if (context.getApiModel().isEnum(type)) {
             EnumTypeApiVisitor visitor = new EnumTypeApiVisitor(context);
-            ApiTraverser traverser = new ApiTraverser();
+            ApiTraverser traverser = new ApiTraverser(context.getApiModel());
             traverser.traverse(type, visitor);
         }
         else {

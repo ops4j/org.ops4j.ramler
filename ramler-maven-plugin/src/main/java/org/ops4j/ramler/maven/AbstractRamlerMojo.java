@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 OPS4J Contributors
+ * Copyright 2019 OPS4J Contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,7 +66,10 @@ public abstract class AbstractRamlerMojo extends AbstractMojo {
 
     protected abstract File getOutputDir();
 
+    /**
+     * Override to add (test) source directories.
+     */
     protected void extendProject() {
-        // override to add (test) source directories
+        // empty
     }
 }

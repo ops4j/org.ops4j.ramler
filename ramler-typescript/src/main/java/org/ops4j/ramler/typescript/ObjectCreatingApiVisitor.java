@@ -50,7 +50,7 @@ public class ObjectCreatingApiVisitor implements ApiVisitor {
         }
 
         ObjectImportApiVisitor importVisitor = new ObjectImportApiVisitor(context);
-        ApiTraverser traverser = new ApiTraverser();
+        ApiTraverser traverser = new ApiTraverser(context.getApiModel());
         traverser.traverse(type, importVisitor);
         output.append("\n");
 

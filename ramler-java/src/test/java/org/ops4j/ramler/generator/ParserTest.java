@@ -66,7 +66,7 @@ public class ParserTest {
     public void shouldParseRaml() {
         parse("simpleobject.raml");
 
-        ApiTraverser traverser = new ApiTraverser();
+        ApiTraverser traverser = new ApiTraverser(apiModel);
         LoggingApiVisitor visitor = new LoggingApiVisitor();
         traverser.traverse(apiModel.getApi(), visitor);
     }

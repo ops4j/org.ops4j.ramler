@@ -37,8 +37,8 @@ public class OpenApiGenerator {
         FileHelper.createDirectoryIfNeeded(config.getTargetDir());
 
         OpenApiCreatingApiVisitor visitor = new OpenApiCreatingApiVisitor(context);
-        ApiTraverser traverser = new ApiTraverser();
-        traverser.traverse(context.getApiModel().getApi(), visitor);
+        ApiTraverser traverser = new ApiTraverser(apiModel);
+        traverser.traverse(apiModel.getApi(), visitor);
 
         OpenAPI openApi = visitor.getOpenApi();
 

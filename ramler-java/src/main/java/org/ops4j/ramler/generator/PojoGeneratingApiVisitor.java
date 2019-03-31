@@ -34,6 +34,7 @@ import java.util.stream.Stream;
 
 import org.ops4j.ramler.model.Annotations;
 import org.ops4j.ramler.model.ApiVisitor;
+import org.ops4j.ramler.model.EnumValue;
 import org.raml.v2.api.model.v10.datamodel.AnyTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.ArrayTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.BooleanTypeDeclaration;
@@ -263,10 +264,18 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
     }
 
     @Override
-    public void visitStringType(StringTypeDeclaration type) {
-        if (context.getApiModel().isEnum(type)) {
-            enumGenerator.generateEnumClass(type);
-        }
+    public void visitEnumTypeStart(StringTypeDeclaration type) {
+        enumGenerator.generateEnumClassStart(type);
+    }
+
+    @Override
+    public void visitEnumTypeEnd(StringTypeDeclaration type) {
+        enumGenerator.generateEnumClassEnd();
+    }
+
+    @Override
+    public void visitEnumValue(StringTypeDeclaration type, EnumValue enumValue) {
+        enumGenerator.generateEnumConstant(enumValue);
     }
 
     private void generateFieldAndAccessors(JDefinedClass klass, TypeDeclaration property) {

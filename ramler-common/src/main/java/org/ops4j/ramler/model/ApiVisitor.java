@@ -164,6 +164,18 @@ public interface ApiVisitor {
         // empty
     }
 
+    default void visitEnumTypeStart(StringTypeDeclaration type) {
+        // empty
+    }
+
+    default void visitEnumTypeEnd(StringTypeDeclaration type) {
+        // empty
+    }
+
+    default void visitEnumValue(StringTypeDeclaration type, EnumValue enumValue) {
+        // empty
+    }
+
     /**
      * Called for each resource before visiting the first method.
      *

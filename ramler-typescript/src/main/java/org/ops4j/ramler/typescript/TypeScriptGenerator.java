@@ -52,7 +52,7 @@ public class TypeScriptGenerator {
 
     /**
      * Generates TypeScript code.
-     * @throws IOException 
+     * @throws IOException
      */
     public void generate() throws IOException {
         ApiModel apiModel = new ApiModelBuilder().buildApiModel(config.getSourceFile());
@@ -62,7 +62,7 @@ public class TypeScriptGenerator {
         FileHelper.createDirectoryIfNeeded(config.getTargetDir());
 
         ModelCreatingApiVisitor modelVisitor = new ModelCreatingApiVisitor(context);
-        ApiTraverser traverser = new ApiTraverser();
+        ApiTraverser traverser = new ApiTraverser(context.getApiModel());
         traverser.traverse(context.getApiModel().getApi(), modelVisitor);
     }
 }

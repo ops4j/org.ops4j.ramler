@@ -80,7 +80,7 @@ public class Generator {
         PojoCreatingApiVisitor pojoCreator = new PojoCreatingApiVisitor(context);
         PojoGeneratingApiVisitor pojoVisitor = new PojoGeneratingApiVisitor(context);
         ResourceGeneratingApiVisitor resourceVisitor = new ResourceGeneratingApiVisitor(context);
-        ApiTraverser traverser = new ApiTraverser();
+        ApiTraverser traverser = new ApiTraverser(context.getApiModel());
         Stream.of(pojoCreator, pojoVisitor, resourceVisitor)
             .forEach(v -> traverser.traverse(context.getApiModel().getApi(), v));
     }

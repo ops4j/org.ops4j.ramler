@@ -51,6 +51,8 @@ public class EnumGenerator {
 
     private JPackage pkg;
 
+    private JDefinedClass klass;
+
     /**
      * Creates a visitor for the given generator context.
      *
@@ -67,9 +69,11 @@ public class EnumGenerator {
      * Fills an enum class for the given type with values and methods.
      * @param type enumeration type declaration
      */
-    public void generateEnumClass(StringTypeDeclaration type) {
-        JDefinedClass klass = pkg._getClass(type.name());
-        generateEnumConstants(klass, type);
+    public void generateEnumClassStart(StringTypeDeclaration type) {
+        klass = pkg._getClass(type.name());
+    }
+
+    public void generateEnumClassEnd() {
         JFieldVar valueField = klass.field(JMod.PRIVATE | JMod.FINAL, String.class, VALUE);
 
         generateEnumConstructor(klass, valueField);
@@ -95,12 +99,7 @@ public class EnumGenerator {
         }
     }
 
-    private void generateEnumConstants(JDefinedClass klass, StringTypeDeclaration type) {
-        context.getApiModel().getEnumValues(type).stream()
-            .forEach(e -> generateEnumConstant(klass, e));
-    }
-
-    private void generateEnumConstant(JDefinedClass klass, EnumValue enumValue) {
+    public void generateEnumConstant(EnumValue enumValue) {
         JEnumConstant constant = klass.enumConstant(Names.buildConstantName(enumValue.getName()))
             .arg(JExpr.lit(enumValue.getName()));
 

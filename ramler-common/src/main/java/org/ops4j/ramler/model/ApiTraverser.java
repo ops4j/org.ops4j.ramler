@@ -56,6 +56,12 @@ import org.raml.v2.api.model.v10.resources.Resource;
  */
 public class ApiTraverser {
 
+    private ApiModel apiModel;
+
+    public ApiTraverser(ApiModel apiModel) {
+        this.apiModel = apiModel;
+    }
+
     /**
      * Lets the given visitor traverse the API model tree.
      *
@@ -136,8 +142,23 @@ public class ApiTraverser {
             visitor.visitUnionType((UnionTypeDeclaration) type);
         }
         else if (type instanceof StringTypeDeclaration) {
-            visitor.visitStringType((StringTypeDeclaration) type);
+            traverse((StringTypeDeclaration) type, visitor);
         }
+    }
+
+    private void traverse(StringTypeDeclaration type, ApiVisitor visitor) {
+        if (apiModel.isEnum(type)) {
+            traverseEnum(type, visitor);
+        }
+        else {
+            visitor.visitStringType(type);
+        }
+    }
+
+    private void traverseEnum(StringTypeDeclaration type, ApiVisitor visitor) {
+        visitor.visitEnumTypeStart(type);
+        apiModel.getEnumValues(type).stream().forEach(e -> visitor.visitEnumValue(type, e));
+        visitor.visitEnumTypeEnd(type);
     }
 
     private void traverse(ObjectTypeDeclaration type, ApiVisitor visitor) {
