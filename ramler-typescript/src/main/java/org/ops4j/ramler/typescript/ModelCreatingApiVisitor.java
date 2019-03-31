@@ -25,7 +25,7 @@ import org.ops4j.ramler.common.model.ApiTraverser;
 import org.ops4j.ramler.common.model.ApiVisitor;
 import org.ops4j.ramler.common.model.EnumValue;
 import org.ops4j.ramler.common.model.Metatype;
-import org.ops4j.ramler.generator.Names;
+import org.ops4j.ramler.java.Names;
 import org.raml.v2.api.model.v10.datamodel.ArrayTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.NumberTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;

@@ -50,7 +50,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.ops4j.ramler.common.exc.Exceptions;
-import org.ops4j.ramler.generator.Names;
+import org.ops4j.ramler.java.Names;
 import org.ops4j.ramler.typescript.parser.JsonGeneratingListener;
 import org.ops4j.ramler.typescript.parser.TypeScriptLexer;
 import org.ops4j.ramler.typescript.parser.TypeScriptParser;

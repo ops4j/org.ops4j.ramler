@@ -17,7 +17,7 @@
  */
 package org.ops4j.ramler.typescript;
 
-import static org.ops4j.ramler.generator.Constants.TYPE_ARGS;
+import static org.ops4j.ramler.java.JavaConstants.TYPE_ARGS;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -25,7 +25,7 @@ import java.util.TreeMap;
 import org.ops4j.ramler.common.model.Annotations;
 import org.ops4j.ramler.common.model.ApiVisitor;
 import org.ops4j.ramler.common.model.Metatype;
-import org.ops4j.ramler.generator.Names;
+import org.ops4j.ramler.java.Names;
 import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
 import org.trimou.engine.MustacheEngine;

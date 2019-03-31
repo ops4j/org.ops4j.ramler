@@ -22,8 +22,8 @@ import java.io.File;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.ops4j.ramler.common.exc.RamlerException;
-import org.ops4j.ramler.generator.Configuration;
-import org.ops4j.ramler.generator.Generator;
+import org.ops4j.ramler.java.JavaConfiguration;
+import org.ops4j.ramler.java.JavaGenerator;
 
 /**
  * Base class for {@code java} and {@code java-test} goals.
@@ -90,7 +90,7 @@ public abstract class AbstractJavaMojo extends AbstractRamlerMojo {
         getLog().info("Generating Java model from " + model);
         String sourceFile = new File(project.getBasedir(), model).getPath();
 
-        Configuration config = new Configuration();
+        JavaConfiguration config = new JavaConfiguration();
         config.setSourceFile(sourceFile);
         config.setBasePackage(packageName);
         config.setTargetDir(getOutputDir());
@@ -104,7 +104,7 @@ public abstract class AbstractJavaMojo extends AbstractRamlerMojo {
         config.setDelegatorSuffix(delegatorSuffix);
 
         try {
-            Generator generator = new Generator(config);
+            JavaGenerator generator = new JavaGenerator(config);
             generator.generate();
         }
         catch (RamlerException exc) {

@@ -23,7 +23,7 @@ import java.util.Map;
 
 import org.ops4j.ramler.common.model.ApiVisitor;
 import org.ops4j.ramler.common.model.EnumValue;
-import org.ops4j.ramler.generator.Names;
+import org.ops4j.ramler.java.Names;
 import org.raml.v2.api.model.v10.datamodel.StringTypeDeclaration;
 import org.trimou.engine.MustacheEngine;
 import org.trimou.util.ImmutableMap;
