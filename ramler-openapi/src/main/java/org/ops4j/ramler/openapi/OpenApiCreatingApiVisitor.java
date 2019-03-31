@@ -101,6 +101,9 @@ public class OpenApiCreatingApiVisitor implements ApiVisitor {
         objectSchema = new SchemaImpl();
         components.addSchema(type.name(), objectSchema);
         objectSchema.setTitle(type.name());
+        if (type.description() != null) {
+            objectSchema.setDescription(type.description().value());
+        }
         TypeDeclaration parentType = type.parentTypes().get(0);
         if (parentType.name().equals(CommonConstants.OBJECT)) {
             objectSchema.setType(SchemaType.OBJECT);
@@ -126,6 +129,9 @@ public class OpenApiCreatingApiVisitor implements ApiVisitor {
             return;
         }
         Schema propertySchema = toSchema(property);
+        if (property.description() != null) {
+            propertySchema.setDescription(property.description().value());
+        }
 
         objectSchema.addProperty(property.name(), propertySchema);
         if (Boolean.TRUE.equals(property.required())) {
