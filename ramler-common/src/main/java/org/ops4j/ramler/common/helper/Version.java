@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ops4j.ramler.java;
+package org.ops4j.ramler.common.helper;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,14 +25,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Provides the current Ramler version at runtime.
+ *
  * @author Harald Wellmann
  *
  */
 public class Version {
 
-    private static Logger log = LoggerFactory.getLogger(JavaGeneratorContext.class);
+    private static Logger log = LoggerFactory.getLogger(Version.class);
 
-    private static final String POM_PROPERTIES = "/META-INF/maven/org.ops4j.ramler/ramler-java/pom.properties";
+    private static final String POM_PROPERTIES = "/META-INF/maven/org.ops4j.ramler/ramler-common/pom.properties";
 
     private static String ramlerVersion;
 
@@ -40,10 +42,14 @@ public class Version {
         // hidden utility class constructor
     }
 
+    /**
+     * Returns the Maven artifact version of Ramler.
+     * @return artifact version
+     */
     public static synchronized String getRamlerVersion() {
         if (ramlerVersion == null) {
             Properties props = new Properties();
-            try (InputStream is = JavaGeneratorContext.class.getResourceAsStream(POM_PROPERTIES)) {
+            try (InputStream is = Version.class.getResourceAsStream(POM_PROPERTIES)) {
                 // The resource may not be available when running from the IDE
                 if (is != null) {
                     props.load(is);

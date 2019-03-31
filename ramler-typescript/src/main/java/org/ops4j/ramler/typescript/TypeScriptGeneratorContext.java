@@ -32,9 +32,9 @@ import java.time.ZonedDateTime;
 import java.util.Map;
 
 import org.ops4j.ramler.common.exc.GeneratorException;
+import org.ops4j.ramler.common.helper.Version;
 import org.ops4j.ramler.common.model.ApiModel;
 import org.ops4j.ramler.java.Names;
-import org.ops4j.ramler.java.Version;
 import org.ops4j.ramler.typescript.trimou.TypeScriptTemplateEngine;
 import org.raml.v2.api.model.v10.datamodel.AnyTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.ArrayTypeDeclaration;

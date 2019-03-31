@@ -31,6 +31,7 @@ import java.util.Map;
 
 import javax.annotation.Generated;
 
+import org.ops4j.ramler.common.helper.Version;
 import org.ops4j.ramler.common.model.ApiModel;
 import org.raml.v2.api.model.v10.datamodel.AnyTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.ArrayTypeDeclaration;
