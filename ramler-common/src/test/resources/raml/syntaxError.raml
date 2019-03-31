@@ -1,0 +1,13 @@
+#%RAML 1.0
+title: Syntax error
+mediaType: application/json
+types:
+  City:
+    properties:
+      name: string
+      population: int
+  Dog:
+    properties:
+      name: string
+      furColour: string
+  Favourite: City | Dog

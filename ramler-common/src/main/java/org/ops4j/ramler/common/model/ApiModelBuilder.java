@@ -45,10 +45,13 @@ public class ApiModelBuilder {
         RamlModelResult ramlModelResult = new RamlModelBuilder().buildApi(sourceFileName);
         log.debug("Finished parsing");
         if (ramlModelResult.hasErrors()) {
+            StringBuilder builder = new StringBuilder("RAML syntax errors:\n");
             for (ValidationResult result : ramlModelResult.getValidationResults()) {
-                log.error("{}: {}", result.getPath(), result.getMessage());
+                builder.append(result.getPath());
+                builder.append(": ");
+                builder.append(result.getMessage());
             }
-            throw new ParserException("RAML syntax errors, see previous messages");
+            throw new ParserException(builder.toString());
         }
 
         Api api = ramlModelResult.getApiV10();
