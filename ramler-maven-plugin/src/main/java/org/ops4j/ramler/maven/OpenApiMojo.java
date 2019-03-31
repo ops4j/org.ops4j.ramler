@@ -24,7 +24,6 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.project.MavenProject;
 import org.ops4j.ramler.common.exc.RamlerException;
 import org.ops4j.ramler.openapi.OpenApiConfiguration;
 import org.ops4j.ramler.openapi.OpenApiGenerator;
@@ -38,18 +37,11 @@ import org.ops4j.ramler.openapi.OpenApiGenerator;
 @Mojo(name = "openapi", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
 public class OpenApiMojo extends AbstractRamlerMojo {
 
-    /** RAML specification file. */
-    @Parameter(required = true)
-    protected String model;
-
     /**
      * Output directory for generated OpenAPI sources.
      */
     @Parameter(defaultValue = "${project.build.directory}/ramler/openapi")
     private File outputDir;
-
-    @Parameter(readonly = true, defaultValue = "${project}")
-    protected MavenProject project;
 
     /**
      * Generate YAML output.

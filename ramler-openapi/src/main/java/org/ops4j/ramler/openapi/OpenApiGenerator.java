@@ -11,6 +11,12 @@ import org.ops4j.ramler.common.model.ApiTraverser;
 import io.smallrye.openapi.runtime.io.OpenApiSerializer;
 import io.smallrye.openapi.runtime.io.OpenApiSerializer.Format;
 
+/**
+ * Generates an OpenAPI specification from a RAML model.
+ *
+ * @author Harald Wellmann
+ *
+ */
 public class OpenApiGenerator {
 
     private OpenApiConfiguration config;
@@ -29,7 +35,7 @@ public class OpenApiGenerator {
     /**
      * Generates OpenApi spec.
      *
-     * @throws IOException
+     * @throws IOException when output cannot be written
      */
     public void generate() throws IOException {
         ApiModel apiModel = new ApiModelBuilder().buildApiModel(config.getSourceFile());

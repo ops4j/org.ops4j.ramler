@@ -33,6 +33,12 @@ import io.smallrye.openapi.api.models.PathsImpl;
 import io.smallrye.openapi.api.models.info.InfoImpl;
 import io.smallrye.openapi.api.models.media.SchemaImpl;
 
+/**
+ * Generates an OpenAPI specification by visiting a RAML model.
+ *
+ * @author Harald Wellmann
+ *
+ */
 public class OpenApiCreatingApiVisitor implements ApiVisitor {
 
     private OpenApiGeneratorContext context;
@@ -165,10 +171,10 @@ public class OpenApiCreatingApiVisitor implements ApiVisitor {
             addArrayProperty(propertySchema, (ArrayTypeDeclaration) property);
         }
         else if (property instanceof BooleanTypeDeclaration) {
-            addBooleanProperty(propertySchema, (BooleanTypeDeclaration) property);
+            addBooleanProperty(propertySchema);
         }
         else if (property instanceof AnyTypeDeclaration) {
-            addAnyProperty(propertySchema, property);
+            addAnyProperty(propertySchema);
         }
         else if (property instanceof IntegerTypeDeclaration) {
             addIntegerProperty(propertySchema, (IntegerTypeDeclaration) property);
@@ -177,19 +183,19 @@ public class OpenApiCreatingApiVisitor implements ApiVisitor {
             addNumberProperty(propertySchema, (NumberTypeDeclaration) property);
         }
         else if (property instanceof StringTypeDeclaration) {
-            addStringProperty(propertySchema, property);
+            addStringProperty(propertySchema);
         }
         else if (property instanceof DateTimeOnlyTypeDeclaration) {
-            addDateTimeOnlyProperty(propertySchema, (DateTimeOnlyTypeDeclaration) property);
+            addDateTimeOnlyProperty(propertySchema);
         }
         else if (property instanceof DateTimeTypeDeclaration) {
-            addDateTimeProperty(propertySchema, (DateTimeTypeDeclaration) property);
+            addDateTimeProperty(propertySchema);
         }
         else if (property instanceof DateTypeDeclaration) {
-            addDateProperty(propertySchema, (DateTypeDeclaration) property);
+            addDateProperty(propertySchema);
         }
         else if (property instanceof TimeOnlyTypeDeclaration) {
-            addTimeOnlyProperty(propertySchema, (TimeOnlyTypeDeclaration) property);
+            addTimeOnlyProperty(propertySchema);
         }
         else {
             throw new UnsupportedOperationException("unsupported type " + property.type());
@@ -197,21 +203,21 @@ public class OpenApiCreatingApiVisitor implements ApiVisitor {
         return propertySchema;
     }
 
-    private void addDateTimeOnlyProperty(Schema propertySchema, DateTimeOnlyTypeDeclaration property) {
+    private void addDateTimeOnlyProperty(Schema propertySchema) {
         propertySchema.setType(SchemaType.STRING);
     }
 
-    private void addDateTimeProperty(Schema propertySchema, DateTimeTypeDeclaration property) {
+    private void addDateTimeProperty(Schema propertySchema) {
         propertySchema.setType(SchemaType.STRING);
         propertySchema.setFormat("date-time");
     }
 
-    private void addDateProperty(Schema propertySchema, DateTypeDeclaration property) {
+    private void addDateProperty(Schema propertySchema) {
         propertySchema.setType(SchemaType.STRING);
         propertySchema.setFormat("date");
     }
 
-    private void addTimeOnlyProperty(Schema propertySchema, TimeOnlyTypeDeclaration property) {
+    private void addTimeOnlyProperty(Schema propertySchema) {
         propertySchema.setType(SchemaType.STRING);
     }
 
@@ -250,7 +256,7 @@ public class OpenApiCreatingApiVisitor implements ApiVisitor {
         }
     }
 
-    private void addStringProperty(Schema propertySchema, TypeDeclaration property) {
+    private void addStringProperty(Schema propertySchema) {
         propertySchema.setType(SchemaType.STRING);
     }
 
@@ -281,11 +287,11 @@ public class OpenApiCreatingApiVisitor implements ApiVisitor {
         propertySchema.setItems(itemSchema);
     }
 
-    private void addBooleanProperty(Schema propertySchema, BooleanTypeDeclaration property) {
+    private void addBooleanProperty(Schema propertySchema) {
         propertySchema.setType(SchemaType.BOOLEAN);
     }
 
-    private void addAnyProperty(Schema propertySchema, TypeDeclaration property) {
+    private void addAnyProperty(Schema propertySchema) {
         generateAny = true;
         propertySchema.setRef("Any");
     }

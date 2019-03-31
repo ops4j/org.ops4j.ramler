@@ -58,6 +58,11 @@ public class ApiTraverser {
 
     private ApiModel apiModel;
 
+    /**
+     * Creates a traverser for the given API model.
+     *
+     * @param apiModel extended model of API to traverse
+     */
     public ApiTraverser(ApiModel apiModel) {
         this.apiModel = apiModel;
     }
@@ -78,11 +83,6 @@ public class ApiTraverser {
         visitor.visitApiEnd(api);
     }
 
-    /**
-     * @param lib
-     * @param visitor
-     * @return
-     */
     private void traverse(Library library, ApiVisitor visitor) {
         visitor.visitLibraryStart(library);
         library.types().forEach(type -> traverse(type, visitor));

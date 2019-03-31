@@ -19,6 +19,12 @@ package org.ops4j.ramler.common.helper;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+
+import org.ops4j.ramler.common.exc.GeneratorException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Utility class for file system operations.
@@ -28,14 +34,17 @@ import java.io.IOException;
  */
 public class FileHelper {
 
+    private static Logger log = LoggerFactory.getLogger(FileHelper.class);
+
     private FileHelper() {
         // hidden utility class constructor
     }
 
     /**
      * Checks is the given directory exists and creates it otherwise.
-     * @param dir
-     * @throws IOException
+     *
+     * @param dir required directory
+     * @throws IOException if directory cannot be created
      */
     public static void createDirectoryIfNeeded(File dir) throws IOException {
         boolean success;
@@ -47,6 +56,24 @@ public class FileHelper {
         }
         if (!success) {
             throw new IOException("could not create " + dir);
+        }
+    }
+
+    /**
+     * Writes the given content to the file with the given name in the target directory.
+     *
+     * @param content
+     *            string content
+     * @param file
+     *            output file
+     */
+    public static void writeToFile(String content, File file) {
+        log.debug("generating {}\n{}", file, content);
+        try {
+            Files.write(file.toPath(), content.getBytes(StandardCharsets.UTF_8));
+        }
+        catch (IOException exc) {
+            throw new GeneratorException(exc);
         }
     }
 }

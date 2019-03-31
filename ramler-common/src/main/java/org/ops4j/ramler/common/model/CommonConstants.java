@@ -1,5 +1,11 @@
 package org.ops4j.ramler.common.model;
 
+/**
+ * Common constants relevant for all generators.
+ *
+ * @author hwellmann
+ *
+ */
 public class CommonConstants {
 
     /**

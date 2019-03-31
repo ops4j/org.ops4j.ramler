@@ -18,14 +18,9 @@
 package org.ops4j.ramler.openapi;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 
-import org.ops4j.ramler.common.exc.GeneratorException;
+import org.ops4j.ramler.common.helper.FileHelper;
 import org.ops4j.ramler.common.model.ApiModel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Context information shared by all API visitors generating OpenApi code.
@@ -34,8 +29,6 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class OpenApiGeneratorContext {
-
-    private static Logger log = LoggerFactory.getLogger(OpenApiGeneratorContext.class);
 
     private OpenApiConfiguration config;
 
@@ -89,16 +82,16 @@ public class OpenApiGeneratorContext {
         this.apiModel = apiModel;
     }
 
+    /**
+     * Writes the given content to the file with the given name in the target directory.
+     *
+     * @param content
+     *            string content
+     * @param fileName
+     *            file name
+     */
     public void writeToFile(String content, String fileName) {
-        File tsFile = new File(config.getTargetDir(), fileName);
-        log.debug("generating {}\n{}", fileName, content);
-        try {
-            Files.write(tsFile.toPath(), content.getBytes(StandardCharsets.UTF_8));
-        }
-        catch (IOException exc) {
-            throw new GeneratorException(exc);
-        }
+        File file = new File(config.getTargetDir(), fileName);
+        FileHelper.writeToFile(content, file);
     }
-
-
 }

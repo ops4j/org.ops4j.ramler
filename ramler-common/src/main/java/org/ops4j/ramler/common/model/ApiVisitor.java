@@ -164,14 +164,34 @@ public interface ApiVisitor {
         // empty
     }
 
+    /**
+     * Called for each enum type declaration before visiting the first enum value.
+     *
+     * @param type
+     *            enumeration type
+     */
     default void visitEnumTypeStart(StringTypeDeclaration type) {
         // empty
     }
 
+    /**
+     * Called for each enum type declaration after visiting the last enum value.
+     *
+     * @param type
+     *            enumeration type
+     */
     default void visitEnumTypeEnd(StringTypeDeclaration type) {
         // empty
     }
 
+    /**
+     * Called for each enum value of the given enum type.
+     *
+     * @param type
+     *            enumeration type
+     * @param enumValue
+     *            enumeration value
+     */
     default void visitEnumValue(StringTypeDeclaration type, EnumValue enumValue) {
         // empty
     }

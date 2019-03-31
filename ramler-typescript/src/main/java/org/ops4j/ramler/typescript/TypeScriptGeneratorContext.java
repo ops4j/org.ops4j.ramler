@@ -25,13 +25,11 @@ import static org.ops4j.ramler.typescript.TypeScriptConstants.NUMBER;
 import static org.ops4j.ramler.typescript.TypeScriptConstants.STRING;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.time.ZonedDateTime;
 import java.util.Map;
 
 import org.ops4j.ramler.common.exc.GeneratorException;
+import org.ops4j.ramler.common.helper.FileHelper;
 import org.ops4j.ramler.common.helper.Version;
 import org.ops4j.ramler.common.model.ApiModel;
 import org.ops4j.ramler.java.Names;
@@ -47,8 +45,6 @@ import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.StringTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.TimeOnlyTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.trimou.util.ImmutableMap;
 
 /**
@@ -58,8 +54,6 @@ import org.trimou.util.ImmutableMap;
  *
  */
 public class TypeScriptGeneratorContext {
-
-    private static Logger log = LoggerFactory.getLogger(TypeScriptGeneratorContext.class);
 
     private TypeScriptConfiguration config;
 
@@ -261,17 +255,19 @@ public class TypeScriptGeneratorContext {
         }
     }
 
+    /**
+     * Writes the given content to a file in the target directory. The file name is derived
+     * from the type name, e.g. {@code FooBar -> foo-bar.ts}.
+     *
+     * @param content
+     *            string content
+     * @param typeName
+     *            file name
+     */
     public void writeToFile(String content, String typeName) {
         String moduleName = Names.buildLowerKebabCaseName(typeName);
         String tsFileName = moduleName + ".ts";
         File tsFile = new File(config.getTargetDir(), tsFileName);
-        log.debug("generating {}\n{}", tsFileName, content);
-        try {
-            Files.write(tsFile.toPath(), content.getBytes(StandardCharsets.UTF_8));
-        }
-        catch (IOException exc) {
-            throw new GeneratorException(exc);
-        }
+        FileHelper.writeToFile(content, tsFile);
     }
-
 }
