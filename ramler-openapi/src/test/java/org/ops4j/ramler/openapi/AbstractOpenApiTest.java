@@ -17,11 +17,13 @@
  */
 package org.ops4j.ramler.openapi;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -38,6 +40,9 @@ import org.leadpony.justify.api.ProblemHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.smallrye.openapi.api.models.OpenAPIImpl;
+import io.smallrye.openapi.runtime.io.OpenApiParser;
+
 @TestInstance(Lifecycle.PER_CLASS)
 public abstract class AbstractOpenApiTest {
 
@@ -51,10 +56,13 @@ public abstract class AbstractOpenApiTest {
 
     private OpenApiConfiguration config;
 
+    private OpenAPIImpl openApi;
+
     @BeforeAll
-    public void setUp() throws IOException {
+    public void setUp() throws IOException, ParseException {
         generateOpenApi();
         validateJson();
+        parseYaml();
     }
 
     private void generateOpenApi() throws IOException {
@@ -83,6 +91,16 @@ public abstract class AbstractOpenApiTest {
         }
         problems.forEach(p -> log.error(p.toString()));
         fail("There are JSON schema validation problems.");
+    }
+
+    private void parseYaml() throws IOException, ParseException  {
+        Path path = config.getTargetDir().toPath().resolve(getBasename() + ".yaml");
+        openApi = OpenApiParser.parse(path.toUri().toURL());
+
+    }
+
+    protected void assertSchemas(String... names) {
+        assertThat(openApi.getComponents().getSchemas().keySet()).containsExactlyInAnyOrder(names);
     }
 
 

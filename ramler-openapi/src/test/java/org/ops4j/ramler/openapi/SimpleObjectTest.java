@@ -10,7 +10,8 @@ public class SimpleObjectTest extends AbstractOpenApiTest {
     }
 
     @Test
-    public void shouldValidate() {
-
+    public void shouldFindSchemas() {
+        assertSchemas("Address", "Age", "Colour", "Employee", "FileResponse", "FunnyNames", "Integers", "Manager",
+                "Name", "Numbers", "Person", "Reference", "Temporals", "User", "UserGroup");
     }
 }
