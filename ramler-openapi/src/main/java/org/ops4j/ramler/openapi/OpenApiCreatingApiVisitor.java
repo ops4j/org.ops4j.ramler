@@ -27,6 +27,7 @@ import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.StringTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.TimeOnlyTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
+import org.raml.v2.api.model.v10.datamodel.UnionTypeDeclaration;
 
 import io.smallrye.openapi.api.models.ComponentsImpl;
 import io.smallrye.openapi.api.models.OpenAPIImpl;
@@ -145,6 +146,23 @@ public class OpenApiCreatingApiVisitor implements ApiVisitor {
         if (Boolean.TRUE.equals(property.required())) {
             objectSchema.addRequired(property.name());
         }
+    }
+
+    @Override
+    public void visitUnionType(UnionTypeDeclaration type) {
+        Schema schema = new SchemaImpl();
+        schema.setTitle(type.name());
+        if (type.description() != null) {
+            schema.setDescription(type.description().value());
+        }
+
+        for (TypeDeclaration variant : type.of()) {
+            Schema variantSchema = new SchemaImpl();
+            variantSchema.setRef(variant.name());
+            schema.addOneOf(variantSchema);
+        }
+
+        components.addSchema(type.name(), schema);
     }
 
     @Override

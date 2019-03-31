@@ -139,10 +139,17 @@ public class ApiTraverser {
             traverse((ObjectTypeDeclaration) type, visitor);
         }
         else if (type instanceof UnionTypeDeclaration) {
-            visitor.visitUnionType((UnionTypeDeclaration) type);
+            traverse((UnionTypeDeclaration) type, visitor);
         }
         else if (type instanceof StringTypeDeclaration) {
             traverse((StringTypeDeclaration) type, visitor);
+        }
+    }
+
+    private void traverse(UnionTypeDeclaration type, ApiVisitor visitor) {
+        String declaredName = apiModel.getDeclaredName(type);
+        if (declaredName != null) {
+            visitor.visitUnionType(type);
         }
     }
 

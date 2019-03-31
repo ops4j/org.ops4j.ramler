@@ -124,10 +124,6 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
 
     @Override
     public void visitUnionType(UnionTypeDeclaration type) {
-        String declaredName = context.getApiModel().getDeclaredName(type);
-        if (declaredName == null) {
-            return ;
-        }
         unionGenerator.generateUnionClass(type);
     }
 
