@@ -8,6 +8,7 @@ import org.eclipse.microprofile.openapi.models.Components;
 import org.eclipse.microprofile.openapi.models.OpenAPI;
 import org.eclipse.microprofile.openapi.models.Paths;
 import org.eclipse.microprofile.openapi.models.info.Info;
+import org.eclipse.microprofile.openapi.models.media.Discriminator;
 import org.eclipse.microprofile.openapi.models.media.Schema;
 import org.eclipse.microprofile.openapi.models.media.Schema.SchemaType;
 import org.ops4j.ramler.common.model.ApiVisitor;
@@ -31,6 +32,7 @@ import io.smallrye.openapi.api.models.ComponentsImpl;
 import io.smallrye.openapi.api.models.OpenAPIImpl;
 import io.smallrye.openapi.api.models.PathsImpl;
 import io.smallrye.openapi.api.models.info.InfoImpl;
+import io.smallrye.openapi.api.models.media.DiscriminatorImpl;
 import io.smallrye.openapi.api.models.media.SchemaImpl;
 
 /**
@@ -115,6 +117,12 @@ public class OpenApiCreatingApiVisitor implements ApiVisitor {
             derived.setType(SchemaType.OBJECT);
             objectSchema.addAllOf(derived);
             objectSchema = derived;
+        }
+
+        if (type.discriminator() != null) {
+            Discriminator discriminator = new DiscriminatorImpl();
+            discriminator.setPropertyName(type.discriminator());
+            objectSchema.setDiscriminator(discriminator);
         }
     }
 
