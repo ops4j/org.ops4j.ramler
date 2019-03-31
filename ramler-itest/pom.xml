@@ -47,7 +47,6 @@
             <plugin>
                 <groupId>org.ops4j.ramler</groupId>
                 <artifactId>ramler-maven-plugin</artifactId>
-                <version>${project.version}</version>
                 <executions>
                     <execution>
                         <id>inheritance</id>
