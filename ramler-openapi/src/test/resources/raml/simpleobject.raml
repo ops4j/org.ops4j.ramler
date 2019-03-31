@@ -20,10 +20,6 @@ types:
     - red
     - yellow
     - green
-  FileResponse:
-    properties:
-      fileName : string
-      token: string
   Name:
     maxLength: 80
   Integers:
@@ -96,26 +92,6 @@ types:
         type: datetime-only
       dt:
         type: datetime
-  Person:
-    discriminator: objectType
-    properties:
-      objectType: string
-      firstname:
-        type: string
-      lastname:
-          type: string
-      address:
-          type: Address
-      age:
-          type: Age
-  Employee:
-    type: Person
-    properties:
-      department: string
-  Manager:
-    type: Employee
-    properties:
-      numEmployees: integer
   User:
     properties:
       firstname:

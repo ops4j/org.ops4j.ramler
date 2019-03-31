@@ -1,0 +1,22 @@
+#%RAML 1.0
+title: Types with discriminator
+mediaType: application/json
+uses:
+  r: ../ramler.raml 
+types:
+  Person:
+    discriminator: objectType
+    properties:
+      objectType: string
+      firstname:
+        type: string
+      lastname:
+          type: string
+  Employee:
+    type: Person
+    properties:
+      department: string
+  Manager:
+    type: Employee
+    properties:
+      numEmployees: integer

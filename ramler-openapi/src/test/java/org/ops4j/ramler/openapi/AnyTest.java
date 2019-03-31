@@ -19,16 +19,15 @@ package org.ops4j.ramler.openapi;
 
 import org.junit.jupiter.api.Test;
 
-public class SimpleObjectTest extends AbstractOpenApiTest {
+public class AnyTest extends AbstractOpenApiTest {
 
     @Override
     public String getBasename() {
-        return "simpleobject";
+        return "any";
     }
 
     @Test
     public void shouldFindSchemas() {
-        assertSchemas("Address", "Age", "Colour", "FunnyNames", "Integers",
-                "Name", "Numbers", "Reference", "Temporals", "User", "UserGroup");
+        assertSchemas("Any", "AnyWrapper");
     }
 }
