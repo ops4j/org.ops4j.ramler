@@ -19,6 +19,8 @@ package org.ops4j.ramler.typescript;
 
 
 /**
+ * Constants used by the TypeScript generator.
+ *
  * @author Harald Wellmann
  *
  */

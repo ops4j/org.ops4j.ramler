@@ -52,7 +52,7 @@ public class TypeScriptGenerator {
 
     /**
      * Generates TypeScript code.
-     * @throws IOException
+     * @throws IOException if the target directory cannot be created
      */
     public void generate() throws IOException {
         ApiModel apiModel = new ApiModelBuilder().buildApiModel(config.getSourceFile());

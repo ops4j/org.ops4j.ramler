@@ -66,13 +66,16 @@ public class EnumGenerator {
     }
 
     /**
-     * Fills an enum class for the given type with values and methods.
+     * Selects the enum class for the given type.
      * @param type enumeration type declaration
      */
     public void generateEnumClassStart(StringTypeDeclaration type) {
         klass = pkg._getClass(type.name());
     }
 
+    /**
+     * Fills the current enum class with values and methods.
+     */
     public void generateEnumClassEnd() {
         JFieldVar valueField = klass.field(JMod.PRIVATE | JMod.FINAL, String.class, VALUE);
 
@@ -89,16 +92,20 @@ public class EnumGenerator {
      */
     public JDefinedClass createEnumClass(StringTypeDeclaration type) {
         try {
-            JDefinedClass klass = pkg._enum(type.name());
-            context.addType(type.name(), klass);
-            context.annotateAsGenerated(klass);
-            return klass;
+            JDefinedClass enumClass = pkg._enum(type.name());
+            context.addType(type.name(), enumClass);
+            context.annotateAsGenerated(enumClass);
+            return enumClass;
         }
         catch (JClassAlreadyExistsException exc) {
             throw Exceptions.unchecked(exc);
         }
     }
 
+    /**
+     * Generates an enum constant for the given value.
+     * @param enumValue enum value
+     */
     public void generateEnumConstant(EnumValue enumValue) {
         JEnumConstant constant = klass.enumConstant(Names.buildConstantName(enumValue.getName()))
             .arg(JExpr.lit(enumValue.getName()));
