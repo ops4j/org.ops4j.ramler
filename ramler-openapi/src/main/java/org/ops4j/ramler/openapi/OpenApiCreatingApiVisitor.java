@@ -151,6 +151,22 @@ public class OpenApiCreatingApiVisitor implements ApiVisitor {
     }
 
     @Override
+    public void visitNumberType(NumberTypeDeclaration type) {
+        SchemaImpl schema = new SchemaImpl();
+        schema.setTitle(type.name());
+        if (type instanceof IntegerTypeDeclaration) {
+            schema.setType(SchemaType.INTEGER);
+
+        } else {
+            schema.setType(SchemaType.NUMBER);
+        }
+        if (type.description() != null) {
+            schema.setDescription(type.description().value());
+        }
+        components.addSchema(type.name(), schema);
+    }
+
+    @Override
     public void visitEnumTypeStart(StringTypeDeclaration type) {
         SchemaImpl schema = new SchemaImpl();
         schema.setTitle(type.name());
