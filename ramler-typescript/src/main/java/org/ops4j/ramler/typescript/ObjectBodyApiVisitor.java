@@ -19,6 +19,7 @@ package org.ops4j.ramler.typescript;
 
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
+import static org.ops4j.ramler.common.model.CommonConstants.OBJECT;
 import static org.ops4j.ramler.java.JavaConstants.TYPE_ARGS;
 import static org.ops4j.ramler.java.JavaConstants.TYPE_VARS;
 
@@ -28,7 +29,6 @@ import java.util.Map;
 
 import org.ops4j.ramler.common.model.Annotations;
 import org.ops4j.ramler.common.model.ApiVisitor;
-import org.ops4j.ramler.java.JavaConstants;
 import org.ops4j.ramler.java.Names;
 import org.raml.v2.api.model.v10.datamodel.ArrayTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;
@@ -60,7 +60,7 @@ public class ObjectBodyApiVisitor implements ApiVisitor {
     @Override
     public void visitObjectTypeStart(ObjectTypeDeclaration type) {
         List<String> baseClasses = type.parentTypes().stream()
-            .filter(t -> !t.name().equals(JavaConstants.OBJECT)).map(t -> this.typeWithArgs(type, t))
+            .filter(t -> !t.name().equals(OBJECT)).map(t -> this.typeWithArgs(type, t))
             .collect(toList());
 
         List<String> typeVars = Annotations.getStringAnnotations(type, TYPE_VARS);

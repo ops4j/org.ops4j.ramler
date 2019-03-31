@@ -33,6 +33,7 @@ import javax.annotation.Generated;
 
 import org.ops4j.ramler.common.helper.Version;
 import org.ops4j.ramler.common.model.ApiModel;
+import org.ops4j.ramler.common.model.CommonConstants;
 import org.raml.v2.api.model.v10.datamodel.AnyTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.ArrayTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.BooleanTypeDeclaration;
@@ -245,7 +246,7 @@ public class JavaGeneratorContext {
      */
     public JType getJavaType(TypeDeclaration decl) {
         if (decl instanceof ObjectTypeDeclaration) {
-            if (decl.type().equals(JavaConstants.OBJECT)) {
+            if (decl.type().equals(CommonConstants.OBJECT)) {
                 return codeModel.ref(Map.class).narrow(String.class, Object.class);
             }
             return getModelPackage()._getClass(decl.type());
@@ -263,16 +264,16 @@ public class JavaGeneratorContext {
      * @return corresponding Java type
      */
     public JType getJavaType(String type) {
-        if (type.equals(JavaConstants.OBJECT)) {
+        if (type.equals(CommonConstants.OBJECT)) {
             return codeModel.ref(Map.class).narrow(String.class, Object.class);
         }
-        if (type.equals("string")) {
+        if (type.equals(CommonConstants.STRING)) {
             return codeModel.ref(String.class);
         }
-        if (type.equals("integer")) {
+        if (type.equals(CommonConstants.INTEGER)) {
             return codeModel.ref(Integer.class);
         }
-        if (type.equals("boolean")) {
+        if (type.equals(CommonConstants.BOOLEAN)) {
             return codeModel.ref(Boolean.class);
         }
         if (type.endsWith("[]")) {

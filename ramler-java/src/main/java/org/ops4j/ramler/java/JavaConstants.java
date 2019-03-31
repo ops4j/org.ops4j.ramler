@@ -80,21 +80,6 @@ public class JavaConstants {
     public static final String DISCRIMINATOR = "DISCRIMINATOR";
 
 
-    /**
-     * Name of built-in RAML object type.
-     */
-    public static final String OBJECT = "object";
-
-    /**
-     * Name of built-in RAML integer type.
-     */
-    public static final String INTEGER = "integer";
-
-    /**
-     * Name of built-in RAML integer type.
-     */
-    public static final String STRING = "string";
-
     private JavaConstants() {
         throw new UnsupportedOperationException();
     }

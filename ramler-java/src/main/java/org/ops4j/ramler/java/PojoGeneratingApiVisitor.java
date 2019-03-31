@@ -17,8 +17,8 @@
  */
 package org.ops4j.ramler.java;
 
+import static org.ops4j.ramler.common.model.CommonConstants.OBJECT;
 import static org.ops4j.ramler.java.JavaConstants.DISCRIMINATOR;
-import static org.ops4j.ramler.java.JavaConstants.OBJECT;
 import static org.ops4j.ramler.java.JavaConstants.TYPE_ARGS;
 import static org.ops4j.ramler.java.JavaConstants.TYPE_VAR;
 import static org.ops4j.ramler.java.JavaConstants.TYPE_VARS;

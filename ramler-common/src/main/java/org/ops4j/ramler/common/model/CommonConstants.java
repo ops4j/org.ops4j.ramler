@@ -39,9 +39,14 @@ public class CommonConstants {
     public static final String INTEGER = "integer";
 
     /**
-     * Name of built-in RAML integer type.
+     * Name of built-in RAML string type.
      */
     public static final String STRING = "string";
+
+    /**
+     * Name of built-in RAML boolean type.
+     */
+    public static final String BOOLEAN = "boolean";
 
     private CommonConstants() {
         throw new UnsupportedOperationException();
