@@ -18,25 +18,57 @@
 package org.ops4j.ramler.java;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 
-import org.junit.jupiter.api.Test;
-import org.ops4j.ramler.java.Names;
+import java.util.stream.Stream;
+
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 
 public class NamesTest {
 
-    @Test
-    public void shouldBuildConstantName() {
-        assertThat(Names.buildConstantName("oneTwoThree")).isEqualTo("ONE_TWO_THREE");
+    @ParameterizedTest
+    @MethodSource
+    public void shouldBuildConstantName(String ramlName, String javaName) {
+        assertThat(Names.buildConstantName(ramlName)).isEqualTo(javaName);
     }
 
-    @Test
-    public void shouldBuildVariableNameForJavaKeyword() {
-        assertThat(Names.buildVariableName("static")).isEqualTo("$static");
+    static Stream<Arguments> shouldBuildConstantName() {
+        return Stream.of(
+            arguments("oneTwoThree", "ONE_TWO_THREE"),
+            arguments("one-two-three", "ONE_TWO_THREE"),
+            arguments("one two three", "ONE_TWO_THREE"),
+            arguments("1twoThree", "_1TWO_THREE"));
     }
 
-    @Test
-    public void shouldBuildVariableNameForDottedProperty() {
-        assertThat(Names.buildVariableName("customer.name")).isEqualTo("customerName");
+    @ParameterizedTest
+    @MethodSource
+    public void shouldBuildVariableNameForJavaKeyword(String ramlName, String javaName) {
+        assertThat(Names.buildVariableName(ramlName)).isEqualTo(javaName);
+    }
+
+    static Stream<Arguments> shouldBuildVariableNameForJavaKeyword() {
+        return Stream.of(
+            arguments("static", "$static"),
+            arguments("class", "$class"),
+            arguments("int", "$int"),
+            arguments("Static", "$static"));
+    }
+
+
+    @ParameterizedTest
+    @MethodSource
+    public void shouldBuildVariableNameForDottedProperty(String ramlName, String javaName) {
+        assertThat(Names.buildVariableName(ramlName)).isEqualTo(javaName);
+    }
+
+    static Stream<Arguments> shouldBuildVariableNameForDottedProperty() {
+        return Stream.of(
+            arguments("customer.name", "customerName"),
+            arguments("one.two.three", "oneTwoThree"),
+            arguments(".net", "net"),
+            arguments("double..dot", "doubleDot"));
     }
 }

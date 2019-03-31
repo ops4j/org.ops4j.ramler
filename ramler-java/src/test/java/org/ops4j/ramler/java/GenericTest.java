@@ -19,7 +19,7 @@ package org.ops4j.ramler.java;
 
 import org.junit.jupiter.api.Test;
 
-public class ParameterizedTest extends AbstractGeneratorTest {
+public class GenericTest extends AbstractGeneratorTest {
 
     @Override
     public String getBasename() {

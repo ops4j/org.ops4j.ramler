@@ -134,7 +134,8 @@ public class Names {
      * @return upper case string with underscores as word separators
      */
     public static String buildConstantName(String source) {
-        Matcher m = CAMEL_CASE_PATTERN.matcher(source);
+        String friendlyName = buildJavaFriendlyName(source);
+        Matcher m = CAMEL_CASE_PATTERN.matcher(friendlyName);
 
         StringBuffer sb = new StringBuffer();
         while (m.find()) {
@@ -142,13 +143,13 @@ public class Names {
         }
         m.appendTail(sb);
 
-        String friendlyName = sb.toString().toUpperCase();
+        String constantName = sb.toString().toUpperCase();
 
-        if (isDigits(left(friendlyName, 1))) {
-            friendlyName = "_" + friendlyName;
+        if (isDigits(left(constantName, 1))) {
+            constantName = "_" + constantName;
         }
 
-        return friendlyName;
+        return constantName;
     }
 
     /**
@@ -174,50 +175,6 @@ public class Names {
         }
 
         return friendlyName;
-    }
-
-
-    /**
-     * Get enum field name from value
-     *
-     * @param value
-     *            string to be checked
-     * @return a {@link java.lang.String} object.
-     */
-    public static boolean canBeEnumConstantName(final String value) {
-        boolean res = !value.isEmpty();
-        for (int i = 0; i < value.length(); i++) {
-            char c = value.charAt(i);
-            if (i == 0) {
-                res &= Character.isJavaIdentifierStart(c);
-            }
-            else {
-                res &= Character.isJavaIdentifierPart(c);
-            }
-            if (!res) {
-                break;
-            }
-        }
-        return res;
-    }
-
-    /**
-     * Checks if the given strings can be used as enum values.
-     *
-     * @param values
-     *            list of strings to be checked
-     * @return true if this list of strings can be used as names for enum
-     */
-    public static boolean isValidEnumValues(java.util.List<String> values) {
-        if (values.isEmpty()) {
-            return false;
-        }
-        for (String v : values) {
-            if (!canBeEnumConstantName(v)) {
-                return false;
-            }
-        }
-        return true;
     }
 
     /**
