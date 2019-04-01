@@ -1,29 +1,34 @@
 #%RAML 1.0
 title: API with resources
 mediaType: application/json
-uses:
-  r: ../ramler.raml 
 types:
   User:
     properties:
       id:
         type: integer
+        description: User identity
       firstname:
         type: string
+        description: First name
       lastname:
         type: string
+        description: Last name
 /user:
   get:
     displayName: find all users
+    description: Finds all users and returns full list.
     queryParameters:
       q :
         type: string
         default: ""
+        description: Query pattern
       sort:
         type: string
         required: false
+        description: Is the result sorted?
     responses:
       200:
+        description: List of users
         body:
           type: User[]
   post:
@@ -48,3 +53,13 @@ types:
       displayName: delete user by id
       responses:
         204:
+    patch:
+      displayName: patch user by id
+      body:
+        application/csv:
+          type: string
+      responses:
+        200:  
+          body:
+            type: User
+        

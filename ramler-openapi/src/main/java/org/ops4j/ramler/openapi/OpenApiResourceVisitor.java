@@ -1,7 +1,5 @@
 package org.ops4j.ramler.openapi;
 
-import javax.ws.rs.core.MediaType;
-
 import org.eclipse.microprofile.openapi.models.OpenAPI;
 import org.eclipse.microprofile.openapi.models.Operation;
 import org.eclipse.microprofile.openapi.models.PathItem;
@@ -102,6 +100,9 @@ public class OpenApiResourceVisitor implements ApiVisitor {
         for (TypeDeclaration pathParam : apiModel.findAllUriParameters(method)) {
             Parameter parameter = new ParameterImpl();
             parameter.setName(pathParam.name());
+            if (pathParam.description() != null) {
+                parameter.setDescription(pathParam.description().value());
+            }
             parameter.setIn(In.PATH);
             parameter.setRequired(true);
             parameter.setSchema(schemaBuilder.toSchema(pathParam));
@@ -111,6 +112,9 @@ public class OpenApiResourceVisitor implements ApiVisitor {
         for (TypeDeclaration queryParam : method.queryParameters()) {
             Parameter parameter = new ParameterImpl();
             parameter.setName(queryParam.name());
+            if (queryParam.description() != null) {
+                parameter.setDescription(queryParam.description().value());
+            }
             parameter.setIn(In.QUERY);
             parameter.setRequired(queryParam.required());
             parameter.setSchema(schemaBuilder.toSchema(queryParam));
@@ -119,19 +123,14 @@ public class OpenApiResourceVisitor implements ApiVisitor {
 
         if (!method.body().isEmpty()) {
             TypeDeclaration body = method.body().get(0);
-            if (body.name().equals(MediaType.MULTIPART_FORM_DATA)) {
-                // addFormParameters(codeMethod, body);
-            }
-            else {
-                RequestBody requestBody = new RequestBodyImpl();
-                requestBody.setRequired(body.required());
-                Content content = new ContentImpl();
-                MediaTypeImpl mediaType = new MediaTypeImpl();
-                mediaType.setSchema(schemaBuilder.toSchema(body));
-                content.addMediaType(MediaType.APPLICATION_JSON, mediaType);
-                requestBody.setContent(content);
-                operation.setRequestBody(requestBody);
-            }
+            RequestBody requestBody = new RequestBodyImpl();
+            requestBody.setRequired(body.required());
+            Content content = new ContentImpl();
+            MediaTypeImpl mediaType = new MediaTypeImpl();
+            mediaType.setSchema(schemaBuilder.toSchema(body));
+            content.addMediaType(body.name(), mediaType);
+            requestBody.setContent(content);
+            operation.setRequestBody(requestBody);
         }
 
         APIResponses responses = new APIResponsesImpl();
@@ -185,8 +184,9 @@ public class OpenApiResourceVisitor implements ApiVisitor {
         if (!response.body().isEmpty()) {
             Content content = new ContentImpl();
             MediaTypeImpl mediaType = new MediaTypeImpl();
-            mediaType.setSchema(schemaBuilder.toSchema(response.body().get(0)));
-            content.addMediaType(MediaType.APPLICATION_JSON, mediaType);
+            TypeDeclaration body = response.body().get(0);
+            mediaType.setSchema(schemaBuilder.toSchema(body));
+            content.addMediaType(body.name(), mediaType);
             apiResponse.setContent(content);
         }
         return apiResponse;
