@@ -62,6 +62,7 @@ import org.raml.v2.api.model.v10.datamodel.TypeInstance;
 import org.raml.v2.api.model.v10.datamodel.TypeInstanceProperty;
 import org.raml.v2.api.model.v10.datamodel.UnionTypeDeclaration;
 import org.raml.v2.api.model.v10.declarations.AnnotationRef;
+import org.raml.v2.api.model.v10.methods.Method;
 import org.raml.v2.api.model.v10.resources.Resource;
 
 /**
@@ -423,5 +424,19 @@ public class ApiModel {
      */
     public boolean isInternal(ObjectTypeDeclaration type) {
         return Annotations.annotationsByName(type, "internal").findFirst().isPresent();
+    }
+
+    /**
+     * Find all URI parameters of the given method, including those of any parent resource.
+     * @param method HTTP method
+     * @return list of URI parameters
+     */
+    public List<TypeDeclaration> findAllUriParameters(Method method) {
+        List<TypeDeclaration> pathParams = new ArrayList<>();
+        if (method.resource().parentResource() != null) {
+            pathParams.addAll(method.resource().parentResource().uriParameters());
+        }
+        pathParams.addAll(method.resource().uriParameters());
+        return pathParams;
     }
 }

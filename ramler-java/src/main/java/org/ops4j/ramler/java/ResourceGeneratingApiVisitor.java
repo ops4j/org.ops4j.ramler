@@ -23,7 +23,6 @@ import static org.ops4j.ramler.java.JavaConstants.TYPE_ARGS;
 import static org.ops4j.ramler.java.JavaConstants.VALUE;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -314,12 +313,7 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
     }
 
     private void addPathParameters(Method method, JMethod codeMethod) {
-        List<TypeDeclaration> pathParams = new ArrayList<>();
-        if (method.resource().parentResource() != null) {
-            pathParams.addAll(method.resource().parentResource().uriParameters());
-        }
-        pathParams.addAll(method.resource().uriParameters());
-        for (TypeDeclaration pathParam : pathParams) {
+        for (TypeDeclaration pathParam : context.getApiModel().findAllUriParameters(method)) {
             JVar param = codeMethod.param(context.getJavaType(pathParam),
                 Names.buildVariableName(pathParam.name()));
             param.annotate(PathParam.class).param(VALUE, pathParam.name());

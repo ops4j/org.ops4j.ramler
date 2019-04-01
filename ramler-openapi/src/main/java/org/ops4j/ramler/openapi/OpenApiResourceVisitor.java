@@ -1,8 +1,5 @@
 package org.ops4j.ramler.openapi;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.ws.rs.core.MediaType;
 
 import org.eclipse.microprofile.openapi.models.OpenAPI;
@@ -15,6 +12,7 @@ import org.eclipse.microprofile.openapi.models.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.models.responses.APIResponse;
 import org.eclipse.microprofile.openapi.models.responses.APIResponses;
 import org.ops4j.ramler.common.exc.GeneratorException;
+import org.ops4j.ramler.common.model.ApiModel;
 import org.ops4j.ramler.common.model.ApiVisitor;
 import org.raml.v2.api.model.v10.bodies.Response;
 import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
@@ -30,6 +28,12 @@ import io.smallrye.openapi.api.models.parameters.RequestBodyImpl;
 import io.smallrye.openapi.api.models.responses.APIResponseImpl;
 import io.smallrye.openapi.api.models.responses.APIResponsesImpl;
 
+/**
+ * Visits a RAML API model and generates OpenAPI path items for resource declarations.
+ *
+ * @author Harald Wellmann
+ *
+ */
 public class OpenApiResourceVisitor implements ApiVisitor {
 
     private OpenAPI openApi;
@@ -37,8 +41,9 @@ public class OpenApiResourceVisitor implements ApiVisitor {
     private Resource outerResource;
     private Resource innerResource;
     private PathItem pathItem;
-    private Operation operation;
     private SchemaBuilder schemaBuilder;
+
+    private ApiModel apiModel;
 
 
 
@@ -49,6 +54,7 @@ public class OpenApiResourceVisitor implements ApiVisitor {
      *            generator context
      */
     public OpenApiResourceVisitor(OpenApiGeneratorContext context) {
+        this.apiModel = context.getApiModel();
         this.openApi = context.getOpenApi();
         this.schemaBuilder = context.getSchemaBuilder();
     }
@@ -85,48 +91,14 @@ public class OpenApiResourceVisitor implements ApiVisitor {
 
     @Override
     public void visitMethodStart(Method method) {
-        operation = new OperationImpl();
-        switch (method.method()) {
-        case "delete":
-            pathItem.setDELETE(operation);
-            break;
-        case "get":
-            pathItem.setGET(operation);
-            break;
-        case "head":
-            pathItem.setHEAD(operation);
-            break;
-        case "options":
-            pathItem.setOPTIONS(operation);
-            break;
-        case "patch":
-            pathItem.setPATCH(operation);
-            break;
-        case "put":
-            pathItem.setPUT(operation);
-            break;
-        case "post":
-            pathItem.setPOST(operation);
-            break;
-        case "trace":
-            pathItem.setTRACE(operation);
-            break;
-        default:
-            throw new IllegalArgumentException("unknown HTTP method: " + method.method());
-        }
+        Operation operation = buildOperation(method);
 
         pathItem.setSummary(method.displayName().value());
         if (method.description() != null) {
             pathItem.setDescription(method.description().value());
         }
 
-        List<TypeDeclaration> pathParams = new ArrayList<>();
-        if (method.resource().parentResource() != null) {
-            pathParams.addAll(method.resource().parentResource().uriParameters());
-        }
-        pathParams.addAll(method.resource().uriParameters());
-
-        for (TypeDeclaration pathParam : pathParams) {
+        for (TypeDeclaration pathParam : apiModel.findAllUriParameters(method)) {
             Parameter parameter = new ParameterImpl();
             parameter.setName(pathParam.name());
             parameter.setIn(In.PATH);
@@ -166,6 +138,39 @@ public class OpenApiResourceVisitor implements ApiVisitor {
         for (Response response : method.responses()) {
             responses.addAPIResponse(response.code().value(), convertResponse(response));
         }
+    }
+
+    private Operation buildOperation(Method method) {
+        Operation operation = new OperationImpl();
+        switch (method.method()) {
+        case "delete":
+            pathItem.setDELETE(operation);
+            break;
+        case "get":
+            pathItem.setGET(operation);
+            break;
+        case "head":
+            pathItem.setHEAD(operation);
+            break;
+        case "options":
+            pathItem.setOPTIONS(operation);
+            break;
+        case "patch":
+            pathItem.setPATCH(operation);
+            break;
+        case "put":
+            pathItem.setPUT(operation);
+            break;
+        case "post":
+            pathItem.setPOST(operation);
+            break;
+        case "trace":
+            pathItem.setTRACE(operation);
+            break;
+        default:
+            throw new IllegalArgumentException("unknown HTTP method: " + method.method());
+        }
+        return operation;
     }
 
     private APIResponse convertResponse(Response response) {
