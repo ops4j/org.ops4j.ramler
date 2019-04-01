@@ -26,7 +26,8 @@ public class OpenApiGenerator {
     /**
      * Creates a generator with the given configuration.
      *
-     * @param config OpenApi generator configuration
+     * @param config
+     *            OpenApi generator configuration
      */
     public OpenApiGenerator(OpenApiConfiguration config) {
         this.config = config;
@@ -36,7 +37,8 @@ public class OpenApiGenerator {
     /**
      * Generates OpenApi spec.
      *
-     * @throws IOException when output cannot be written
+     * @throws IOException
+     *             when output cannot be written
      */
     public void generate() throws IOException {
         ApiModel apiModel = new ApiModelBuilder().buildApiModel(config.getSourceFile());

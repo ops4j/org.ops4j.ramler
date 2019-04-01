@@ -43,7 +43,8 @@ public class FileHelper {
     /**
      * Checks is the given directory exists and creates it otherwise.
      *
-     * @param dir required directory
+     * @param dir
+     *            required directory
      */
     public static void createDirectoryIfNeeded(File dir) {
         boolean success;

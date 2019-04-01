@@ -37,6 +37,7 @@ public class OpenApiConfiguration {
 
     /**
      * Gets the RAML source file name.
+     * 
      * @return source file name
      */
     public String getSourceFile() {
@@ -45,7 +46,9 @@ public class OpenApiConfiguration {
 
     /**
      * Sets the RAML source file name.
-     * @param sourceFile source file name
+     * 
+     * @param sourceFile
+     *            source file name
      */
     public void setSourceFile(String sourceFile) {
         this.sourceFile = sourceFile;
@@ -53,6 +56,7 @@ public class OpenApiConfiguration {
 
     /**
      * Gets the target directory for the generated OpenAPI files.
+     * 
      * @return target directory
      */
     public File getTargetDir() {
@@ -61,6 +65,7 @@ public class OpenApiConfiguration {
 
     /**
      * Sets the target directory.
+     * 
      * @param targetDir
      *            target directory
      */
@@ -80,7 +85,8 @@ public class OpenApiConfiguration {
     /**
      * Sets the flag for generating JSON output
      *
-     * @param generateJson true if JSON will be created
+     * @param generateJson
+     *            true if JSON will be created
      */
     public void setGenerateJson(boolean generateJson) {
         this.generateJson = generateJson;
@@ -98,7 +104,8 @@ public class OpenApiConfiguration {
     /**
      * Sets the flag for generating YAML output
      *
-     * @param generateJson true if YAML will be created
+     * @param generateJson
+     *            true if YAML will be created
      */
     public void setGenerateYaml(boolean generateYaml) {
         this.generateYaml = generateYaml;

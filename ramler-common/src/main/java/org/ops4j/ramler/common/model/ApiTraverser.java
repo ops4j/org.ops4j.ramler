@@ -61,7 +61,8 @@ public class ApiTraverser {
     /**
      * Creates a traverser for the given API model.
      *
-     * @param apiModel extended model of API to traverse
+     * @param apiModel
+     *            extended model of API to traverse
      */
     public ApiTraverser(ApiModel apiModel) {
         this.apiModel = apiModel;

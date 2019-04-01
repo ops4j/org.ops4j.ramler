@@ -37,9 +37,12 @@ public class ApiModelBuilder {
 
     /**
      * Builds an API model for the given RAML source file.
-     * @param sourceFileName source file name
+     *
+     * @param sourceFileName
+     *            source file name
      * @return API model
-     * @throws ParserException on syntax errors
+     * @throws ParserException
+     *             on syntax errors
      */
     public ApiModel buildApiModel(String sourceFileName) {
         RamlModelResult ramlModelResult = new RamlModelBuilder().buildApi(sourceFileName);

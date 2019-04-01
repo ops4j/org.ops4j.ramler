@@ -99,7 +99,8 @@ public class OpenApiCreatingApiVisitor implements ApiVisitor {
         TypeDeclaration parentType = type.parentTypes().get(0);
         if (parentType.name().equals(CommonConstants.OBJECT)) {
             objectSchema.setType(SchemaType.OBJECT);
-        } else {
+        }
+        else {
             Schema base = new SchemaImpl();
             base.setRef(parentType.name());
             objectSchema.addAllOf(base);
@@ -172,7 +173,8 @@ public class OpenApiCreatingApiVisitor implements ApiVisitor {
         if (type instanceof IntegerTypeDeclaration) {
             schema.setType(SchemaType.INTEGER);
 
-        } else {
+        }
+        else {
             schema.setType(SchemaType.NUMBER);
         }
         if (type.description() != null) {
@@ -191,7 +193,7 @@ public class OpenApiCreatingApiVisitor implements ApiVisitor {
         }
 
         List<Object> enumValues = context.getApiModel().getEnumValues(type).stream()
-                .map(EnumValue::getName).collect(toList());
+            .map(EnumValue::getName).collect(toList());
         schema.setEnumeration(enumValues);
         components.addSchema(type.name(), schema);
     }

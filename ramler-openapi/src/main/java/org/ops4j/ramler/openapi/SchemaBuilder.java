@@ -21,6 +21,7 @@ import io.smallrye.openapi.api.models.media.SchemaImpl;
 
 /**
  * Builds OpenAPI schemas from RAML type declarations.
+ *
  * @author hwellmann
  *
  */
@@ -31,7 +32,9 @@ public class SchemaBuilder {
 
     /**
      * Creates a schema builder with the given context.
-     * @param context OpenAPI generator context
+     *
+     * @param context
+     *            OpenAPI generator context
      */
     public SchemaBuilder(OpenApiGeneratorContext context) {
         this.context = context;
@@ -39,7 +42,9 @@ public class SchemaBuilder {
 
     /**
      * Build an OpenAPI schema for the given RAML type declaration.
-     * @param type type declaration
+     *
+     * @param type
+     *            type declaration
      * @return OpenAPI schema
      */
     public Schema toSchema(TypeDeclaration type) {
@@ -91,6 +96,7 @@ public class SchemaBuilder {
 
     /**
      * Indicates whether a synthetic "Any" schema should be generated.
+     *
      * @return true of "Any" is used
      */
     public boolean isGenerateAny() {
@@ -126,15 +132,15 @@ public class SchemaBuilder {
             return;
         }
         switch (property.format()) {
-        case "int64":
-        case "long":
-            schema.setFormat("int64");
-            break;
-        case "int32":
-            schema.setFormat("int32");
-            break;
-        default:
-            // ignore
+            case "int64":
+            case "long":
+                schema.setFormat("int64");
+                break;
+            case "int32":
+                schema.setFormat("int32");
+                break;
+            default:
+                // ignore
         }
     }
 
@@ -144,14 +150,14 @@ public class SchemaBuilder {
             return;
         }
         switch (property.format()) {
-        case "float":
-            schema.setFormat("float");
-            break;
-        case "double":
-            schema.setFormat("double");
-            break;
-        default:
-            // ignore
+            case "float":
+                schema.setFormat("float");
+                break;
+            case "double":
+                schema.setFormat("double");
+                break;
+            default:
+                // ignore
         }
     }
 
@@ -173,7 +179,8 @@ public class SchemaBuilder {
     private void addObjectProperty(Schema schema, TypeDeclaration property) {
         if (property.type().equals(CommonConstants.OBJECT)) {
             schema.setType(SchemaType.OBJECT);
-        } else {
+        }
+        else {
             schema.setRef(property.type());
         }
     }

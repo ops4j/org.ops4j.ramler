@@ -74,7 +74,6 @@ public enum Metatype {
 
     private static Map<String, Metatype> literalToTypeMap;
 
-
     private String literal;
 
     static {
@@ -88,7 +87,6 @@ public enum Metatype {
         this.literal = literal;
     }
 
-
     /**
      * @return the literal
      */
@@ -98,7 +96,9 @@ public enum Metatype {
 
     /**
      * Checks if the given type is a built-in type.
-     * @param typeName type name
+     *
+     * @param typeName
+     *            type name
      * @return true if type is built-in
      */
     public static boolean isBuiltIn(String typeName) {

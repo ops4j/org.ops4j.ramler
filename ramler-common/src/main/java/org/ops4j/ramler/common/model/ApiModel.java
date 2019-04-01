@@ -402,6 +402,7 @@ public class ApiModel {
         }
         return emptyList();
     }
+
     private EnumValue toEnumValue(TypeInstance ti) {
         Object name = getPropertyValue(ti, "name");
         Object description = getPropertyValue(ti, "description");
@@ -428,7 +429,9 @@ public class ApiModel {
 
     /**
      * Find all URI parameters of the given method, including those of any parent resource.
-     * @param method HTTP method
+     *
+     * @param method
+     *            HTTP method
      * @return list of URI parameters
      */
     public List<TypeDeclaration> findAllUriParameters(Method method) {

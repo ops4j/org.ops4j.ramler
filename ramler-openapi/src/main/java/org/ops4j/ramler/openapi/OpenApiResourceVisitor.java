@@ -43,8 +43,6 @@ public class OpenApiResourceVisitor implements ApiVisitor {
 
     private ApiModel apiModel;
 
-
-
     /**
      * Creates a visitor with the given generator context.
      *
@@ -143,32 +141,32 @@ public class OpenApiResourceVisitor implements ApiVisitor {
     private Operation buildOperation(Method method) {
         Operation operation = new OperationImpl();
         switch (method.method()) {
-        case "delete":
-            pathItem.setDELETE(operation);
-            break;
-        case "get":
-            pathItem.setGET(operation);
-            break;
-        case "head":
-            pathItem.setHEAD(operation);
-            break;
-        case "options":
-            pathItem.setOPTIONS(operation);
-            break;
-        case "patch":
-            pathItem.setPATCH(operation);
-            break;
-        case "put":
-            pathItem.setPUT(operation);
-            break;
-        case "post":
-            pathItem.setPOST(operation);
-            break;
-        case "trace":
-            pathItem.setTRACE(operation);
-            break;
-        default:
-            throw new IllegalArgumentException("unknown HTTP method: " + method.method());
+            case "delete":
+                pathItem.setDELETE(operation);
+                break;
+            case "get":
+                pathItem.setGET(operation);
+                break;
+            case "head":
+                pathItem.setHEAD(operation);
+                break;
+            case "options":
+                pathItem.setOPTIONS(operation);
+                break;
+            case "patch":
+                pathItem.setPATCH(operation);
+                break;
+            case "put":
+                pathItem.setPUT(operation);
+                break;
+            case "post":
+                pathItem.setPOST(operation);
+                break;
+            case "trace":
+                pathItem.setTRACE(operation);
+                break;
+            default:
+                throw new IllegalArgumentException("unknown HTTP method: " + method.method());
         }
         return operation;
     }
@@ -177,7 +175,8 @@ public class OpenApiResourceVisitor implements ApiVisitor {
         APIResponse apiResponse = new APIResponseImpl();
         if (response.description() == null) {
             apiResponse.setDescription("No description");
-        } else {
+        }
+        else {
             apiResponse.setDescription(response.description().value());
         }
 

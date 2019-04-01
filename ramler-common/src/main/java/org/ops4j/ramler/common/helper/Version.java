@@ -44,6 +44,7 @@ public class Version {
 
     /**
      * Returns the Maven artifact version of Ramler.
+     *
      * @return artifact version
      */
     public static synchronized String getRamlerVersion() {
