@@ -19,8 +19,11 @@ package org.ops4j.ramler.openapi;
 
 import java.io.File;
 
+import org.eclipse.microprofile.openapi.models.OpenAPI;
 import org.ops4j.ramler.common.helper.FileHelper;
 import org.ops4j.ramler.common.model.ApiModel;
+
+import io.smallrye.openapi.api.models.OpenAPIImpl;
 
 /**
  * Context information shared by all API visitors generating OpenApi code.
@@ -34,6 +37,10 @@ public class OpenApiGeneratorContext {
 
     private ApiModel apiModel;
 
+    private OpenAPI openApi;
+
+    private SchemaBuilder schemaBuilder;
+
     /**
      * Creates a generator context for the given configuration.
      *
@@ -42,6 +49,8 @@ public class OpenApiGeneratorContext {
      */
     public OpenApiGeneratorContext(OpenApiConfiguration config) {
         this.config = config;
+        this.openApi = new OpenAPIImpl();
+        this.schemaBuilder = new SchemaBuilder(this);
     }
 
     /**
@@ -80,6 +89,19 @@ public class OpenApiGeneratorContext {
      */
     public void setApiModel(ApiModel apiModel) {
         this.apiModel = apiModel;
+    }
+
+    /**
+     * Gets the openApi.
+     *
+     * @return the openApi
+     */
+    public OpenAPI getOpenApi() {
+        return openApi;
+    }
+
+    public SchemaBuilder getSchemaBuilder() {
+        return schemaBuilder;
     }
 
     /**

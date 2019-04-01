@@ -81,6 +81,7 @@ public abstract class AbstractOpenApiTest {
         JsonSchema schema = service.readSchema(getClass().getResourceAsStream("/schema/openapi-v3-schema.json"));
         List<Problem> problems = new ArrayList<>();
 
+        ProblemHandler handler = service.createProblemPrinter(log::error);
         Path path = config.getTargetDir().toPath().resolve(getBasename() + ".json");
         try (JsonReader reader = service.createReader(path, schema, ProblemHandler.collectingTo(problems))) {
             reader.readValue();
@@ -89,7 +90,7 @@ public abstract class AbstractOpenApiTest {
         if (problems.isEmpty()) {
             return;
         }
-        problems.forEach(p -> log.error(p.toString()));
+        handler.handleProblems(problems);
         fail("There are JSON schema validation problems.");
     }
 

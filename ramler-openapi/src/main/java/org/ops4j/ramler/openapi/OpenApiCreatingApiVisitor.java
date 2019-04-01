@@ -15,22 +15,14 @@ import org.ops4j.ramler.common.model.ApiVisitor;
 import org.ops4j.ramler.common.model.CommonConstants;
 import org.ops4j.ramler.common.model.EnumValue;
 import org.raml.v2.api.model.v10.api.Api;
-import org.raml.v2.api.model.v10.datamodel.AnyTypeDeclaration;
-import org.raml.v2.api.model.v10.datamodel.ArrayTypeDeclaration;
-import org.raml.v2.api.model.v10.datamodel.BooleanTypeDeclaration;
-import org.raml.v2.api.model.v10.datamodel.DateTimeOnlyTypeDeclaration;
-import org.raml.v2.api.model.v10.datamodel.DateTimeTypeDeclaration;
-import org.raml.v2.api.model.v10.datamodel.DateTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.IntegerTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.NumberTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.StringTypeDeclaration;
-import org.raml.v2.api.model.v10.datamodel.TimeOnlyTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.UnionTypeDeclaration;
 
 import io.smallrye.openapi.api.models.ComponentsImpl;
-import io.smallrye.openapi.api.models.OpenAPIImpl;
 import io.smallrye.openapi.api.models.PathsImpl;
 import io.smallrye.openapi.api.models.info.InfoImpl;
 import io.smallrye.openapi.api.models.media.DiscriminatorImpl;
@@ -52,7 +44,7 @@ public class OpenApiCreatingApiVisitor implements ApiVisitor {
 
     private Schema objectSchema;
 
-    private boolean generateAny;
+    private SchemaBuilder schemaBuilder;
 
     /**
      * Creates a visitor with the given generator context.
@@ -62,11 +54,8 @@ public class OpenApiCreatingApiVisitor implements ApiVisitor {
      */
     public OpenApiCreatingApiVisitor(OpenApiGeneratorContext context) {
         this.context = context;
-        this.openApi = new OpenAPIImpl();
-    }
-
-    public OpenAPI getOpenApi() {
-        return openApi;
+        this.openApi = context.getOpenApi();
+        this.schemaBuilder = context.getSchemaBuilder();
     }
 
     @Override
@@ -88,7 +77,7 @@ public class OpenApiCreatingApiVisitor implements ApiVisitor {
 
     @Override
     public void visitApiEnd(Api api) {
-        if (generateAny) {
+        if (schemaBuilder.isGenerateAny()) {
             Schema anySchema = new SchemaImpl();
             anySchema.setTitle("Any");
             anySchema.setDescription("Can be any simple or complex type");
@@ -137,7 +126,7 @@ public class OpenApiCreatingApiVisitor implements ApiVisitor {
         if (objectSchema == null) {
             return;
         }
-        Schema propertySchema = toSchema(property);
+        Schema propertySchema = schemaBuilder.toSchema(property);
         if (property.description() != null) {
             propertySchema.setDescription(property.description().value());
         }
@@ -207,140 +196,4 @@ public class OpenApiCreatingApiVisitor implements ApiVisitor {
         components.addSchema(type.name(), schema);
     }
 
-    private Schema toSchema(TypeDeclaration property) {
-        Schema propertySchema = new SchemaImpl();
-        if (isAdditionalProperties(property)) {
-            addAdditionalProperties(propertySchema, property);
-        }
-        else if (property instanceof ObjectTypeDeclaration) {
-            addObjectProperty(propertySchema, property);
-        }
-        else if (property instanceof ArrayTypeDeclaration) {
-            addArrayProperty(propertySchema, (ArrayTypeDeclaration) property);
-        }
-        else if (property instanceof BooleanTypeDeclaration) {
-            addBooleanProperty(propertySchema);
-        }
-        else if (property instanceof AnyTypeDeclaration) {
-            addAnyProperty(propertySchema);
-        }
-        else if (property instanceof IntegerTypeDeclaration) {
-            addIntegerProperty(propertySchema, (IntegerTypeDeclaration) property);
-        }
-        else if (property instanceof NumberTypeDeclaration) {
-            addNumberProperty(propertySchema, (NumberTypeDeclaration) property);
-        }
-        else if (property instanceof StringTypeDeclaration) {
-            addStringProperty(propertySchema);
-        }
-        else if (property instanceof DateTimeOnlyTypeDeclaration) {
-            addDateTimeOnlyProperty(propertySchema);
-        }
-        else if (property instanceof DateTimeTypeDeclaration) {
-            addDateTimeProperty(propertySchema);
-        }
-        else if (property instanceof DateTypeDeclaration) {
-            addDateProperty(propertySchema);
-        }
-        else if (property instanceof TimeOnlyTypeDeclaration) {
-            addTimeOnlyProperty(propertySchema);
-        }
-        else {
-            throw new UnsupportedOperationException("unsupported type " + property.type());
-        }
-        return propertySchema;
-    }
-
-    private void addDateTimeOnlyProperty(Schema propertySchema) {
-        propertySchema.setType(SchemaType.STRING);
-    }
-
-    private void addDateTimeProperty(Schema propertySchema) {
-        propertySchema.setType(SchemaType.STRING);
-        propertySchema.setFormat("date-time");
-    }
-
-    private void addDateProperty(Schema propertySchema) {
-        propertySchema.setType(SchemaType.STRING);
-        propertySchema.setFormat("date");
-    }
-
-    private void addTimeOnlyProperty(Schema propertySchema) {
-        propertySchema.setType(SchemaType.STRING);
-    }
-
-    private void addIntegerProperty(Schema propertySchema, IntegerTypeDeclaration property) {
-        propertySchema.setType(SchemaType.INTEGER);
-        if (property.format() == null) {
-            return;
-        }
-        switch (property.format()) {
-        case "int64":
-        case "long":
-            propertySchema.setFormat("int64");
-            break;
-        case "int32":
-            propertySchema.setFormat("int32");
-            break;
-        default:
-            // ignore
-        }
-    }
-
-    private void addNumberProperty(Schema propertySchema, NumberTypeDeclaration property) {
-        propertySchema.setType(SchemaType.NUMBER);
-        if (property.format() == null) {
-            return;
-        }
-        switch (property.format()) {
-        case "float":
-            propertySchema.setFormat("float");
-            break;
-        case "double":
-            propertySchema.setFormat("double");
-            break;
-        default:
-            // ignore
-        }
-    }
-
-    private void addStringProperty(Schema propertySchema) {
-        propertySchema.setType(SchemaType.STRING);
-    }
-
-    private boolean isAdditionalProperties(TypeDeclaration property) {
-        return property.name().startsWith("/");
-    }
-
-    private void addAdditionalProperties(Schema propertySchema, TypeDeclaration property) {
-        String pattern = property.name().substring(1, property.name().length() - 1);
-        Schema additionalPropertiesSchema = new SchemaImpl();
-        additionalPropertiesSchema.setPattern(pattern);
-        propertySchema.additionalPropertiesSchema(additionalPropertiesSchema);
-    }
-
-    private void addObjectProperty(Schema propertySchema, TypeDeclaration property) {
-        if (property.type().equals(CommonConstants.OBJECT)) {
-            propertySchema.setType(SchemaType.OBJECT);
-        } else {
-            propertySchema.setRef(property.type());
-        }
-    }
-
-    private void addArrayProperty(Schema propertySchema, ArrayTypeDeclaration property) {
-        propertySchema.setType(SchemaType.ARRAY);
-        String itemType = context.getApiModel().getItemType(property);
-        Schema itemSchema = new SchemaImpl();
-        itemSchema.setRef(itemType);
-        propertySchema.setItems(itemSchema);
-    }
-
-    private void addBooleanProperty(Schema propertySchema) {
-        propertySchema.setType(SchemaType.BOOLEAN);
-    }
-
-    private void addAnyProperty(Schema propertySchema) {
-        generateAny = true;
-        propertySchema.setRef("Any");
-    }
 }

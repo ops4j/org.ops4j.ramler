@@ -1,0 +1,50 @@
+#%RAML 1.0
+title: API with resources
+mediaType: application/json
+uses:
+  r: ../ramler.raml 
+types:
+  User:
+    properties:
+      id:
+        type: integer
+      firstname:
+        type: string
+      lastname:
+        type: string
+/user:
+  get:
+    displayName: find all users
+    queryParameters:
+      q :
+        type: string
+        default: ""
+      sort:
+        type: string
+        required: false
+    responses:
+      200:
+        body:
+          type: User[]
+  post:
+    displayName: create user
+    body:
+      type : User
+    responses:
+      200:
+        body:
+          type: User
+  /{id}:
+    uriParameters:
+      id:
+        type : integer
+    get:
+      displayName: find user by id
+      responses:
+        200:
+          body:
+            type: User
+    delete:
+      displayName: delete user by id
+      responses:
+        204:

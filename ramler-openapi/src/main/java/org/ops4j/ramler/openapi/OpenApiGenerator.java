@@ -43,11 +43,14 @@ public class OpenApiGenerator {
         context.setApiModel(apiModel);
         FileHelper.createDirectoryIfNeeded(config.getTargetDir());
 
-        OpenApiCreatingApiVisitor visitor = new OpenApiCreatingApiVisitor(context);
-        ApiTraverser traverser = new ApiTraverser(apiModel);
-        traverser.traverse(apiModel.getApi(), visitor);
+        OpenApiCreatingApiVisitor schemaVisitor = new OpenApiCreatingApiVisitor(context);
+        OpenApiResourceVisitor resourceVisitor = new OpenApiResourceVisitor(context);
 
-        OpenAPI openApi = visitor.getOpenApi();
+        ApiTraverser traverser = new ApiTraverser(apiModel);
+        traverser.traverse(apiModel.getApi(), schemaVisitor);
+        traverser.traverse(apiModel.getApi(), resourceVisitor);
+
+        OpenAPI openApi = context.getOpenApi();
 
         String fileName = new File(config.getSourceFile()).getName();
         String baseName = fileName;
