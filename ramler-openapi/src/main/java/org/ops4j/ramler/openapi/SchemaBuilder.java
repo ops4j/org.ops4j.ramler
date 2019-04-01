@@ -9,6 +9,7 @@ import org.raml.v2.api.model.v10.datamodel.BooleanTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.DateTimeOnlyTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.DateTimeTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.DateTypeDeclaration;
+import org.raml.v2.api.model.v10.datamodel.FileTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.IntegerTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.NumberTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;
@@ -79,6 +80,9 @@ public class SchemaBuilder {
         else if (type instanceof TimeOnlyTypeDeclaration) {
             addTimeOnlyProperty(schema);
         }
+        else if (type instanceof FileTypeDeclaration) {
+            addFileProperty(schema);
+        }
         else {
             throw new UnsupportedOperationException("unsupported type " + type.type());
         }
@@ -91,6 +95,11 @@ public class SchemaBuilder {
      */
     public boolean isGenerateAny() {
         return generateAny;
+    }
+
+    private void addFileProperty(Schema schema) {
+        schema.setType(SchemaType.STRING);
+        schema.setFormat("binary");
     }
 
     private void addDateTimeOnlyProperty(Schema schema) {
