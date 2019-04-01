@@ -92,6 +92,7 @@ public class OpenApiResourceVisitor implements ApiVisitor {
     @Override
     public void visitMethodStart(Method method) {
         Operation operation = buildOperation(method);
+        operation.addTag(outerResource.resourcePath().substring(1));
 
         pathItem.setSummary(method.displayName().value());
         if (method.description() != null) {
