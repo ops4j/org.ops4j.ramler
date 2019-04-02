@@ -37,12 +37,14 @@ public class ExampleHelper extends BasicHelper {
     private ExampleSpecJsonRenderer renderer = new ExampleSpecJsonRenderer();
 
     private void validateRuntimeParameters(Options options) {
-        if (!(options.getParameters().get(0) instanceof TypeDeclaration)) {
+        if (!(options.getParameters()
+            .get(0) instanceof TypeDeclaration)) {
             throw HelperValidator.newValidationException("Parameter 0 must be a TypeDeclaration",
                 ExampleHelper.class, options);
         }
 
-        if (!(options.getParameters().get(1) instanceof ExampleSpec)) {
+        if (!(options.getParameters()
+            .get(1) instanceof ExampleSpec)) {
             throw HelperValidator.newValidationException("Parameter 1 must be an ExampleSpec",
                 ExampleHelper.class, options);
         }
@@ -51,8 +53,10 @@ public class ExampleHelper extends BasicHelper {
     @Override
     public void execute(Options options) {
         validateRuntimeParameters(options);
-        TypeDeclaration type = (TypeDeclaration) options.getParameters().get(0);
-        ExampleSpec example = (ExampleSpec) options.getParameters().get(1);
+        TypeDeclaration type = (TypeDeclaration) options.getParameters()
+            .get(0);
+        ExampleSpec example = (ExampleSpec) options.getParameters()
+            .get(1);
         String json = renderer.prettyPrint(type, example);
         options.append(json);
 

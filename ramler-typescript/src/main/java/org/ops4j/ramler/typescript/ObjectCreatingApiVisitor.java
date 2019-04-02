@@ -45,7 +45,8 @@ public class ObjectCreatingApiVisitor implements ApiVisitor {
 
     @Override
     public void visitObjectTypeStart(ObjectTypeDeclaration type) {
-        if (context.getApiModel().isInternal(type)) {
+        if (context.getApiModel()
+            .isInternal(type)) {
             return;
         }
 
@@ -61,7 +62,8 @@ public class ObjectCreatingApiVisitor implements ApiVisitor {
 
     @Override
     public void visitObjectTypeEnd(ObjectTypeDeclaration type) {
-        if (context.getApiModel().isInternal(type)) {
+        if (context.getApiModel()
+            .isInternal(type)) {
             return;
         }
         context.writeToFile(output.toString(), type.name());

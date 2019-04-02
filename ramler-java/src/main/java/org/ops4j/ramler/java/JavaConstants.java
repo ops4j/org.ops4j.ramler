@@ -79,7 +79,6 @@ public class JavaConstants {
      */
     public static final String DISCRIMINATOR = "DISCRIMINATOR";
 
-
     private JavaConstants() {
         throw new UnsupportedOperationException();
     }

@@ -54,12 +54,18 @@ public class Annotations {
     }
 
     private static Stream<String> findStringAnnotationValues(AnnotationRef ref) {
-        TypeInstanceProperty tip = ref.structuredValue().properties().get(0);
-        return tip.values().stream().map(TypeInstance::value).map(String.class::cast);
+        TypeInstanceProperty tip = ref.structuredValue()
+            .properties()
+            .get(0);
+        return tip.values()
+            .stream()
+            .map(TypeInstance::value)
+            .map(String.class::cast);
     }
 
     private static String findStringAnnotationValue(AnnotationRef ref) {
-        return (String) ref.structuredValue().value();
+        return (String) ref.structuredValue()
+            .value();
     }
 
     /**
@@ -72,7 +78,11 @@ public class Annotations {
      * @return stream of matching annotations
      */
     public static Stream<AnnotationRef> annotationsByName(Annotable decl, String name) {
-        return decl.annotations().stream().filter(a -> a.annotation().name().equals(name));
+        return decl.annotations()
+            .stream()
+            .filter(a -> a.annotation()
+                .name()
+                .equals(name));
     }
 
     /**
@@ -84,7 +94,8 @@ public class Annotations {
      */
     public static String findCodeName(Annotable decl) {
         return annotationsByName(decl, "codeName").findFirst()
-            .map(Annotations::findStringAnnotationValue).orElse(null);
+            .map(Annotations::findStringAnnotationValue)
+            .orElse(null);
     }
 
     /**
@@ -96,7 +107,8 @@ public class Annotations {
      */
     public static String findTypeVar(Annotable decl) {
         return annotationsByName(decl, "typeVar").findFirst()
-            .map(Annotations::findStringAnnotationValue).orElse(null);
+            .map(Annotations::findStringAnnotationValue)
+            .orElse(null);
     }
 
     /**
@@ -107,6 +119,7 @@ public class Annotations {
      * @return true if annotation is present
      */
     public static boolean isIdentity(Annotable decl) {
-        return annotationsByName(decl, "id").findFirst().isPresent();
+        return annotationsByName(decl, "id").findFirst()
+            .isPresent();
     }
 }

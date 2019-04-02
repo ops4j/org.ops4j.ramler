@@ -22,8 +22,8 @@ import org.trimou.handlebars.HelperValidator;
 import org.trimou.handlebars.Options;
 
 /**
- * Trimou helper for rendering links to type names. The helper strips brackets
- * from array type names and generates links of the form {@code #itemType}.
+ * Trimou helper for rendering links to type names. The helper strips brackets from array type names
+ * and generates links of the form {@code #itemType}.
  *
  * @author Harald Wellmann
  *
@@ -33,7 +33,8 @@ public class TypeLinkHelper extends BasicHelper {
     public static final String NAME = "typeLink";
 
     private void validateRuntimeParameters(Options options) {
-        if (!(options.getParameters().get(0) instanceof String)) {
+        if (!(options.getParameters()
+            .get(0) instanceof String)) {
             throw HelperValidator.newValidationException("Parameter 0 must be a String",
                 TypeLinkHelper.class, options);
         }
@@ -42,7 +43,8 @@ public class TypeLinkHelper extends BasicHelper {
     @Override
     public void execute(Options options) {
         validateRuntimeParameters(options);
-        String typeName = (String) options.getParameters().get(0);
+        String typeName = (String) options.getParameters()
+            .get(0);
         typeName = typeName.replace("[]", "");
         options.append("#");
         options.append(typeName);

@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 package org.ops4j.ramler.html;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
@@ -59,7 +60,9 @@ public class HtmlGeneratorTest {
     @Test
     public void shouldWalkTree() throws IOException {
         Path root = Paths.get("src/main/resources");
-        assertThat(Files.walk(root).map(p -> root.relativize(p).toString()))
-            .contains("fonts", "fonts/slate.eot", "trimou", "trimou/api.trimou.html");
+        assertThat(Files.walk(root)
+            .map(p -> root.relativize(p)
+                .toString()))
+                    .contains("fonts", "fonts/slate.eot", "trimou", "trimou/api.trimou.html");
     }
 }

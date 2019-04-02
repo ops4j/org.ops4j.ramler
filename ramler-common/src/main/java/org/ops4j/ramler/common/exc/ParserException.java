@@ -12,7 +12,9 @@ public class ParserException extends RamlerException {
 
     /**
      * Creates an exception with the given message.
-     * @param message message
+     * 
+     * @param message
+     *            message
      */
     public ParserException(String message) {
         super(message);
@@ -20,8 +22,11 @@ public class ParserException extends RamlerException {
 
     /**
      * Creates an exception with the given message and cause.
-     * @param message message
-     * @param cause cause
+     * 
+     * @param message
+     *            message
+     * @param cause
+     *            cause
      */
     public ParserException(String message, Throwable cause) {
         super(message, cause);
@@ -29,7 +34,9 @@ public class ParserException extends RamlerException {
 
     /**
      * Creates an exception with the given cause.
-     * @param cause cause
+     * 
+     * @param cause
+     *            cause
      */
     public ParserException(Throwable cause) {
         super(cause);

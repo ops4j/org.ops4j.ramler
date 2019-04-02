@@ -82,14 +82,16 @@ public class JavaGenerator {
         ResourceGeneratingApiVisitor resourceVisitor = new ResourceGeneratingApiVisitor(context);
         ApiTraverser traverser = new ApiTraverser(context.getApiModel());
         Stream.of(pojoCreator, pojoVisitor, resourceVisitor)
-            .forEach(v -> traverser.traverse(context.getApiModel().getApi(), v));
+            .forEach(v -> traverser.traverse(context.getApiModel()
+                .getApi(), v));
     }
 
     private void writeCodeModel() {
         try {
             File dir = config.getTargetDir();
             FileHelper.createDirectoryIfNeeded(dir);
-            context.getCodeModel().build(new FileCodeWriter(dir));
+            context.getCodeModel()
+                .build(new FileCodeWriter(dir));
         }
         catch (IOException exc) {
             throw Exceptions.unchecked(exc);

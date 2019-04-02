@@ -99,10 +99,13 @@ public class EnumTypeApiVisitor implements ApiVisitor {
     public void visitEnumTypeEnd(StringTypeDeclaration type) {
         String name = type.name();
 
-        Map<String, Object> contextObject = ImmutableMap.of("name", name, "enumValues", enumSymbols);
+        Map<String, Object> contextObject = ImmutableMap.of("name", name, "enumValues",
+            enumSymbols);
 
-        MustacheEngine engine = context.getTemplateEngine().getEngine();
-        engine.getMustache("enum").render(output, contextObject);
+        MustacheEngine engine = context.getTemplateEngine()
+            .getEngine();
+        engine.getMustache("enum")
+            .render(output, contextObject);
 
         context.writeToFile(output.toString(), type.name());
         enumSymbols.clear();
@@ -110,7 +113,8 @@ public class EnumTypeApiVisitor implements ApiVisitor {
 
     @Override
     public void visitEnumValue(StringTypeDeclaration type, EnumValue enumValue) {
-        EnumSymbol enumSymbol = new EnumSymbol(Names.buildConstantName(enumValue.getName()), enumValue.getName());
+        EnumSymbol enumSymbol = new EnumSymbol(Names.buildConstantName(enumValue.getName()),
+            enumValue.getName());
         enumSymbols.add(enumSymbol);
     }
 }

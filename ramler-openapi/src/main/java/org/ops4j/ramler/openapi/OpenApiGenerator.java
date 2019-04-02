@@ -60,12 +60,14 @@ public class OpenApiGenerator {
         if (lastDot > 0) {
             baseName = fileName.substring(0, lastDot);
         }
-        if (context.getConfig().isGenerateYaml()) {
+        if (context.getConfig()
+            .isGenerateYaml()) {
             String yaml = OpenApiSerializer.serialize(openApi, Format.YAML);
             context.writeToFile(yaml, baseName + ".yaml");
         }
 
-        if (context.getConfig().isGenerateJson()) {
+        if (context.getConfig()
+            .isGenerateJson()) {
             String json = OpenApiSerializer.serialize(openApi, Format.JSON);
             context.writeToFile(json, baseName + ".json");
         }

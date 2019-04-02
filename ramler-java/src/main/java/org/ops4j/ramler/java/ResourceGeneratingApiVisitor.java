@@ -91,7 +91,6 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
 
     private List<String> mediaTypes = Collections.emptyList();
 
-
     /**
      * Creates a visitor for the given generator context.
      *
@@ -108,7 +107,10 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
 
     @Override
     public void visitApiStart(Api api) {
-        mediaTypes = api.mediaType().stream().map(MimeType::value).collect(toList());
+        mediaTypes = api.mediaType()
+            .stream()
+            .map(MimeType::value)
+            .collect(toList());
     }
 
     @Override
@@ -135,20 +137,27 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
     private void createResourceInterface(Resource resource) throws JClassAlreadyExistsException {
         klass = pkg._interface(Names.buildResourceInterfaceName(resource, context.getConfig()));
         context.annotateAsGenerated(klass);
-        klass.annotate(Path.class).param(VALUE, resource.resourcePath());
+        klass.annotate(Path.class)
+            .param(VALUE, resource.resourcePath());
     }
 
     private void addMediaTypes() {
         if (mediaTypes.size() > 1) {
             mediaTypes
-                .forEach(m -> klass.annotate(Produces.class).paramArray(VALUE).param(mediaType(m)));
+                .forEach(m -> klass.annotate(Produces.class)
+                    .paramArray(VALUE)
+                    .param(mediaType(m)));
             mediaTypes
-                .forEach(m -> klass.annotate(Consumes.class).paramArray(VALUE).param(mediaType(m)));
+                .forEach(m -> klass.annotate(Consumes.class)
+                    .paramArray(VALUE)
+                    .param(mediaType(m)));
         }
         else if (!mediaTypes.isEmpty()) {
             JExpression m = mediaType(mediaTypes.get(0));
-            klass.annotate(Produces.class).param(VALUE, m);
-            klass.annotate(Consumes.class).param(VALUE, m);
+            klass.annotate(Produces.class)
+                .param(VALUE, m);
+            klass.annotate(Consumes.class)
+                .param(VALUE, m);
         }
     }
 
@@ -201,7 +210,10 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
 
     private void buildNonVoidMethods(Method method, int numResponseTypes) {
         for (int bodyIndex = 0; bodyIndex < numResponseTypes; bodyIndex++) {
-            TypeDeclaration body = method.responses().get(0).body().get(bodyIndex);
+            TypeDeclaration body = method.responses()
+                .get(0)
+                .body()
+                .get(bodyIndex);
             String methodName = buildMethodName(method, bodyIndex);
             JMethod codeMethod = klass.method(JMod.NONE, klass, methodName);
 
@@ -217,26 +229,35 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
     }
 
     private int getNumResponseTypes(Method method) {
-        if (method.responses().isEmpty()) {
+        if (method.responses()
+            .isEmpty()) {
             return 0;
         }
         else {
-            return method.responses().get(0).body().size();
+            return method.responses()
+                .get(0)
+                .body()
+                .size();
         }
     }
 
     private void addProduces(JMethod codeMethod, TypeDeclaration body) {
         String mediaType = body.name();
-        boolean useDefault = (mediaTypes.size() == 1) && mediaTypes.get(0).equals(mediaType);
+        boolean useDefault = (mediaTypes.size() == 1) && mediaTypes.get(0)
+            .equals(mediaType);
         if (!useDefault) {
-            codeMethod.annotate(Produces.class).param(VALUE, mediaType);
+            codeMethod.annotate(Produces.class)
+                .param(VALUE, mediaType);
         }
     }
 
     private String buildMethodName(Method method, int bodyIndex) {
         String methodName = buildMethodName(method);
         if (bodyIndex > 0) {
-            TypeDeclaration responseType = method.responses().get(0).body().get(bodyIndex);
+            TypeDeclaration responseType = method.responses()
+                .get(0)
+                .body()
+                .get(bodyIndex);
             String codeName = Annotations.findCodeName(responseType);
             if (codeName == null) {
                 methodName += Integer.toString(bodyIndex);
@@ -251,7 +272,8 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
     private String buildMethodName(Method method) {
         String name = Annotations.findCodeName(method);
         if (name == null) {
-            name = method.displayName().value();
+            name = method.displayName()
+                .value();
         }
         if (name == null) {
             name = method.method();
@@ -261,26 +283,35 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
 
     private void addSubresourcePath(JMethod codeMethod) {
         if (innerResource != null) {
-            codeMethod.annotate(Path.class).param(VALUE, innerResource.relativeUri().value());
+            codeMethod.annotate(Path.class)
+                .param(VALUE, innerResource.relativeUri()
+                    .value());
         }
     }
 
     private void addJavadoc(Method method, JMethod codeMethod) {
         if (method.description() != null) {
-            codeMethod.javadoc().add(method.description().value());
+            codeMethod.javadoc()
+                .add(method.description()
+                    .value());
         }
         else if (method.displayName() != null) {
-            codeMethod.javadoc().add(method.displayName().value());
+            codeMethod.javadoc()
+                .add(method.displayName()
+                    .value());
         }
     }
 
     private void addReturnType(Method method, JMethod codeMethod, TypeDeclaration body) {
-        if (method.responses().isEmpty()) {
+        if (method.responses()
+            .isEmpty()) {
             codeMethod.type(codeModel.VOID);
         }
         else {
-            Response response = method.responses().get(0);
-            if (response.body().isEmpty()) {
+            Response response = method.responses()
+                .get(0);
+            if (response.body()
+                .isEmpty()) {
                 codeMethod.type(codeModel.VOID);
             }
             else {
@@ -305,25 +336,32 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
         for (TypeDeclaration queryParam : method.queryParameters()) {
             JVar param = codeMethod.param(context.getJavaType(queryParam),
                 Names.buildVariableName(queryParam.name()));
-            param.annotate(QueryParam.class).param(VALUE, queryParam.name());
+            param.annotate(QueryParam.class)
+                .param(VALUE, queryParam.name());
             if (queryParam.defaultValue() != null) {
-                param.annotate(DefaultValue.class).param(VALUE, queryParam.defaultValue());
+                param.annotate(DefaultValue.class)
+                    .param(VALUE, queryParam.defaultValue());
             }
         }
     }
 
     private void addPathParameters(Method method, JMethod codeMethod) {
-        for (TypeDeclaration pathParam : context.getApiModel().findAllUriParameters(method)) {
+        for (TypeDeclaration pathParam : context.getApiModel()
+            .findAllUriParameters(method)) {
             JVar param = codeMethod.param(context.getJavaType(pathParam),
                 Names.buildVariableName(pathParam.name()));
-            param.annotate(PathParam.class).param(VALUE, pathParam.name());
+            param.annotate(PathParam.class)
+                .param(VALUE, pathParam.name());
         }
     }
 
     private void addBodyParameters(Method method, JMethod codeMethod) {
-        if (!method.body().isEmpty()) {
-            TypeDeclaration body = method.body().get(0);
-            if (body.name().equals(MediaType.MULTIPART_FORM_DATA)) {
+        if (!method.body()
+            .isEmpty()) {
+            TypeDeclaration body = method.body()
+                .get(0);
+            if (body.name()
+                .equals(MediaType.MULTIPART_FORM_DATA)) {
                 addFormParameters(codeMethod, body);
             }
             else {
@@ -342,12 +380,14 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
     private void addFormParameter(JMethod codeMethod, TypeDeclaration formParam) {
         JVar param = codeMethod.param(context.getJavaType(formParam),
             Names.buildVariableName(formParam.name()));
-        param.annotate(FormDataParam.class).param(VALUE, formParam.name());
+        param.annotate(FormDataParam.class)
+            .param(VALUE, formParam.name());
 
         if (formParam instanceof FileTypeDeclaration) {
             JVar detail = codeMethod.param(codeModel._ref(FormDataContentDisposition.class),
                 Names.buildVariableName(formParam.name()) + "Detail");
-            detail.annotate(FormDataParam.class).param(VALUE, formParam.name());
+            detail.annotate(FormDataParam.class)
+                .param(VALUE, formParam.name());
         }
     }
 

@@ -67,7 +67,9 @@ public class EnumGenerator {
 
     /**
      * Selects the enum class for the given type.
-     * @param type enumeration type declaration
+     * 
+     * @param type
+     *            enumeration type declaration
      */
     public void generateEnumClassStart(StringTypeDeclaration type) {
         klass = pkg._getClass(type.name());
@@ -87,7 +89,9 @@ public class EnumGenerator {
 
     /**
      * Creates an empty enum class for the given type.
-     * @param type enumeration type declaration
+     * 
+     * @param type
+     *            enumeration type declaration
      * @return enum class
      */
     public JDefinedClass createEnumClass(StringTypeDeclaration type) {
@@ -104,30 +108,38 @@ public class EnumGenerator {
 
     /**
      * Generates an enum constant for the given value.
-     * @param enumValue enum value
+     * 
+     * @param enumValue
+     *            enum value
      */
     public void generateEnumConstant(EnumValue enumValue) {
         JEnumConstant constant = klass.enumConstant(Names.buildConstantName(enumValue.getName()))
             .arg(JExpr.lit(enumValue.getName()));
 
-        if (context.getConfig().isJacksonPropertyName()) {
-            constant.annotate(JsonProperty.class).param(VALUE, enumValue.getName());
+        if (context.getConfig()
+            .isJacksonPropertyName()) {
+            constant.annotate(JsonProperty.class)
+                .param(VALUE, enumValue.getName());
         }
 
         if (enumValue.getDescription() != null) {
-            constant.javadoc().add(enumValue.getDescription());
+            constant.javadoc()
+                .add(enumValue.getDescription());
         }
     }
 
     private void generateEnumConstructor(JDefinedClass klass, JFieldVar valueField) {
         JMethod constructor = klass.constructor(JMod.PRIVATE);
         JVar p1 = constructor.param(String.class, VALUE);
-        constructor.body().assign(JExpr._this().ref(valueField), p1);
+        constructor.body()
+            .assign(JExpr._this()
+                .ref(valueField), p1);
     }
 
     private void generateEnumValueMethod(JDefinedClass klass, JFieldVar valueField) {
         JMethod getter = klass.method(JMod.PUBLIC, codeModel._ref(String.class), VALUE);
-        getter.body()._return(valueField);
+        getter.body()
+            ._return(valueField);
     }
 
     private void generateEnumFromStringMethod(JDefinedClass klass, JFieldVar valueField) {
@@ -137,9 +149,14 @@ public class EnumGenerator {
         JBlock body = converter.body();
         JForEach forEach = body.forEach(klass, "v", klass.staticInvoke("values"));
         JBlock loopBlock = forEach.body();
-        loopBlock._if(forEach.var().ref(valueField).invoke("equals").arg(param))._then()
+        loopBlock._if(forEach.var()
+            .ref(valueField)
+            .invoke("equals")
+            .arg(param))
+            ._then()
             ._return(forEach.var());
-        body._throw(JExpr._new(codeModel._ref(IllegalArgumentException.class)).arg(param));
+        body._throw(JExpr._new(codeModel._ref(IllegalArgumentException.class))
+            .arg(param));
     }
 
     private void generateEnumToStringMethod(JDefinedClass klass, JFieldVar valueField) {

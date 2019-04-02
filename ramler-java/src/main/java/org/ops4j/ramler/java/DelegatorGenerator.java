@@ -67,19 +67,22 @@ public class DelegatorGenerator {
         JPackage pkg = context.getDelegatorPackage();
         try {
             JDefinedClass delegator = pkg
-                ._class(delegateClass.name() + context.getConfig().getDelegatorSuffix());
+                ._class(delegateClass.name() + context.getConfig()
+                    .getDelegatorSuffix());
             context.annotateAsGenerated(delegator);
 
             JClass delegateType = delegateClass;
 
             if (delegateClass.typeParams().length > 0) {
-                Stream.of(delegateClass.typeParams()).map(JTypeVar::name)
+                Stream.of(delegateClass.typeParams())
+                    .map(JTypeVar::name)
                     .forEach(delegator::generify);
                 delegateType = delegateClass.narrow(delegateClass.typeParams());
             }
 
             JFieldVar delegate = delegator.field(JMod.PROTECTED, delegateType,
-                context.getConfig().getDelegateFieldName());
+                context.getConfig()
+                    .getDelegateFieldName());
             delegate.init(JExpr._new(delegateType));
 
             JDefinedClass klass = delegateClass;
@@ -119,7 +122,8 @@ public class DelegatorGenerator {
         JFieldVar delegate) {
         if (delegator.getMethod(method.name(), new JType[0]) == null) {
             JMethod delegatingMethod = delegator.method(JMod.PUBLIC, method.type(), method.name());
-            delegatingMethod.body()._return(delegate.invoke(method.name()));
+            delegatingMethod.body()
+                ._return(delegate.invoke(method.name()));
         }
     }
 
@@ -129,15 +133,19 @@ public class DelegatorGenerator {
         if (delegator.getMethod(method.name(), new JType[] { type }) == null) {
             JMethod delegatingMethod = delegator.method(JMod.PUBLIC, method.type(), method.name());
             JVar p1 = delegatingMethod.param(type, method.listParams()[0].name());
-            delegatingMethod.body().invoke(delegate, delegatingMethod.name()).arg(p1);
+            delegatingMethod.body()
+                .invoke(delegate, delegatingMethod.name())
+                .arg(p1);
         }
     }
 
     private boolean isSetter(JMethod method) {
-        return method.name().matches("set[A-Z]\\w*");
+        return method.name()
+            .matches("set[A-Z]\\w*");
     }
 
     private boolean isGetter(JMethod method) {
-        return method.name().matches("(get|is)[A-Z]\\w*");
+        return method.name()
+            .matches("(get|is)[A-Z]\\w*");
     }
 }

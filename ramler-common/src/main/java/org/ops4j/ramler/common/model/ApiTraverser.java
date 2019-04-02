@@ -78,15 +78,18 @@ public class ApiTraverser {
      */
     public void traverse(Api api, ApiVisitor visitor) {
         visitor.visitApiStart(api);
-        api.uses().forEach(lib -> traverse(lib, visitor));
+        api.uses()
+            .forEach(lib -> traverse(lib, visitor));
         orderTypes(api).forEach((name, type) -> traverse(type, visitor));
-        api.resources().forEach(resource -> traverse(resource, visitor));
+        api.resources()
+            .forEach(resource -> traverse(resource, visitor));
         visitor.visitApiEnd(api);
     }
 
     private void traverse(Library library, ApiVisitor visitor) {
         visitor.visitLibraryStart(library);
-        library.types().forEach(type -> traverse(type, visitor));
+        library.types()
+            .forEach(type -> traverse(type, visitor));
         visitor.visitLibraryEnd(library);
     }
 
@@ -100,7 +103,8 @@ public class ApiTraverser {
      */
     private Map<String, TypeDeclaration> orderTypes(Api api) {
         Map<String, TypeDeclaration> orderedTypes = new LinkedHashMap<>();
-        api.types().forEach(type -> storeHierarchy(orderedTypes, api, type));
+        api.types()
+            .forEach(type -> storeHierarchy(orderedTypes, api, type));
         return orderedTypes;
     }
 
@@ -165,13 +169,17 @@ public class ApiTraverser {
 
     private void traverseEnum(StringTypeDeclaration type, ApiVisitor visitor) {
         visitor.visitEnumTypeStart(type);
-        apiModel.getEnumValues(type).stream().forEach(e -> visitor.visitEnumValue(type, e));
+        apiModel.getEnumValues(type)
+            .stream()
+            .forEach(e -> visitor.visitEnumValue(type, e));
         visitor.visitEnumTypeEnd(type);
     }
 
     private void traverse(ObjectTypeDeclaration type, ApiVisitor visitor) {
         visitor.visitObjectTypeStart(type);
-        type.properties().stream().filter(p -> !isInherited(p, type))
+        type.properties()
+            .stream()
+            .filter(p -> !isInherited(p, type))
             .forEach(property -> visitor.visitObjectTypeProperty(type, property));
         visitor.visitObjectTypeEnd(type);
     }
@@ -189,20 +197,27 @@ public class ApiTraverser {
     }
 
     private boolean hasProperty(ObjectTypeDeclaration parent, String name) {
-        return parent.properties().stream().anyMatch(p -> p.name().equals(name));
+        return parent.properties()
+            .stream()
+            .anyMatch(p -> p.name()
+                .equals(name));
     }
 
     private void traverse(Resource resource, ApiVisitor visitor) {
         visitor.visitResourceStart(resource);
-        resource.methods().forEach(method -> traverse(method, visitor));
-        resource.resources().forEach(child -> traverse(child, visitor));
+        resource.methods()
+            .forEach(method -> traverse(method, visitor));
+        resource.resources()
+            .forEach(child -> traverse(child, visitor));
         visitor.visitResourceEnd(resource);
     }
 
     private void traverse(Method method, ApiVisitor visitor) {
         visitor.visitMethodStart(method);
-        method.headers().forEach(visitor::visitHeader);
-        method.queryParameters().forEach(visitor::visitQueryParameter);
+        method.headers()
+            .forEach(visitor::visitHeader);
+        method.queryParameters()
+            .forEach(visitor::visitQueryParameter);
         visitor.visitMethodEnd(method);
     }
 }

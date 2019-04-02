@@ -166,18 +166,22 @@ public class SchemaBuilder {
     }
 
     private boolean isAdditionalProperties(TypeDeclaration property) {
-        return property.name().startsWith("/");
+        return property.name()
+            .startsWith("/");
     }
 
     private void addAdditionalProperties(Schema schema, TypeDeclaration property) {
-        String pattern = property.name().substring(1, property.name().length() - 1);
+        String pattern = property.name()
+            .substring(1, property.name()
+                .length() - 1);
         Schema additionalPropertiesSchema = new SchemaImpl();
         additionalPropertiesSchema.setPattern(pattern);
         schema.additionalPropertiesSchema(additionalPropertiesSchema);
     }
 
     private void addObjectProperty(Schema schema, TypeDeclaration property) {
-        if (property.type().equals(CommonConstants.OBJECT)) {
+        if (property.type()
+            .equals(CommonConstants.OBJECT)) {
             schema.setType(SchemaType.OBJECT);
         }
         else {
@@ -187,7 +191,8 @@ public class SchemaBuilder {
 
     private void addArrayProperty(Schema schema, ArrayTypeDeclaration property) {
         schema.setType(SchemaType.ARRAY);
-        String itemType = context.getApiModel().getItemType(property);
+        String itemType = context.getApiModel()
+            .getItemType(property);
         Schema itemSchema = new SchemaImpl();
         itemSchema.setRef(itemType);
         schema.setItems(itemSchema);

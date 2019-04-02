@@ -101,8 +101,13 @@ public class TemplateEngine {
                 .addTemplateLocator(genericLocator)
                 .registerHelper(ExampleHelper.NAME, new ExampleHelper())
                 .registerHelper(TypeLinkHelper.NAME, new TypeLinkHelper())
-                .registerHelpers(HelpersBuilder.builtin().addInclude().addInvoke().addSet()
-                    .addSwitch().addWith().build())
+                .registerHelpers(HelpersBuilder.builtin()
+                    .addInclude()
+                    .addInvoke()
+                    .addSet()
+                    .addSwitch()
+                    .addWith()
+                    .build())
                 .addGlobalData(MarkdownLambda.NAME, new MarkdownLambda())
                 .addGlobalData(UpperCaseLambda.NAME, new UpperCaseLambda());
             if (templateDir != null) {

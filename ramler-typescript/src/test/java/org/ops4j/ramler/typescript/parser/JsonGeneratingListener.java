@@ -63,7 +63,9 @@ public class JsonGeneratingListener extends TypeScriptBaseListener {
     @Override
     public void enterModule(ModuleContext ctx) {
         stringWriter = new StringWriter();
-        generator = Json.createGeneratorFactory(ImmutableMap.of(JsonGenerator.PRETTY_PRINTING, true)).createGenerator(stringWriter);
+        generator = Json
+            .createGeneratorFactory(ImmutableMap.of(JsonGenerator.PRETTY_PRINTING, true))
+            .createGenerator(stringWriter);
         generator.writeStartObject();
     }
 
@@ -96,7 +98,8 @@ public class JsonGeneratingListener extends TypeScriptBaseListener {
     @Override
     public void enterImportDecl(ImportDeclContext ctx) {
         generator.writeStartObject();
-        generator.write("module", ctx.STRING().getText());
+        generator.write("module", ctx.STRING()
+            .getText());
         generator.writeStartArray("identifiers");
     }
 
@@ -108,7 +111,8 @@ public class JsonGeneratingListener extends TypeScriptBaseListener {
 
     @Override
     public void enterIdentifiers(IdentifiersContext ctx) {
-        ctx.ID().forEach(id -> generator.write(id.getText()));
+        ctx.ID()
+            .forEach(id -> generator.write(id.getText()));
     }
 
     @Override
@@ -127,7 +131,8 @@ public class JsonGeneratingListener extends TypeScriptBaseListener {
     public void enterTypeAlias(TypeAliasContext ctx) {
         generator.writeStartObject();
         generator.write("discriminator", "alias");
-        generator.write("name", ctx.ID().getText());
+        generator.write("name", ctx.ID()
+            .getText());
         generator.writeStartObject("type");
     }
 
@@ -140,7 +145,8 @@ public class JsonGeneratingListener extends TypeScriptBaseListener {
     @Override
     public void enterTypeDecl(TypeDeclContext ctx) {
         generator.writeStartObject("type");
-        generator.write("name", ctx.ID().getText());
+        generator.write("name", ctx.ID()
+            .getText());
     }
 
     @Override
@@ -152,7 +158,8 @@ public class JsonGeneratingListener extends TypeScriptBaseListener {
     public void enterEnumDecl(EnumDeclContext ctx) {
         generator.writeStartObject();
         generator.write("discriminator", "enum");
-        generator.write("name", ctx.ID().getText());
+        generator.write("name", ctx.ID()
+            .getText());
         generator.writeStartArray("members");
     }
 
@@ -165,9 +172,11 @@ public class JsonGeneratingListener extends TypeScriptBaseListener {
     @Override
     public void enterEnumMember(EnumMemberContext ctx) {
         generator.writeStartObject();
-        generator.write("name", ctx.ID().getText());
+        generator.write("name", ctx.ID()
+            .getText());
         if (ctx.STRING() != null) {
-            generator.write("value", ctx.STRING().getText());
+            generator.write("value", ctx.STRING()
+                .getText());
         }
         generator.writeEnd();
     }
@@ -195,19 +204,22 @@ public class JsonGeneratingListener extends TypeScriptBaseListener {
     @Override
     public void enterSimpleType(SimpleTypeContext ctx) {
         generator.write("discriminator", "simple");
-        generator.write("name", ctx.ID().getText());
+        generator.write("name", ctx.ID()
+            .getText());
     }
 
     @Override
     public void enterArrayType(ArrayTypeContext ctx) {
         generator.write("discriminator", "array");
-        generator.write("name", ctx.ID().getText());
+        generator.write("name", ctx.ID()
+            .getText());
     }
 
     @Override
     public void enterParamType(ParamTypeContext ctx) {
         generator.write("discriminator", "param");
-        generator.write("name", ctx.ID().getText());
+        generator.write("name", ctx.ID()
+            .getText());
     }
 
     @Override
@@ -274,7 +286,8 @@ public class JsonGeneratingListener extends TypeScriptBaseListener {
     @Override
     public void enterMember(MemberContext ctx) {
         generator.writeStartObject()
-            .write("name", ctx.ID().getText())
+            .write("name", ctx.ID()
+                .getText())
             .writeStartObject("type");
     }
 

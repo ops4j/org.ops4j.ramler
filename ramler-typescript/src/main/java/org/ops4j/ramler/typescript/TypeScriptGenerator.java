@@ -52,7 +52,9 @@ public class TypeScriptGenerator {
 
     /**
      * Generates TypeScript code.
-     * @throws IOException if the target directory cannot be created
+     * 
+     * @throws IOException
+     *             if the target directory cannot be created
      */
     public void generate() throws IOException {
         ApiModel apiModel = new ApiModelBuilder().buildApiModel(config.getSourceFile());
@@ -63,6 +65,7 @@ public class TypeScriptGenerator {
 
         ModelCreatingApiVisitor modelVisitor = new ModelCreatingApiVisitor(context);
         ApiTraverser traverser = new ApiTraverser(context.getApiModel());
-        traverser.traverse(context.getApiModel().getApi(), modelVisitor);
+        traverser.traverse(context.getApiModel()
+            .getApi(), modelVisitor);
     }
 }

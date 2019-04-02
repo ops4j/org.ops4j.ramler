@@ -12,7 +12,9 @@ public class RamlerException extends RuntimeException {
 
     /**
      * Creates an exception with the given message.
-     * @param message message
+     * 
+     * @param message
+     *            message
      */
     public RamlerException(String message) {
         super(message);
@@ -20,8 +22,11 @@ public class RamlerException extends RuntimeException {
 
     /**
      * Creates an exception with the given message and cause.
-     * @param message message
-     * @param cause cause
+     * 
+     * @param message
+     *            message
+     * @param cause
+     *            cause
      */
     public RamlerException(String message, Throwable cause) {
         super(message, cause);
@@ -29,7 +34,9 @@ public class RamlerException extends RuntimeException {
 
     /**
      * Creates an exception with the given cause.
-     * @param cause cause
+     * 
+     * @param cause
+     *            cause
      */
     public RamlerException(Throwable cause) {
         super(cause);

@@ -38,11 +38,13 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 public class JacksonUnionTest {
 
     public static class City {
+
         public String name;
         public int population;
     }
 
     public static class Dog {
+
         public String name;
         public String furColour;
     }
@@ -108,7 +110,7 @@ public class JacksonUnionTest {
         @Override
         public Favourite deserialize(JsonParser p, DeserializationContext ctxt)
             throws IOException {
-            ObjectMapper mapper  = (ObjectMapper) p.getCodec();
+            ObjectMapper mapper = (ObjectMapper) p.getCodec();
 
             JsonNode node = mapper.readTree(p);
 
@@ -166,11 +168,11 @@ public class JacksonUnionTest {
     }
 
     public static class Container {
+
         public StringOrNumber content;
     }
 
     public static class StringOrNumberSerializer extends StdSerializer<StringOrNumber> {
-
 
         private static final long serialVersionUID = 1L;
 
@@ -220,8 +222,6 @@ public class JacksonUnionTest {
             return node.isInt();
         }
     }
-
-
 
     @Test
     public void shouldSerializeAndDeserializeCity() throws IOException {

@@ -102,7 +102,10 @@ public class ApiModel {
     }
 
     private void mapTypes() {
-        api.types().stream().sorted((l, r) -> l.name().compareTo(r.name()))
+        api.types()
+            .stream()
+            .sorted((l, r) -> l.name()
+                .compareTo(r.name()))
             .forEach(t -> types.put(t.name(), t));
     }
 
@@ -150,7 +153,8 @@ public class ApiModel {
      * @return API title
      */
     public String getTitle() {
-        return api.title().value();
+        return api.title()
+            .value();
     }
 
     /**
@@ -159,8 +163,12 @@ public class ApiModel {
      * @return collection of resources (never null)
      */
     public Collection<Resource> getResources() {
-        return api.resources().stream()
-            .sorted((l, r) -> l.displayName().value().compareTo(r.displayName().value()))
+        return api.resources()
+            .stream()
+            .sorted((l, r) -> l.displayName()
+                .value()
+                .compareTo(r.displayName()
+                    .value()))
             .collect(toList());
     }
 
@@ -229,7 +237,8 @@ public class ApiModel {
         ArrayTypeDeclaration array = (ArrayTypeDeclaration) type;
         TypeDeclaration item = array.items();
         if (item.type() == null) {
-            return item.name().replaceFirst("\\[\\]", "");
+            return item.name()
+                .replaceFirst("\\[\\]", "");
         }
         if (getDeclaredType(item.name()) != null) {
             return item.name();
@@ -354,14 +363,16 @@ public class ApiModel {
 
         if (decl instanceof StringTypeDeclaration) {
             StringTypeDeclaration stringType = (StringTypeDeclaration) decl;
-            return !stringType.enumValues().isEmpty();
+            return !stringType.enumValues()
+                .isEmpty();
         }
 
         return false;
     }
 
     private Optional<AnnotationRef> findEnumAnnotation(TypeDeclaration decl) {
-        return Annotations.annotationsByName(decl, "enum").findFirst();
+        return Annotations.annotationsByName(decl, "enum")
+            .findFirst();
     }
 
     /**
@@ -374,14 +385,21 @@ public class ApiModel {
     public List<EnumValue> getEnumValues(TypeDeclaration decl) {
         Optional<AnnotationRef> annotationRef = findEnumAnnotation(decl);
         if (annotationRef.isPresent()) {
-            TypeInstance annotationValue = annotationRef.get().structuredValue();
-            TypeInstanceProperty valuesProperty = annotationValue.properties().get(0);
-            return valuesProperty.values().stream().map(this::toEnumValue).collect(toList());
+            TypeInstance annotationValue = annotationRef.get()
+                .structuredValue();
+            TypeInstanceProperty valuesProperty = annotationValue.properties()
+                .get(0);
+            return valuesProperty.values()
+                .stream()
+                .map(this::toEnumValue)
+                .collect(toList());
         }
         else {
             if (decl instanceof StringTypeDeclaration) {
                 StringTypeDeclaration type = (StringTypeDeclaration) decl;
-                return type.enumValues().stream().map(e -> new EnumValue(e, null))
+                return type.enumValues()
+                    .stream()
+                    .map(e -> new EnumValue(e, null))
                     .collect(toList());
             }
             return emptyList();
@@ -411,8 +429,14 @@ public class ApiModel {
     }
 
     private Object getPropertyValue(TypeInstance ti, String propertyName) {
-        return ti.properties().stream().filter(p -> p.name().equals(propertyName))
-            .map(t -> t.value().value()).findFirst().orElse(null);
+        return ti.properties()
+            .stream()
+            .filter(p -> p.name()
+                .equals(propertyName))
+            .map(t -> t.value()
+                .value())
+            .findFirst()
+            .orElse(null);
     }
 
     /**
@@ -424,7 +448,9 @@ public class ApiModel {
      * @return true if type is internal
      */
     public boolean isInternal(ObjectTypeDeclaration type) {
-        return Annotations.annotationsByName(type, "internal").findFirst().isPresent();
+        return Annotations.annotationsByName(type, "internal")
+            .findFirst()
+            .isPresent();
     }
 
     /**
@@ -436,10 +462,14 @@ public class ApiModel {
      */
     public List<TypeDeclaration> findAllUriParameters(Method method) {
         List<TypeDeclaration> pathParams = new ArrayList<>();
-        if (method.resource().parentResource() != null) {
-            pathParams.addAll(method.resource().parentResource().uriParameters());
+        if (method.resource()
+            .parentResource() != null) {
+            pathParams.addAll(method.resource()
+                .parentResource()
+                .uriParameters());
         }
-        pathParams.addAll(method.resource().uriParameters());
+        pathParams.addAll(method.resource()
+            .uriParameters());
         return pathParams;
     }
 }

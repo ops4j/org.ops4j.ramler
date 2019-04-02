@@ -69,9 +69,10 @@ public class ModelCreatingApiVisitor implements ApiVisitor {
 
     @Override
     public void visitUnionType(UnionTypeDeclaration type) {
-        String declaredName = context.getApiModel().getDeclaredName(type);
+        String declaredName = context.getApiModel()
+            .getDeclaredName(type);
         if (declaredName == null) {
-            return ;
+            return;
         }
 
         Map<String, String> imports = new LinkedHashMap<>();
@@ -103,10 +104,12 @@ public class ModelCreatingApiVisitor implements ApiVisitor {
 
     @Override
     public void visitArrayType(ArrayTypeDeclaration type) {
-        if (context.getApiModel().getDeclaredName(type) == null) {
+        if (context.getApiModel()
+            .getDeclaredName(type) == null) {
             return;
         }
-        String itemTypeName = context.getApiModel().getItemType(type);
+        String itemTypeName = context.getApiModel()
+            .getItemType(type);
         Map<String, String> imports = new LinkedHashMap<>();
         addTypeToImports(imports, itemTypeName);
 
@@ -133,7 +136,8 @@ public class ModelCreatingApiVisitor implements ApiVisitor {
      */
     private void createTypeAlias(TypeDeclaration type, String targetType,
         Map<String, String> imports) {
-        MustacheEngine engine = context.getTemplateEngine().getEngine();
+        MustacheEngine engine = context.getTemplateEngine()
+            .getEngine();
         StringBuilder output = context.startOutput();
 
         renderImports(engine, imports, output);
@@ -145,20 +149,23 @@ public class ModelCreatingApiVisitor implements ApiVisitor {
     }
 
     private void createUnionType(UnionTypeDeclaration type, Map<String, String> imports) {
-        MustacheEngine engine = context.getTemplateEngine().getEngine();
+        MustacheEngine engine = context.getTemplateEngine()
+            .getEngine();
         StringBuilder output = context.startOutput();
 
         renderImports(engine, imports, output);
 
-        engine.getMustache("union").render(output, ImmutableMap.of("name", type.name(), "type", type));
+        engine.getMustache("union")
+            .render(output, ImmutableMap.of("name", type.name(), "type", type));
 
         context.writeToFile(output.toString(), type.name());
     }
 
-    private void renderImports(MustacheEngine engine, Map<String, String> imports, StringBuilder output) {
+    private void renderImports(MustacheEngine engine, Map<String, String> imports,
+        StringBuilder output) {
         if (!imports.isEmpty()) {
             imports.forEach((k, v) -> engine.getMustache("import")
-                    .render(output, ImmutableMap.of("tsType", k, "tsFile", v)));
+                .render(output, ImmutableMap.of("tsType", k, "tsFile", v)));
             output.append("\n");
         }
     }

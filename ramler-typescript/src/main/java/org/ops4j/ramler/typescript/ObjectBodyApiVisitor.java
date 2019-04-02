@@ -59,8 +59,11 @@ public class ObjectBodyApiVisitor implements ApiVisitor {
 
     @Override
     public void visitObjectTypeStart(ObjectTypeDeclaration type) {
-        List<String> baseClasses = type.parentTypes().stream()
-            .filter(t -> !t.name().equals(OBJECT)).map(t -> this.typeWithArgs(type, t))
+        List<String> baseClasses = type.parentTypes()
+            .stream()
+            .filter(t -> !t.name()
+                .equals(OBJECT))
+            .map(t -> this.typeWithArgs(type, t))
             .collect(toList());
 
         List<String> typeVars = Annotations.getStringAnnotations(type, TYPE_VARS);
@@ -68,14 +71,18 @@ public class ObjectBodyApiVisitor implements ApiVisitor {
         Map<String, Object> contextObject = ImmutableMap.of("name", type.name(), "baseClasses",
             baseClasses, "typeVars", typeVars);
 
-        MustacheEngine engine = context.getTemplateEngine().getEngine();
-        engine.getMustache("objectStart").render(context.getOutput(), contextObject);
+        MustacheEngine engine = context.getTemplateEngine()
+            .getEngine();
+        engine.getMustache("objectStart")
+            .render(context.getOutput(), contextObject);
     }
 
     @Override
     public void visitObjectTypeEnd(ObjectTypeDeclaration type) {
-        MustacheEngine engine = context.getTemplateEngine().getEngine();
-        engine.getMustache("objectEnd").render(context.getOutput(), Collections.emptyMap());
+        MustacheEngine engine = context.getTemplateEngine()
+            .getEngine();
+        engine.getMustache("objectEnd")
+            .render(context.getOutput(), Collections.emptyMap());
     }
 
     @Override
@@ -94,7 +101,8 @@ public class ObjectBodyApiVisitor implements ApiVisitor {
      */
     private void generateArrayProperty(ArrayTypeDeclaration property) {
         String fieldName = Names.buildVariableName(property);
-        String itemTypeName = context.getApiModel().getItemType(property);
+        String itemTypeName = context.getApiModel()
+            .getItemType(property);
         String typeVar = Annotations.findTypeVar(property);
         String tsItemType;
         if (typeVar != null) {
@@ -103,10 +111,12 @@ public class ObjectBodyApiVisitor implements ApiVisitor {
         else {
             tsItemType = itemTypeName;
         }
-        MustacheEngine engine = context.getTemplateEngine().getEngine();
+        MustacheEngine engine = context.getTemplateEngine()
+            .getEngine();
         Map<String, Object> contextObject = ImmutableMap.of("name", fieldName, "tsPropType",
             tsItemType + "[]", "optional", !property.required());
-        engine.getMustache("property").render(context.getOutput(), contextObject);
+        engine.getMustache("property")
+            .render(context.getOutput(), contextObject);
     }
 
     /**
@@ -123,10 +133,12 @@ public class ObjectBodyApiVisitor implements ApiVisitor {
         else {
             tsPropType = propertyTypeWithArgs(property);
         }
-        MustacheEngine engine = context.getTemplateEngine().getEngine();
+        MustacheEngine engine = context.getTemplateEngine()
+            .getEngine();
         Map<String, Object> contextObject = ImmutableMap.of("name", fieldName, "tsPropType",
             tsPropType, "optional", !property.required());
-        engine.getMustache("property").render(context.getOutput(), contextObject);
+        engine.getMustache("property")
+            .render(context.getOutput(), contextObject);
     }
 
     /**
@@ -140,7 +152,8 @@ public class ObjectBodyApiVisitor implements ApiVisitor {
         if (!typeArgs.isEmpty()) {
             StringBuilder builder = new StringBuilder(tsPropType);
             builder.append("<");
-            builder.append(typeArgs.stream().collect(joining(", ")));
+            builder.append(typeArgs.stream()
+                .collect(joining(", ")));
             builder.append(">");
             tsPropType = builder.toString();
         }
@@ -154,7 +167,8 @@ public class ObjectBodyApiVisitor implements ApiVisitor {
         if (!typeArgs.isEmpty()) {
             StringBuilder builder = new StringBuilder(tsPropType);
             builder.append("<");
-            builder.append(typeArgs.stream().collect(joining(", ")));
+            builder.append(typeArgs.stream()
+                .collect(joining(", ")));
             builder.append(">");
             tsPropType = builder.toString();
         }

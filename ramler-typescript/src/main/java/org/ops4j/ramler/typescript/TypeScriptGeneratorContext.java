@@ -159,8 +159,12 @@ public class TypeScriptGeneratorContext {
         this.output = builder;
 
         Map<String, String> contextObject = ImmutableMap.of("version", Version.getRamlerVersion(),
-            "date", ZonedDateTime.now().truncatedTo(SECONDS).format(ISO_OFFSET_DATE_TIME));
-        getTemplateEngine().getEngine().getMustache("generated").render(output, contextObject);
+            "date", ZonedDateTime.now()
+                .truncatedTo(SECONDS)
+                .format(ISO_OFFSET_DATE_TIME));
+        getTemplateEngine().getEngine()
+            .getMustache("generated")
+            .render(output, contextObject);
         return builder;
     }
 
@@ -204,7 +208,8 @@ public class TypeScriptGeneratorContext {
             return apiModel.getItemType(propertyType) + "[]";
         }
         throw new GeneratorException(
-            "unsupported declaration type: " + propertyType.getClass().getName());
+            "unsupported declaration type: " + propertyType.getClass()
+                .getName());
     }
 
     /**
@@ -243,7 +248,8 @@ public class TypeScriptGeneratorContext {
         if (type instanceof ArrayTypeDeclaration) {
             return apiModel.getItemType(type) + "[]";
         }
-        throw new GeneratorException("unsupported declaration type: " + type.getClass().getName());
+        throw new GeneratorException("unsupported declaration type: " + type.getClass()
+            .getName());
     }
 
     private String getDeclaredName(String typeName, String fallback) {
@@ -256,8 +262,8 @@ public class TypeScriptGeneratorContext {
     }
 
     /**
-     * Writes the given content to a file in the target directory. The file name is derived
-     * from the type name, e.g. {@code FooBar -> foo-bar.ts}.
+     * Writes the given content to a file in the target directory. The file name is derived from the
+     * type name, e.g. {@code FooBar -> foo-bar.ts}.
      *
      * @param content
      *            string content

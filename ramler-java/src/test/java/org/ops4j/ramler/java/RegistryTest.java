@@ -28,6 +28,7 @@ public class RegistryTest extends AbstractGeneratorTest {
 
     @Test
     public void shouldFindModelClasses() {
-        assertClasses("Configuration", "Error", "ErrorCode", "Errors", "Layer", "Manifest", "Repositories", "Tags");
+        assertClasses("Configuration", "Error", "ErrorCode", "Errors", "Layer", "Manifest",
+            "Repositories", "Tags");
     }
 }

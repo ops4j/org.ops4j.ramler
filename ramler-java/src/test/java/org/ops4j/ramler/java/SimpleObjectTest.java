@@ -39,7 +39,8 @@ public class SimpleObjectTest extends AbstractGeneratorTest {
     @Test
     public void shouldFindModelClasses() {
         assertClasses("Address", "Colour", "Employee", "FileResponse", "FunnyNames",
-            "Integers", "Manager", "Numbers", "Person", "Reference", "Temporals", "User", "UserGroup");
+            "Integers", "Manager", "Numbers", "Person", "Reference", "Temporals", "User",
+            "UserGroup");
     }
 
     @SuppressWarnings("unchecked")
@@ -47,7 +48,8 @@ public class SimpleObjectTest extends AbstractGeneratorTest {
     public void shouldFindEnumValues() throws IllegalAccessException {
         klass = modelPackage._getClass("Colour");
         assertThat(klass.getClassType()).isEqualTo(ClassType.ENUM);
-        Map<String,JEnumConstant> enums = (Map<String, JEnumConstant>) FieldUtils.readField(klass, "enumConstantsByName", true);
+        Map<String, JEnumConstant> enums = (Map<String, JEnumConstant>) FieldUtils.readField(klass,
+            "enumConstantsByName", true);
         assertThat(enums.keySet()).containsExactly("LIGHT_BLUE", "RED", "YELLOW", "GREEN");
     }
 
@@ -61,7 +63,9 @@ public class SimpleObjectTest extends AbstractGeneratorTest {
 
     @Test
     public void shouldFindDiscriminator() {
-        TypeDeclaration type = generator.getContext().getApiModel().getDeclaredType("Manager");
+        TypeDeclaration type = generator.getContext()
+            .getApiModel()
+            .getDeclaredType("Manager");
         ObjectTypeDeclaration objectType = (ObjectTypeDeclaration) type;
         assertThat(objectType.discriminator()).isEqualTo("objectType");
     }
@@ -110,18 +114,21 @@ public class SimpleObjectTest extends AbstractGeneratorTest {
         assertProperty(klass, "address", "Address", "getAddress", "setAddress");
         assertProperty(klass, "age", "int", "getAge", "setAge");
         assertProperty(klass, "dateOfBirth", "LocalDate", "getDateOfBirth", "setDateOfBirth");
-        assertProperty(klass, "favouriteColour", "Colour", "getFavouriteColour", "setFavouriteColour");
+        assertProperty(klass, "favouriteColour", "Colour", "getFavouriteColour",
+            "setFavouriteColour");
         assertProperty(klass, "firstname", "String", "getFirstname", "setFirstname");
         assertProperty(klass, "lastname", "String", "getLastname", "setLastname");
         assertProperty(klass, "registered", "boolean", "isRegistered", "setRegistered");
-        assertProperty(klass, "registrationDate", "ZonedDateTime", "getRegistrationDate", "setRegistrationDate");
+        assertProperty(klass, "registrationDate", "ZonedDateTime", "getRegistrationDate",
+            "setRegistrationDate");
         verifyClass();
     }
 
     @Test
     public void shouldFindEmployeeMembers() {
         expectClass("Employee");
-        assertThat(klass._extends().name()).isEqualTo("Person");
+        assertThat(klass._extends()
+            .name()).isEqualTo("Person");
         assertProperty(klass, "department", "String", "getDepartment", "setDepartment");
 
         fieldNames.remove("DISCRIMINATOR");

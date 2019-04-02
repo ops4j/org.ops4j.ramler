@@ -158,13 +158,15 @@ public class JavaGeneratorContext {
 
     private JType getObjectType(ObjectTypeDeclaration decl) {
         // special case for nested arrays
-        String ref = decl.name().equals("object") ? decl.type() : decl.name();
+        String ref = decl.name()
+            .equals("object") ? decl.type() : decl.name();
         return getModelPackage()._getClass(ref);
     }
 
     private JType getArrayType(ArrayTypeDeclaration decl) {
         JType itemType = getReferencedJavaType(decl.items());
-        return codeModel.ref(List.class).narrow(itemType);
+        return codeModel.ref(List.class)
+            .narrow(itemType);
     }
 
     private JType getBooleanType(BooleanTypeDeclaration decl) {
@@ -246,8 +248,10 @@ public class JavaGeneratorContext {
      */
     public JType getJavaType(TypeDeclaration decl) {
         if (decl instanceof ObjectTypeDeclaration) {
-            if (decl.type().equals(CommonConstants.OBJECT)) {
-                return codeModel.ref(Map.class).narrow(String.class, Object.class);
+            if (decl.type()
+                .equals(CommonConstants.OBJECT)) {
+                return codeModel.ref(Map.class)
+                    .narrow(String.class, Object.class);
             }
             return getModelPackage()._getClass(decl.type());
         }
@@ -265,7 +269,8 @@ public class JavaGeneratorContext {
      */
     public JType getJavaType(String type) {
         if (type.equals(CommonConstants.OBJECT)) {
-            return codeModel.ref(Map.class).narrow(String.class, Object.class);
+            return codeModel.ref(Map.class)
+                .narrow(String.class, Object.class);
         }
         if (type.equals(CommonConstants.STRING)) {
             return codeModel.ref(String.class);
@@ -279,7 +284,8 @@ public class JavaGeneratorContext {
         if (type.endsWith("[]")) {
             String itemTypeName = type.substring(0, type.length() - 2);
             JType itemType = getJavaType(itemTypeName);
-            return codeModel.ref(List.class).narrow(itemType);
+            return codeModel.ref(List.class)
+                .narrow(itemType);
         }
         return getReferencedJavaType(apiModel.getDeclaredType(type));
     }
@@ -293,7 +299,9 @@ public class JavaGeneratorContext {
     public void annotateAsGenerated(JDefinedClass klass) {
         klass.annotate(Generated.class)
             .param("value", "org.ops4j.ramler")
-            .param("date", ZonedDateTime.now().truncatedTo(SECONDS).format(ISO_OFFSET_DATE_TIME))
+            .param("date", ZonedDateTime.now()
+                .truncatedTo(SECONDS)
+                .format(ISO_OFFSET_DATE_TIME))
             .param("comments", "version " + Version.getRamlerVersion());
     }
 
@@ -308,14 +316,15 @@ public class JavaGeneratorContext {
      */
     public void addJavadoc(JDefinedClass klass, TypeDeclaration type) {
         if (type.description() == null) {
-            klass.javadoc().add("Generated from a RAML specification.");
+            klass.javadoc()
+                .add("Generated from a RAML specification.");
         }
         else {
-            klass.javadoc().add(type.description().value());
+            klass.javadoc()
+                .add(type.description()
+                    .value());
         }
     }
-
-
 
     /**
      * Gets the configuration of this generator.

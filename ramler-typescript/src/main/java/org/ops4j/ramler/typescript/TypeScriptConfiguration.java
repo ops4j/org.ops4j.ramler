@@ -33,6 +33,7 @@ public class TypeScriptConfiguration {
 
     /**
      * Gets the RAML source file name.
+     *
      * @return source file name
      */
     public String getSourceFile() {
@@ -41,7 +42,9 @@ public class TypeScriptConfiguration {
 
     /**
      * Sets the RAML source file name.
-     * @param sourceFile source file name
+     *
+     * @param sourceFile
+     *            source file name
      */
     public void setSourceFile(String sourceFile) {
         this.sourceFile = sourceFile;
@@ -49,6 +52,7 @@ public class TypeScriptConfiguration {
 
     /**
      * Gets the target directory for the generated TypeScript files.
+     *
      * @return target directory
      */
     public File getTargetDir() {
@@ -57,6 +61,7 @@ public class TypeScriptConfiguration {
 
     /**
      * Sets the target directory.
+     *
      * @param targetDir
      *            target directory
      */

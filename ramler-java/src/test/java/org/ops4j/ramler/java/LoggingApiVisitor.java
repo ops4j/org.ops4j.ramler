@@ -29,12 +29,11 @@ public class LoggingApiVisitor implements ApiVisitor {
 
     private static Logger log = LoggerFactory.getLogger(LoggingApiVisitor.class);
 
-    
     @Override
     public void visitObjectTypeStart(ObjectTypeDeclaration type) {
         log.debug("object type: name = {}, type = {}", type.name(), type.type());
     }
-    
+
     @Override
     public void visitObjectTypeProperty(ObjectTypeDeclaration type, TypeDeclaration property) {
         if (property instanceof ObjectTypeDeclaration) {
@@ -42,21 +41,25 @@ public class LoggingApiVisitor implements ApiVisitor {
             log.debug("prop={}, type={}", obj.name(), obj.type());
         }
         else {
-            log.debug("prop={}", property.name());            
+            log.debug("prop={}", property.name());
         }
     }
-    
+
     @Override
     public void visitMethodStart(Method method) {
-        if (method.responses().isEmpty()) {
+        if (method.responses()
+            .isEmpty()) {
             return;
         }
-        
-        Response response = method.responses().get(0);
-        if (response.body().isEmpty()) {
+
+        Response response = method.responses()
+            .get(0);
+        if (response.body()
+            .isEmpty()) {
             return;
         }
-        TypeDeclaration body = response.body().get(0);
+        TypeDeclaration body = response.body()
+            .get(0);
         log.debug("body = {}", body.type());
     }
 }

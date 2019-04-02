@@ -62,8 +62,11 @@ public class OpenApiCreatingApiVisitor implements ApiVisitor {
     public void visitApiStart(Api api) {
         openApi.setOpenapi("3.0.2");
         Info info = new InfoImpl();
-        info.setTitle(api.title().value());
-        String version = (api.version() == null) ? "undefined" : api.version().value();
+        info.setTitle(api.title()
+            .value());
+        String version = (api.version() == null) ? "undefined"
+            : api.version()
+                .value();
         info.setVersion(version);
         openApi.setInfo(info);
 
@@ -87,17 +90,21 @@ public class OpenApiCreatingApiVisitor implements ApiVisitor {
 
     @Override
     public void visitObjectTypeStart(ObjectTypeDeclaration type) {
-        if (context.getApiModel().isInternal(type)) {
+        if (context.getApiModel()
+            .isInternal(type)) {
             return;
         }
         objectSchema = new SchemaImpl();
         components.addSchema(type.name(), objectSchema);
         objectSchema.setTitle(type.name());
         if (type.description() != null) {
-            objectSchema.setDescription(type.description().value());
+            objectSchema.setDescription(type.description()
+                .value());
         }
-        TypeDeclaration parentType = type.parentTypes().get(0);
-        if (parentType.name().equals(CommonConstants.OBJECT)) {
+        TypeDeclaration parentType = type.parentTypes()
+            .get(0);
+        if (parentType.name()
+            .equals(CommonConstants.OBJECT)) {
             objectSchema.setType(SchemaType.OBJECT);
         }
         else {
@@ -129,7 +136,8 @@ public class OpenApiCreatingApiVisitor implements ApiVisitor {
         }
         Schema propertySchema = schemaBuilder.toSchema(property);
         if (property.description() != null) {
-            propertySchema.setDescription(property.description().value());
+            propertySchema.setDescription(property.description()
+                .value());
         }
 
         objectSchema.addProperty(property.name(), propertySchema);
@@ -143,7 +151,8 @@ public class OpenApiCreatingApiVisitor implements ApiVisitor {
         Schema schema = new SchemaImpl();
         schema.setTitle(type.name());
         if (type.description() != null) {
-            schema.setDescription(type.description().value());
+            schema.setDescription(type.description()
+                .value());
         }
 
         for (TypeDeclaration variant : type.of()) {
@@ -161,7 +170,8 @@ public class OpenApiCreatingApiVisitor implements ApiVisitor {
         schema.setTitle(type.name());
         schema.setType(SchemaType.STRING);
         if (type.description() != null) {
-            schema.setDescription(type.description().value());
+            schema.setDescription(type.description()
+                .value());
         }
         components.addSchema(type.name(), schema);
     }
@@ -178,7 +188,8 @@ public class OpenApiCreatingApiVisitor implements ApiVisitor {
             schema.setType(SchemaType.NUMBER);
         }
         if (type.description() != null) {
-            schema.setDescription(type.description().value());
+            schema.setDescription(type.description()
+                .value());
         }
         components.addSchema(type.name(), schema);
     }
@@ -189,11 +200,15 @@ public class OpenApiCreatingApiVisitor implements ApiVisitor {
         schema.setTitle(type.name());
         schema.setType(SchemaType.STRING);
         if (type.description() != null) {
-            schema.setDescription(type.description().value());
+            schema.setDescription(type.description()
+                .value());
         }
 
-        List<Object> enumValues = context.getApiModel().getEnumValues(type).stream()
-            .map(EnumValue::getName).collect(toList());
+        List<Object> enumValues = context.getApiModel()
+            .getEnumValues(type)
+            .stream()
+            .map(EnumValue::getName)
+            .collect(toList());
         schema.setEnumeration(enumValues);
         components.addSchema(type.name(), schema);
     }

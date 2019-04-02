@@ -68,7 +68,8 @@ public abstract class AbstractGeneratorTest {
         generator = new JavaGenerator(config);
         generator.generate();
 
-        codeModel = generator.getContext().getCodeModel();
+        codeModel = generator.getContext()
+            .getCodeModel();
         modelPackage = codeModel._package(String.format("org.ops4j.raml.%s.model", getBasename()));
         apiPackage = codeModel._package(String.format("org.ops4j.raml.%s.api", getBasename()));
     }
@@ -76,38 +77,54 @@ public abstract class AbstractGeneratorTest {
     public abstract String getBasename();
 
     protected void assertClasses(String... classNames) {
-        assertThat(modelPackage.classes()).toIterable().extracting(JDefinedClass::name)
+        assertThat(modelPackage.classes()).toIterable()
+            .extracting(JDefinedClass::name)
             .containsExactlyInAnyOrder(classNames);
     }
 
     protected void assertApiClasses(String... classNames) {
-        assertThat(apiPackage.classes()).toIterable().extracting(JDefinedClass::name)
+        assertThat(apiPackage.classes()).toIterable()
+            .extracting(JDefinedClass::name)
             .containsExactlyInAnyOrder(classNames);
     }
 
     protected void assertApiMethods(String className, String... methodNames) {
         JDefinedClass klass = apiPackage._getClass(className);
-        assertThat(klass.methods()).extracting(JMethod::name).containsExactlyInAnyOrder(methodNames);
+        assertThat(klass.methods()).extracting(JMethod::name)
+            .containsExactlyInAnyOrder(methodNames);
     }
 
     protected JMethod findApiMethod(String className, String methodName) {
         JDefinedClass klass = apiPackage._getClass(className);
-        return klass.methods().stream().filter(m -> m.name().equals(methodName)).findFirst().get();
+        return klass.methods()
+            .stream()
+            .filter(m -> m.name()
+                .equals(methodName))
+            .findFirst()
+            .get();
     }
 
     protected void assertReturnType(JMethod method, String returnType) {
-        assertThat(method.type().name()).isEqualTo(returnType);
+        assertThat(method.type()
+            .name()).isEqualTo(returnType);
     }
 
     protected void assertSignature(JMethod method, String... parameterTypes) {
         assertThat(method.listParamTypes()).hasSize(parameterTypes.length)
-            .extracting(JType::name).containsExactly(parameterTypes);
+            .extracting(JType::name)
+            .containsExactly(parameterTypes);
     }
 
     protected void assertSimpleAnnotation(JMethod method, String annotation, String argument) {
-        JAnnotationUse annotationUse = method.annotations().stream()
-            .filter(a -> a.getAnnotationClass().name().equals(annotation)).findFirst().get();
-        JAnnotationValue value = annotationUse.getAnnotationMembers().get("value");
+        JAnnotationUse annotationUse = method.annotations()
+            .stream()
+            .filter(a -> a.getAnnotationClass()
+                .name()
+                .equals(annotation))
+            .findFirst()
+            .get();
+        JAnnotationValue value = annotationUse.getAnnotationMembers()
+            .get("value");
         StringWriter writer = new StringWriter();
         JFormatter formatter = new JFormatter(writer);
         value.generate(formatter);
@@ -115,8 +132,13 @@ public abstract class AbstractGeneratorTest {
     }
 
     protected void assertNoArgAnnotation(JMethod method, Class<?> annotation) {
-        JAnnotationUse annotationUse = method.annotations().stream()
-            .filter(a -> a.getAnnotationClass().name().equals(annotation.getSimpleName())).findFirst().get();
+        JAnnotationUse annotationUse = method.annotations()
+            .stream()
+            .filter(a -> a.getAnnotationClass()
+                .name()
+                .equals(annotation.getSimpleName()))
+            .findFirst()
+            .get();
         StringWriter writer = new StringWriter();
         JFormatter formatter = new JFormatter(writer);
         annotationUse.generate(formatter);
@@ -125,8 +147,12 @@ public abstract class AbstractGeneratorTest {
 
     protected void expectClass(String className) {
         klass = modelPackage._getClass(className);
-        fieldNames = new HashSet<>(klass.fields().keySet());
-        methodNames = klass.methods().stream().map(m -> m.name()).collect(toSet());
+        fieldNames = new HashSet<>(klass.fields()
+            .keySet());
+        methodNames = klass.methods()
+            .stream()
+            .map(m -> m.name())
+            .collect(toSet());
     }
 
     protected void expectClass(String className, String... typeParams) {
@@ -148,22 +174,34 @@ public abstract class AbstractGeneratorTest {
         assertThat(methodNames).isEmpty();
     }
 
-    protected void assertProperty(JDefinedClass klass, String memberName, String typeName, String getterName, String setterName) {
-        JFieldVar field = klass.fields().get(memberName);
+    protected void assertProperty(JDefinedClass klass, String memberName, String typeName,
+        String getterName, String setterName) {
+        JFieldVar field = klass.fields()
+            .get(memberName);
         assertThat(field).isNotNull();
-        assertThat(field.type().name()).isEqualTo(typeName);
+        assertThat(field.type()
+            .name()).isEqualTo(typeName);
 
-        List<JMethod> getters = klass.methods().stream().filter(m -> m.name().equals(getterName)).collect(toList());
+        List<JMethod> getters = klass.methods()
+            .stream()
+            .filter(m -> m.name()
+                .equals(getterName))
+            .collect(toList());
         assertThat(getters).hasSize(1);
         JMethod getter = getters.get(0);
-        assertThat(getter.type().name()).isEqualTo(typeName);
+        assertThat(getter.type()
+            .name()).isEqualTo(typeName);
         assertThat(getter.hasSignature(new JType[0])).isEqualTo(true);
 
-        List<JMethod> setters = klass.methods().stream().filter(m -> m.name().equals(setterName)).collect(toList());
+        List<JMethod> setters = klass.methods()
+            .stream()
+            .filter(m -> m.name()
+                .equals(setterName))
+            .collect(toList());
         assertThat(setters).hasSize(1);
         JMethod setter = setters.get(0);
         assertThat(setter.type()).isEqualTo(codeModel.VOID);
-        assertThat(setter.hasSignature(new JType[]{field.type()})).isEqualTo(true);
+        assertThat(setter.hasSignature(new JType[] { field.type() })).isEqualTo(true);
 
         fieldNames.remove(memberName);
         methodNames.remove(getterName);
@@ -171,56 +209,85 @@ public abstract class AbstractGeneratorTest {
     }
 
     protected void assertField(JDefinedClass klass, String memberName, String typeName) {
-        JFieldVar field = klass.fields().get(memberName);
+        JFieldVar field = klass.fields()
+            .get(memberName);
         assertThat(field).isNotNull();
-        assertThat(field.type().name()).isEqualTo(typeName);
+        assertThat(field.type()
+            .name()).isEqualTo(typeName);
         fieldNames.remove(memberName);
     }
 
     protected void assertMethod(JDefinedClass klass, String memberName, String typeName) {
-        List<JMethod> methods = klass.methods().stream().filter(m -> m.name().equals(memberName)).collect(toList());
+        List<JMethod> methods = klass.methods()
+            .stream()
+            .filter(m -> m.name()
+                .equals(memberName))
+            .collect(toList());
         assertThat(methods).hasSize(1);
         JMethod method = methods.get(0);
-        assertThat(method.type().name()).isEqualTo(typeName);
+        assertThat(method.type()
+            .name()).isEqualTo(typeName);
         assertThat(method.hasSignature(new JType[0])).isEqualTo(true);
         methodNames.remove(memberName);
     }
 
-    protected void assertVariant(JDefinedClass klass, String memberName, String typeName, String checkerName, String getterName, String setterName) {
-        List<JMethod> checkers = klass.methods().stream().filter(m -> m.name().equals(checkerName)).collect(toList());
+    protected void assertVariant(JDefinedClass klass, String memberName, String typeName,
+        String checkerName, String getterName, String setterName) {
+        List<JMethod> checkers = klass.methods()
+            .stream()
+            .filter(m -> m.name()
+                .equals(checkerName))
+            .collect(toList());
         assertThat(checkers).hasSize(1);
         JMethod checker = checkers.get(0);
-        assertThat(checker.type().name()).isEqualTo("boolean");
+        assertThat(checker.type()
+            .name()).isEqualTo("boolean");
         assertThat(checker.hasSignature(new JType[0])).isEqualTo(true);
 
-        List<JMethod> getters = klass.methods().stream().filter(m -> m.name().equals(getterName)).collect(toList());
+        List<JMethod> getters = klass.methods()
+            .stream()
+            .filter(m -> m.name()
+                .equals(getterName))
+            .collect(toList());
         assertThat(getters).hasSize(1);
         JMethod getter = getters.get(0);
-        assertThat(getter.type().name()).isEqualTo(typeName);
+        assertThat(getter.type()
+            .name()).isEqualTo(typeName);
         assertThat(getter.hasSignature(new JType[0])).isEqualTo(true);
 
-        List<JMethod> setters = klass.methods().stream().filter(m -> m.name().equals(setterName)).collect(toList());
+        List<JMethod> setters = klass.methods()
+            .stream()
+            .filter(m -> m.name()
+                .equals(setterName))
+            .collect(toList());
         assertThat(setters).hasSize(1);
         JMethod setter = setters.get(0);
         assertThat(setter.type()).isEqualTo(codeModel.VOID);
-        assertThat(setter.hasSignature(new JType[]{modelPackage._getClass(typeName)})).isEqualTo(true);
+        assertThat(setter.hasSignature(new JType[] { modelPackage._getClass(typeName) }))
+            .isEqualTo(true);
 
         methodNames.remove(checkerName);
         methodNames.remove(getterName);
         methodNames.remove(setterName);
     }
 
-
-
-    protected void assertDiscriminator(JDefinedClass klass, String memberName, String typeName, String getterName) {
-        JFieldVar field = klass.fields().get(memberName);
+    protected void assertDiscriminator(JDefinedClass klass, String memberName, String typeName,
+        String getterName) {
+        JFieldVar field = klass.fields()
+            .get(memberName);
         assertThat(field).isNotNull();
-        assertThat(field.type().name()).isEqualTo(typeName);
+        assertThat(field.type()
+            .name()).isEqualTo(typeName);
 
-        List<JMethod> getters = klass.methods().stream().filter(m -> m.name().equals(getterName)).collect(toList());
+        List<JMethod> getters = klass.methods()
+            .stream()
+            .filter(m -> m.name()
+                .equals(getterName))
+            .collect(toList());
         assertThat(getters).hasSize(1);
         JMethod getter = getters.get(0);
-        assertThat(getter.type().name()).isEqualTo(typeName);
+        assertThat(getter.type()
+            .name()).isEqualTo(typeName);
         assertThat(getter.hasSignature(new JType[0])).isTrue();
 
         fieldNames.remove(memberName);

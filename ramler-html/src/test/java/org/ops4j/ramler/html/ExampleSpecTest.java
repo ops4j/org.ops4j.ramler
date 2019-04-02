@@ -47,7 +47,10 @@ public class ExampleSpecTest {
     }
 
     private ExampleSpec getExample(TypeDeclaration type) {
-        return type.examples().isEmpty() ? type.example() : type.examples().get(0);
+        return type.examples()
+            .isEmpty() ? type.example()
+                : type.examples()
+                    .get(0);
     }
 
     @Test
@@ -58,21 +61,27 @@ public class ExampleSpecTest {
         ExampleSpec exampleSpec = getExample(userGroup);
         TypeInstance instance = exampleSpec.structuredValue();
         assertThat(instance.isScalar()).isFalse();
-        TypeInstanceProperty users = instance.properties().get(1);
+        TypeInstanceProperty users = instance.properties()
+            .get(1);
         assertThat(users.isArray()).isTrue();
-        TypeInstance user = users.values().get(0);
-        assertThat(user.properties().get(0).name()).isEqualTo("firstname");
-        assertThat(user.properties().get(0).value().value()).isEqualTo("Anna");
+        TypeInstance user = users.values()
+            .get(0);
+        assertThat(user.properties()
+            .get(0)
+            .name()).isEqualTo("firstname");
+        assertThat(user.properties()
+            .get(0)
+            .value()
+            .value()).isEqualTo("Anna");
 
         ExampleSpecJsonRenderer renderer = new ExampleSpecJsonRenderer();
         JsonValue jsonValue = renderer.toJsonValue(userGroup, exampleSpec);
 
-        assertThat(jsonValue.toString()).
-            isEqualTo("{\"name\":\"Editors\",\"users\":["
-                + "{\"firstname\":\"Anna\",\"lastname\":\"Walter\",\"age\":32,"
-                + "\"address\":{\"city\":\"Hamburg\",\"street\":\"Colonnaden\"},"
-                + "\"registered\":true,\"dateOfBirth\":\"1985-04-30\","
-                + "\"registrationDate\":\"2016-02-28T16:41:41.090Z\"}]}");
+        assertThat(jsonValue.toString()).isEqualTo("{\"name\":\"Editors\",\"users\":["
+            + "{\"firstname\":\"Anna\",\"lastname\":\"Walter\",\"age\":32,"
+            + "\"address\":{\"city\":\"Hamburg\",\"street\":\"Colonnaden\"},"
+            + "\"registered\":true,\"dateOfBirth\":\"1985-04-30\","
+            + "\"registrationDate\":\"2016-02-28T16:41:41.090Z\"}]}");
     }
 
     @Test
@@ -81,7 +90,8 @@ public class ExampleSpecTest {
         TypeDeclaration nameList = apiModel.getDeclaredType("NameList");
         assertThat(nameList).isNotNull();
         ExampleSpec exampleSpec = getExample(nameList);
-        List<TypeInstanceProperty> props = exampleSpec.structuredValue().properties();
+        List<TypeInstanceProperty> props = exampleSpec.structuredValue()
+            .properties();
         TypeInstanceProperty p0 = props.get(0);
         assertThat(p0.isArray()).isTrue();
 

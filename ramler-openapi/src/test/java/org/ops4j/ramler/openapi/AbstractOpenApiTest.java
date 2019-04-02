@@ -78,12 +78,16 @@ public abstract class AbstractOpenApiTest {
 
     private void validateJson() {
         JsonValidationService service = JsonValidationService.newInstance();
-        JsonSchema schema = service.readSchema(getClass().getResourceAsStream("/schema/openapi-v3-schema.json"));
+        JsonSchema schema = service
+            .readSchema(getClass().getResourceAsStream("/schema/openapi-v3-schema.json"));
         List<Problem> problems = new ArrayList<>();
 
         ProblemHandler handler = service.createProblemPrinter(log::error);
-        Path path = config.getTargetDir().toPath().resolve(getBasename() + ".json");
-        try (JsonReader reader = service.createReader(path, schema, ProblemHandler.collectingTo(problems))) {
+        Path path = config.getTargetDir()
+            .toPath()
+            .resolve(getBasename() + ".json");
+        try (JsonReader reader = service.createReader(path, schema,
+            ProblemHandler.collectingTo(problems))) {
             reader.readValue();
         }
 
@@ -94,16 +98,20 @@ public abstract class AbstractOpenApiTest {
         fail("There are JSON schema validation problems.");
     }
 
-    private void parseYaml() throws IOException, ParseException  {
-        Path path = config.getTargetDir().toPath().resolve(getBasename() + ".yaml");
-        openApi = OpenApiParser.parse(path.toUri().toURL());
+    private void parseYaml() throws IOException, ParseException {
+        Path path = config.getTargetDir()
+            .toPath()
+            .resolve(getBasename() + ".yaml");
+        openApi = OpenApiParser.parse(path.toUri()
+            .toURL());
 
     }
 
     protected void assertSchemas(String... names) {
-        assertThat(openApi.getComponents().getSchemas().keySet()).containsExactlyInAnyOrder(names);
+        assertThat(openApi.getComponents()
+            .getSchemas()
+            .keySet()).containsExactlyInAnyOrder(names);
     }
-
 
     public abstract String getBasename();
 

@@ -73,12 +73,15 @@ public class UnionGenerator {
         this.context = context;
         this.codeModel = context.getCodeModel();
         this.pkg = context.getModelPackage();
-        this.jacksonEnabled = context.getConfig().isJacksonUnion();
+        this.jacksonEnabled = context.getConfig()
+            .isJacksonUnion();
     }
 
     /**
      * Generates a Java class for the given union type.
-     * @param type union type
+     * 
+     * @param type
+     *            union type
      */
     public void generateUnionClass(UnionTypeDeclaration type) {
         if (jacksonEnabled) {
@@ -110,15 +113,16 @@ public class UnionGenerator {
         }
 
         JDefinedClass unionClass = pkg._getClass(type.name());
-        JClass baseClass = codeModel.ref(StdSerializer.class).narrow(unionClass);
+        JClass baseClass = codeModel.ref(StdSerializer.class)
+            .narrow(unionClass);
         serializer._extends(baseClass);
 
         addDefaultSerialVersionUid(serializer);
 
         JMethod constructor = serializer.constructor(JMod.PUBLIC);
-        JInvocation sup = constructor.body().invoke("super");
+        JInvocation sup = constructor.body()
+            .invoke("super");
         sup.arg(unionClass.dotclass());
-
 
         JMethod serialize = serializer.method(JMod.PUBLIC, codeModel.VOID, "serialize");
         serialize.annotate(Override.class);
@@ -127,7 +131,9 @@ public class UnionGenerator {
         serialize.param(SerializerProvider.class, "provider");
         serialize._throws(IOException.class);
 
-        serialize.body().invoke(gen, "writeObject").arg(value.invoke("value"));
+        serialize.body()
+            .invoke(gen, "writeObject")
+            .arg(value.invoke("value"));
     }
 
     private void addDefaultSerialVersionUid(JDefinedClass klass) {
@@ -147,13 +153,15 @@ public class UnionGenerator {
         }
 
         JDefinedClass unionClass = pkg._getClass(type.name());
-        JClass baseClass = codeModel.ref(StdDeserializer.class).narrow(unionClass);
+        JClass baseClass = codeModel.ref(StdDeserializer.class)
+            .narrow(unionClass);
         deserializer._extends(baseClass);
 
         addDefaultSerialVersionUid(deserializer);
 
         JMethod constructor = deserializer.constructor(JMod.PUBLIC);
-        JInvocation sup = constructor.body().invoke("super");
+        JInvocation sup = constructor.body()
+            .invoke("super");
         sup.arg(unionClass.dotclass());
 
         for (TypeDeclaration variant : type.of()) {
@@ -170,8 +178,10 @@ public class UnionGenerator {
         JClass jsonNode = codeModel.ref(JsonNode.class);
         JBlock body = deserialize.body();
 
-        JVar mapper = body.decl(objectMapper, "mapper", JExpr.cast(objectMapper, parser.invoke("getCodec")));
-        JVar node = body.decl(jsonNode, "node", mapper.invoke("readTree").arg(parser));
+        JVar mapper = body.decl(objectMapper, "mapper",
+            JExpr.cast(objectMapper, parser.invoke("getCodec")));
+        JVar node = body.decl(jsonNode, "node", mapper.invoke("readTree")
+            .arg(parser));
         JVar result = body.decl(unionClass, "result", JExpr._new(unionClass));
 
         for (TypeDeclaration variant : type.of()) {
@@ -179,15 +189,21 @@ public class UnionGenerator {
         }
 
         body._throw(JExpr._new(codeModel.ref(IOException.class))
-            .arg(JExpr.lit("Cannot determine type of ").plus(node)));
+            .arg(JExpr.lit("Cannot determine type of ")
+                .plus(node)));
 
     }
 
     private void tryVariant(JBlock body, JVar result, JVar node, JVar mapper,
         TypeDeclaration variant) {
-        JBlock then = body._if(JExpr.invoke("looksLike" + variant.name()).arg(node))._then();
-        then.invoke(result, "set" + variant.name()).arg(JExpr.invoke(mapper, "convertValue")
-            .arg(node).arg(pkg._getClass(variant.name()).dotclass()));
+        JBlock then = body._if(JExpr.invoke("looksLike" + variant.name())
+            .arg(node))
+            ._then();
+        then.invoke(result, "set" + variant.name())
+            .arg(JExpr.invoke(mapper, "convertValue")
+                .arg(node)
+                .arg(pkg._getClass(variant.name())
+                    .dotclass()));
         then._return(result);
     }
 
@@ -198,18 +214,22 @@ public class UnionGenerator {
         if (variant instanceof ObjectTypeDeclaration) {
             ObjectTypeDeclaration objectType = (ObjectTypeDeclaration) variant;
             JExpression conjunction = buildRequiredPropertiesConjunction(objectType, node);
-            method.body()._return(conjunction);
+            method.body()
+                ._return(conjunction);
         }
         else {
-            method.body()._return(JExpr.FALSE);
+            method.body()
+                ._return(JExpr.FALSE);
         }
     }
 
-    private JExpression buildRequiredPropertiesConjunction(ObjectTypeDeclaration objectType, JVar node) {
+    private JExpression buildRequiredPropertiesConjunction(ObjectTypeDeclaration objectType,
+        JVar node) {
         JExpression conjunction = null;
         for (TypeDeclaration prop : objectType.properties()) {
             if (prop.required()) {
-                JInvocation hasProp = JExpr.invoke(node, "has").arg(prop.name());
+                JInvocation hasProp = JExpr.invoke(node, "has")
+                    .arg(prop.name());
                 if (conjunction == null) {
                     conjunction = hasProp;
                 }
@@ -223,9 +243,11 @@ public class UnionGenerator {
 
     private void addJacksonAnnotations(JDefinedClass klass, UnionTypeDeclaration type) {
         JDefinedClass serializer = pkg._getClass(type.name() + "Serializer");
-        klass.annotate(JsonSerialize.class).param("using", serializer);
+        klass.annotate(JsonSerialize.class)
+            .param("using", serializer);
         JDefinedClass deserializer = pkg._getClass(type.name() + "Deserializer");
-        klass.annotate(JsonDeserialize.class).param("using", deserializer);
+        klass.annotate(JsonDeserialize.class)
+            .param("using", deserializer);
     }
 
     private void addValueField(JDefinedClass klass) {
@@ -234,21 +256,28 @@ public class UnionGenerator {
 
     private void addValueGetter(JDefinedClass klass) {
         JMethod getter = klass.method(JMod.PUBLIC, codeModel._ref(Object.class), VALUE);
-        getter.body()._return(klass.fields().get(VALUE));
+        getter.body()
+            ._return(klass.fields()
+                .get(VALUE));
     }
 
     private void addVariantChecker(JDefinedClass klass, TypeDeclaration variant) {
         String methodName = Names.getCheckerName(variant.name());
         JDefinedClass variantClass = pkg._getClass(variant.name());
         JMethod checker = klass.method(JMod.PUBLIC, codeModel.BOOLEAN, methodName);
-        checker.body()._return(klass.fields().get(VALUE)._instanceof(variantClass));
+        checker.body()
+            ._return(klass.fields()
+                .get(VALUE)
+                ._instanceof(variantClass));
     }
 
     private void addVariantGetter(JDefinedClass klass, TypeDeclaration variant) {
         String methodName = Names.getGetterName(variant.name());
         JDefinedClass variantClass = pkg._getClass(variant.name());
         JMethod getter = klass.method(JMod.PUBLIC, variantClass, methodName);
-        getter.body()._return(JExpr.cast(variantClass, klass.fields().get(VALUE)));
+        getter.body()
+            ._return(JExpr.cast(variantClass, klass.fields()
+                .get(VALUE)));
     }
 
     private void addVariantSetter(JDefinedClass klass, TypeDeclaration variant) {
@@ -257,6 +286,8 @@ public class UnionGenerator {
         JDefinedClass variantClass = pkg._getClass(variant.name());
         JMethod setter = klass.method(JMod.PUBLIC, codeModel.VOID, methodName);
         JVar param = setter.param(variantClass, paramName);
-        setter.body().assign(JExpr._this().ref(VALUE), param);
+        setter.body()
+            .assign(JExpr._this()
+                .ref(VALUE), param);
     }
 }

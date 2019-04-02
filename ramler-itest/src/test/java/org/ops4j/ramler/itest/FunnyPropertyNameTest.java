@@ -41,10 +41,12 @@ public class FunnyPropertyNameTest {
         StringWriter sw = new StringWriter();
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true);
-        mapper.writer().writeValue(sw, funnyNames);
+        mapper.writer()
+            .writeValue(sw, funnyNames);
         String json = sw.toString();
 
-        assertThat(json).isEqualTo("{\"customer.name\":\"Donald Duck\",\"interface\":-1,\"rawName\":\"Voldemort\",\"static\":true}");
+        assertThat(json).isEqualTo(
+            "{\"customer.name\":\"Donald Duck\",\"interface\":-1,\"rawName\":\"Voldemort\",\"static\":true}");
     }
 
     @Test

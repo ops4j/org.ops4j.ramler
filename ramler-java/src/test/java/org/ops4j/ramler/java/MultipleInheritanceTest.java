@@ -25,6 +25,7 @@ public class MultipleInheritanceTest extends AbstractGeneratorTest {
     public String getBasename() {
         return "multipleInheritance";
     }
+
     @Test
     public void shouldFindModelClasses() {
         assertClasses("A", "B", "C");

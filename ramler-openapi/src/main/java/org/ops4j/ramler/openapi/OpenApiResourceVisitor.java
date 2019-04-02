@@ -69,10 +69,13 @@ public class OpenApiResourceVisitor implements ApiVisitor {
 
         pathItem = new PathItemImpl();
         if (resource.description() != null) {
-            pathItem.setDescription(resource.description().value());
+            pathItem.setDescription(resource.description()
+                .value());
         }
-        pathItem.setSummary(resource.displayName().value());
-        openApi.getPaths().addPathItem(resource.resourcePath(), pathItem);
+        pathItem.setSummary(resource.displayName()
+            .value());
+        openApi.getPaths()
+            .addPathItem(resource.resourcePath(), pathItem);
     }
 
     @Override
@@ -88,18 +91,22 @@ public class OpenApiResourceVisitor implements ApiVisitor {
     @Override
     public void visitMethodStart(Method method) {
         Operation operation = buildOperation(method);
-        operation.addTag(outerResource.resourcePath().substring(1));
+        operation.addTag(outerResource.resourcePath()
+            .substring(1));
 
-        pathItem.setSummary(method.displayName().value());
+        pathItem.setSummary(method.displayName()
+            .value());
         if (method.description() != null) {
-            pathItem.setDescription(method.description().value());
+            pathItem.setDescription(method.description()
+                .value());
         }
 
         for (TypeDeclaration pathParam : apiModel.findAllUriParameters(method)) {
             Parameter parameter = new ParameterImpl();
             parameter.setName(pathParam.name());
             if (pathParam.description() != null) {
-                parameter.setDescription(pathParam.description().value());
+                parameter.setDescription(pathParam.description()
+                    .value());
             }
             parameter.setIn(In.PATH);
             parameter.setRequired(true);
@@ -111,7 +118,8 @@ public class OpenApiResourceVisitor implements ApiVisitor {
             Parameter parameter = new ParameterImpl();
             parameter.setName(queryParam.name());
             if (queryParam.description() != null) {
-                parameter.setDescription(queryParam.description().value());
+                parameter.setDescription(queryParam.description()
+                    .value());
             }
             parameter.setIn(In.QUERY);
             parameter.setRequired(queryParam.required());
@@ -119,8 +127,10 @@ public class OpenApiResourceVisitor implements ApiVisitor {
             operation.addParameter(parameter);
         }
 
-        if (!method.body().isEmpty()) {
-            TypeDeclaration body = method.body().get(0);
+        if (!method.body()
+            .isEmpty()) {
+            TypeDeclaration body = method.body()
+                .get(0);
             RequestBody requestBody = new RequestBodyImpl();
             requestBody.setRequired(body.required());
             Content content = new ContentImpl();
@@ -134,7 +144,8 @@ public class OpenApiResourceVisitor implements ApiVisitor {
         APIResponses responses = new APIResponsesImpl();
         operation.setResponses(responses);
         for (Response response : method.responses()) {
-            responses.addAPIResponse(response.code().value(), convertResponse(response));
+            responses.addAPIResponse(response.code()
+                .value(), convertResponse(response));
         }
     }
 
@@ -177,13 +188,16 @@ public class OpenApiResourceVisitor implements ApiVisitor {
             apiResponse.setDescription("No description");
         }
         else {
-            apiResponse.setDescription(response.description().value());
+            apiResponse.setDescription(response.description()
+                .value());
         }
 
-        if (!response.body().isEmpty()) {
+        if (!response.body()
+            .isEmpty()) {
             Content content = new ContentImpl();
             MediaTypeImpl mediaType = new MediaTypeImpl();
-            TypeDeclaration body = response.body().get(0);
+            TypeDeclaration body = response.body()
+                .get(0);
             mediaType.setSchema(schemaBuilder.toSchema(body));
             content.addMediaType(body.name(), mediaType);
             apiResponse.setContent(content);

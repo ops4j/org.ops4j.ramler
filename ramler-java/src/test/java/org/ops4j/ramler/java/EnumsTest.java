@@ -47,11 +47,13 @@ public class EnumsTest extends AbstractGeneratorTest {
     public void shouldFindEnumValues() throws IllegalAccessException {
         klass = modelPackage._getClass("Colour");
         assertThat(klass.getClassType()).isEqualTo(ClassType.ENUM);
-        Map<String,JEnumConstant> enums = (Map<String, JEnumConstant>) FieldUtils.readField(klass, "enumConstantsByName", true);
+        Map<String, JEnumConstant> enums = (Map<String, JEnumConstant>) FieldUtils.readField(klass,
+            "enumConstantsByName", true);
         assertThat(enums.keySet()).contains("LIGHT_BLUE", "RED");
 
         JEnumConstant lightBlue = enums.get("LIGHT_BLUE");
-        assertThat(lightBlue.javadoc().get(0)).isEqualTo("Colour of the sky");
+        assertThat(lightBlue.javadoc()
+            .get(0)).isEqualTo("Colour of the sky");
 
         List<JExpression> args = (List<JExpression>) FieldUtils.readField(lightBlue, "args", true);
         assertThat(args).hasSize(1);

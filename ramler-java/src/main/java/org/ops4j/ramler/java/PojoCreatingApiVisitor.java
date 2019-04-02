@@ -58,7 +58,8 @@ public class PojoCreatingApiVisitor implements ApiVisitor {
 
     @Override
     public void visitObjectTypeStart(ObjectTypeDeclaration type) {
-        if (context.getApiModel().isInternal(type)) {
+        if (context.getApiModel()
+            .isInternal(type)) {
             return;
         }
         try {
@@ -73,7 +74,8 @@ public class PojoCreatingApiVisitor implements ApiVisitor {
 
     @Override
     public void visitUnionType(UnionTypeDeclaration type) {
-        String declaredName = context.getApiModel().getDeclaredName(type);
+        String declaredName = context.getApiModel()
+            .getDeclaredName(type);
         if (declaredName == null) {
             return;
         }

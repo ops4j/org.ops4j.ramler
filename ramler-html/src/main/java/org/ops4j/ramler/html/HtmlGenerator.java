@@ -52,7 +52,8 @@ public class HtmlGenerator {
     /**
      * Creates an HTML generator with the given configuration.
      *
-     * @param config code generator configuration
+     * @param config
+     *            code generator configuration
      */
     public HtmlGenerator(HtmlConfiguration config) {
         this.config = config;
@@ -65,7 +66,9 @@ public class HtmlGenerator {
 
     /**
      * Generates HTML documentation for the given configuration.
-     * @throws IOException if generated files cannot be written
+     * 
+     * @throws IOException
+     *             if generated files cannot be written
      */
     public void generate() throws IOException {
         ApiModel apiModel = new ApiModelBuilder().buildApiModel(config.getSourceFile());
@@ -75,7 +78,8 @@ public class HtmlGenerator {
 
         File targetDir = new File(config.getTargetDir());
         createDirectoryIfNeeded(targetDir);
-        Files.write(targetDir.toPath().resolve("index.html"), result.getBytes(StandardCharsets.UTF_8));
+        Files.write(targetDir.toPath()
+            .resolve("index.html"), result.getBytes(StandardCharsets.UTF_8));
 
         writeWebResources(targetDir);
     }
@@ -91,20 +95,20 @@ public class HtmlGenerator {
 
     private void writeDefaultWebResources(File targetDir) {
         Stream.of("css/print.css",
-                "css/screen.css",
-                "fonts/slate.eot",
-                "fonts/slate.svg",
-                "fonts/slate.ttf",
-                "fonts/slate.woff",
-                "fonts/slate.woff2",
-                "images/logo.png",
-                "images/navbar.png",
-                "js/app/lang.js",
-                "js/app/search.js",
-                "js/app/toc.js",
-                "js/lib/jquery.highlight.js",
-                "js/lib/jquery.tocify.js")
-        .forEach(f -> copyTo(f, targetDir));
+            "css/screen.css",
+            "fonts/slate.eot",
+            "fonts/slate.svg",
+            "fonts/slate.ttf",
+            "fonts/slate.woff",
+            "fonts/slate.woff2",
+            "images/logo.png",
+            "images/navbar.png",
+            "js/app/lang.js",
+            "js/app/search.js",
+            "js/app/toc.js",
+            "js/lib/jquery.highlight.js",
+            "js/lib/jquery.tocify.js")
+            .forEach(f -> copyTo(f, targetDir));
     }
 
     private void copyCustomWebResources(File sourceDir, File targetDir) {
@@ -121,7 +125,8 @@ public class HtmlGenerator {
         Path relPath = sourceRoot.relativize(sourcePath);
         Path targetPath = targetRoot.resolve(relPath);
         try {
-            if (sourcePath.toFile().isDirectory()) {
+            if (sourcePath.toFile()
+                .isDirectory()) {
                 createDirectoryIfNeeded(targetPath.toFile());
             }
             else {
@@ -135,9 +140,11 @@ public class HtmlGenerator {
     }
 
     private void copyTo(String file, File targetDir) {
-        try (InputStream is = getClass().getClassLoader().getResourceAsStream(file)) {
+        try (InputStream is = getClass().getClassLoader()
+            .getResourceAsStream(file)) {
             createDirectoryIfNeeded(new File(targetDir, file).getParentFile());
-            Files.copy(is, targetDir.toPath().resolve(file), REPLACE_EXISTING);
+            Files.copy(is, targetDir.toPath()
+                .resolve(file), REPLACE_EXISTING);
         }
         catch (IOException exc) {
             throw Exceptions.unchecked(exc);

@@ -28,8 +28,9 @@ public class SimpleObjectTest extends AbstractGeneratorTest {
 
     @Test
     public void shouldFindModules() {
-        assertModules("address", "age", "colour", "employee", "integers", "manager", "name", "numbers",
-                "person", "persons", "temporals", "user-group", "user");
+        assertModules("address", "age", "colour", "employee", "integers", "manager", "name",
+            "numbers",
+            "person", "persons", "temporals", "user-group", "user");
     }
 
     @Test
@@ -51,10 +52,10 @@ public class SimpleObjectTest extends AbstractGeneratorTest {
     public void shouldFindColourEnum() {
         expectEnum("Colour");
         assertImports();
-        assertEnumMember("LIGHT_BLUE","'lightBlue'");
-        assertEnumMember("RED","'red'");
-        assertEnumMember("YELLOW","'yellow'");
-        assertEnumMember("GREEN","'green'");
+        assertEnumMember("LIGHT_BLUE", "'lightBlue'");
+        assertEnumMember("RED", "'red'");
+        assertEnumMember("YELLOW", "'yellow'");
+        assertEnumMember("GREEN", "'green'");
         verifyEnum();
     }
 

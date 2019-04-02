@@ -12,7 +12,9 @@ public class GeneratorException extends RamlerException {
 
     /**
      * Creates an exception with the given message.
-     * @param message message
+     *
+     * @param message
+     *            message
      */
     public GeneratorException(String message) {
         super(message);
@@ -20,8 +22,11 @@ public class GeneratorException extends RamlerException {
 
     /**
      * Creates an exception with the given message and cause.
-     * @param message message
-     * @param cause cause
+     *
+     * @param message
+     *            message
+     * @param cause
+     *            cause
      */
     public GeneratorException(String message, Throwable cause) {
         super(message, cause);
@@ -29,7 +34,9 @@ public class GeneratorException extends RamlerException {
 
     /**
      * Creates an exception with the given cause.
-     * @param cause cause
+     *
+     * @param cause
+     *            cause
      */
     public GeneratorException(Throwable cause) {
         super(cause);

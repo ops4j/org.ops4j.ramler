@@ -11,4 +11,5 @@ test-output
 .idea
 *.iml
 node_modules/
-.mvn/jvm.config
+maven-wrapper.jar
+

@@ -85,7 +85,8 @@ public class JavaConfiguration {
      * @return the model package, defaulting to {@code model}.
      */
     public String getModelPackage() {
-        return Optional.ofNullable(modelPackage).orElse("model");
+        return Optional.ofNullable(modelPackage)
+            .orElse("model");
     }
 
     /**
@@ -109,7 +110,8 @@ public class JavaConfiguration {
      * @return the resource package, defaulting to {@code api}.
      */
     public String getApiPackage() {
-        return Optional.ofNullable(apiPackage).orElse("api");
+        return Optional.ofNullable(apiPackage)
+            .orElse("api");
     }
 
     /**
@@ -132,7 +134,8 @@ public class JavaConfiguration {
      * @return the delegator package, defaulting to {@code delegator}.
      */
     public String getDelegatorPackage() {
-        return Optional.ofNullable(delegatorPackage).orElse("delegator");
+        return Optional.ofNullable(delegatorPackage)
+            .orElse("delegator");
     }
 
     /**
@@ -195,7 +198,8 @@ public class JavaConfiguration {
      * @return the interfaceNameSuffix
      */
     public String getInterfaceNameSuffix() {
-        return Optional.ofNullable(interfaceNameSuffix).orElse("Resource");
+        return Optional.ofNullable(interfaceNameSuffix)
+            .orElse("Resource");
     }
 
     /**
@@ -210,6 +214,7 @@ public class JavaConfiguration {
 
     /**
      * Should discriminator properties be mutable?
+     * 
      * @return true if discriminators are mutable
      */
     public boolean isDiscriminatorMutable() {
@@ -218,7 +223,9 @@ public class JavaConfiguration {
 
     /**
      * Should discriminator properties be mutable?
-     * @param discriminatorMutable desired setting
+     * 
+     * @param discriminatorMutable
+     *            desired setting
      */
     public void setDiscriminatorMutable(boolean discriminatorMutable) {
         this.discriminatorMutable = discriminatorMutable;
@@ -226,6 +233,7 @@ public class JavaConfiguration {
 
     /**
      * Should Jackson annotation {@code @JsonTypeInfo} be used where appropriate?
+     * 
      * @return true if type info is added to generated code
      */
     public boolean isJacksonTypeInfo() {
@@ -234,7 +242,9 @@ public class JavaConfiguration {
 
     /**
      * Should Jackson annotation {@code @JsonTypeInfo} be used where appropriate?
-     * @param jacksonTypeInfo desired setting
+     * 
+     * @param jacksonTypeInfo
+     *            desired setting
      */
     public void setJacksonTypeInfo(boolean jacksonTypeInfo) {
         this.jacksonTypeInfo = jacksonTypeInfo;
@@ -242,6 +252,7 @@ public class JavaConfiguration {
 
     /**
      * Should Jackson annotation {@code @JsonProperty} be used where necessary?
+     * 
      * @return true if differing JSON property name is added to generated code
      */
     public boolean isJacksonPropertyName() {
@@ -250,12 +261,13 @@ public class JavaConfiguration {
 
     /**
      * Should Jackson annotation {@code @JsonProperty} be used where necessary?
-     * @param jacksonPropertyName desired setting
+     * 
+     * @param jacksonPropertyName
+     *            desired setting
      */
     public void setJacksonPropertyName(boolean jacksonPropertyName) {
         this.jacksonPropertyName = jacksonPropertyName;
     }
-
 
     /**
      * @return the delegators
@@ -264,59 +276,60 @@ public class JavaConfiguration {
         return delegators;
     }
 
-
     /**
-     * @param delegators the delegators to set
+     * @param delegators
+     *            the delegators to set
      */
     public void setDelegators(boolean delegators) {
         this.delegators = delegators;
     }
 
-
     /**
      * @return the delegatorSuffix
      */
     public String getDelegatorSuffix() {
-        return Optional.ofNullable(delegatorSuffix).orElse("Delegator");
+        return Optional.ofNullable(delegatorSuffix)
+            .orElse("Delegator");
     }
 
-
     /**
-     * @param delegatorSuffix the delegatorSuffix to set
+     * @param delegatorSuffix
+     *            the delegatorSuffix to set
      */
     public void setDelegatorSuffix(String delegatorSuffix) {
         this.delegatorSuffix = delegatorSuffix;
     }
 
-
     /**
      * @return the delegateFieldName
      */
     public String getDelegateFieldName() {
-        return Optional.ofNullable(delegateFieldName).orElse("delegate");
+        return Optional.ofNullable(delegateFieldName)
+            .orElse("delegate");
     }
 
-
     /**
-     * @param delegateFieldName the delegateFieldName to set
+     * @param delegateFieldName
+     *            the delegateFieldName to set
      */
     public void setDelegateFieldName(String delegateFieldName) {
         this.delegateFieldName = delegateFieldName;
     }
 
-
     /**
      * Should Jackson annotations {@code @JsonSerializer} etc. be used for union types?
+     * 
      * @return true annotations should be added to generated code
      */
     public boolean isJacksonUnion() {
         return jacksonUnion;
     }
 
-
     /**
      * Should Jackson annotations {@code @JsonSerializer} etc. be used for union types?
-     * @param jacksonPropertyName desired setting
+     * 
+     * @param jacksonPropertyName
+     *            desired setting
      */
     public void setJacksonUnion(boolean jacksonUnion) {
         this.jacksonUnion = jacksonUnion;

@@ -50,7 +50,10 @@ public class ExampleSpecJsonRenderer {
         JsonObjectBuilder builder = createObject(instance);
         JsonObject jsonObject = builder.build();
         if (isArray(type)) {
-            return jsonObject.entrySet().iterator().next().getValue();
+            return jsonObject.entrySet()
+                .iterator()
+                .next()
+                .getValue();
         }
         if (!isObject(type) && jsonObject.containsKey("value")) {
             return jsonObject.get("value");
@@ -69,7 +72,8 @@ public class ExampleSpecJsonRenderer {
         if (value instanceof Long) {
             return Json.createValue((Long) value);
         }
-        throw new IllegalArgumentException("Unsupported value class: " + value.getClass().getName());
+        throw new IllegalArgumentException("Unsupported value class: " + value.getClass()
+            .getName());
     }
 
     /**
@@ -108,7 +112,8 @@ public class ExampleSpecJsonRenderer {
     }
 
     private boolean isObject(TypeInstanceProperty tip) {
-        return !tip.isArray() && !tip.value().isScalar();
+        return !tip.isArray() && !tip.value()
+            .isScalar();
     }
 
     private boolean isArray(TypeInstanceProperty tip) {
@@ -150,7 +155,8 @@ public class ExampleSpecJsonRenderer {
 
     private void addScalarOrNull(JsonObjectBuilder builder, TypeInstanceProperty tip) {
         String name = tip.name();
-        Object value = tip.value().value();
+        Object value = tip.value()
+            .value();
         if (value instanceof Integer) {
             builder.add(name, (Integer) value);
         }
@@ -169,11 +175,15 @@ public class ExampleSpecJsonRenderer {
     }
 
     private boolean isObject(TypeInstance instance) {
-        return !instance.isScalar() && !instance.properties().get(0).isArray();
+        return !instance.isScalar() && !instance.properties()
+            .get(0)
+            .isArray();
     }
 
     private boolean isArray(TypeInstance instance) {
-        return !instance.isScalar() && instance.properties().get(0).isArray();
+        return !instance.isScalar() && instance.properties()
+            .get(0)
+            .isArray();
     }
 
     private JsonObjectBuilder createObject(TypeInstance instance) {

@@ -27,9 +27,9 @@ public class ApiModelBuilderTest {
     @Test
     public void shouldLogParserErrors() {
         assertThatExceptionOfType(ParserException.class)
-                .isThrownBy(() -> new ApiModelBuilder().buildApiModel("raml/syntaxError.raml"))
-                .withMessageContaining("RAML syntax errors")
-                .withMessageContaining("/types/City/properties/population/type")
-                .withMessageContaining("Invalid reference 'int'");
+            .isThrownBy(() -> new ApiModelBuilder().buildApiModel("raml/syntaxError.raml"))
+            .withMessageContaining("RAML syntax errors")
+            .withMessageContaining("/types/City/properties/population/type")
+            .withMessageContaining("Invalid reference 'int'");
     }
 }

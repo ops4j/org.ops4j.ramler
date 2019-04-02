@@ -29,6 +29,6 @@ public class SimpleObjectTest extends AbstractOpenApiTest {
     @Test
     public void shouldFindSchemas() {
         assertSchemas("Address", "Age", "Colour", "FunnyNames", "Integers",
-                "Name", "Numbers", "Reference", "Temporals", "User", "UserGroup");
+            "Name", "Numbers", "Reference", "Temporals", "User", "UserGroup");
     }
 }

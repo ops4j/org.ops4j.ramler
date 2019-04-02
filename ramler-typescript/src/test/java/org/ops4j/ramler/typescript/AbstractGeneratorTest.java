@@ -106,7 +106,8 @@ public abstract class AbstractGeneratorTest {
             ParseTreeWalker.DEFAULT.walk(listener, module);
             log.debug(listener.getJson());
 
-        } catch (IOException exc) {
+        }
+        catch (IOException exc) {
             throw Exceptions.unchecked(exc);
         }
     }
@@ -127,7 +128,11 @@ public abstract class AbstractGeneratorTest {
     }
 
     protected void assertModules(String... modules) {
-        List<String> actual = Stream.of(config.getTargetDir().list()).sorted().map(m -> m.replace(".ts", "")).collect(toList());
+        List<String> actual = Stream.of(config.getTargetDir()
+            .list())
+            .sorted()
+            .map(m -> m.replace(".ts", ""))
+            .collect(toList());
         assertThat(actual).containsExactly(modules);
     }
 
@@ -136,23 +141,29 @@ public abstract class AbstractGeneratorTest {
         parseTypeScriptModule(baseName);
         String json = listener.getJson();
 
-        module = Json.createReader(new StringReader(json)).readObject();
+        module = Json.createReader(new StringReader(json))
+            .readObject();
         JsonArray exports = module.getJsonArray("exports");
         assertThat(exports).hasSize(1);
 
         JsonObject export = exports.getJsonObject(0);
         assertThat(export.getString("discriminator")).isEqualTo("interface");
-        assertThat(export.getJsonObject("type").getString("name")).isEqualTo(interfaceName);
+        assertThat(export.getJsonObject("type")
+            .getString("name")).isEqualTo(interfaceName);
 
         assertBaseClasses(export.getJsonArray("extends"), baseClasses);
 
-        members = export.getJsonArray("members").getValuesAs(JsonObject.class);
-        memberNames = members.stream().map(m -> m.getString("name")).collect(toSet());
+        members = export.getJsonArray("members")
+            .getValuesAs(JsonObject.class);
+        memberNames = members.stream()
+            .map(m -> m.getString("name"))
+            .collect(toSet());
     }
 
     protected void assertImports(String... importNames) {
         JsonArray importsArray = module.getJsonArray("imports");
-        List<JsonObject> imports = importsArray == null ? Collections.emptyList() : importsArray.getValuesAs(JsonObject.class);
+        List<JsonObject> imports = importsArray == null ? Collections.emptyList()
+            : importsArray.getValuesAs(JsonObject.class);
         assertThat(imports).hasSize(importNames.length);
         int pos = 0;
         for (JsonObject actualImport : imports) {
@@ -166,7 +177,8 @@ public abstract class AbstractGeneratorTest {
      * @param baseClasses
      */
     private void assertBaseClasses(JsonArray extendsArray, String[] baseClasses) {
-        List<JsonObject> extended = extendsArray == null ? Collections.emptyList() : extendsArray.getValuesAs(JsonObject.class);
+        List<JsonObject> extended = extendsArray == null ? Collections.emptyList()
+            : extendsArray.getValuesAs(JsonObject.class);
         assertThat(extended).hasSize(baseClasses.length);
         int pos = 0;
         for (JsonObject actualBaseClass : extended) {
@@ -174,8 +186,6 @@ public abstract class AbstractGeneratorTest {
             pos++;
         }
     }
-
-
 
     private void assertBaseClass(JsonObject actualBaseClass, String baseClass) {
         String discriminator = actualBaseClass.getString("discriminator");
@@ -190,24 +200,30 @@ public abstract class AbstractGeneratorTest {
     }
 
     private String buildParamTypeName(String name, JsonArray args) {
-        return args.getValuesAs(JsonObject.class).stream()
-                .map(a -> a.getString("name"))
-                .collect(joining(", ", name + "<", ">"));
+        return args.getValuesAs(JsonObject.class)
+            .stream()
+            .map(a -> a.getString("name"))
+            .collect(joining(", ", name + "<", ">"));
     }
 
     private void assertImport(JsonObject actualImport, String identifier) {
-        List<JsonString> identifiers = actualImport.getJsonArray("identifiers").getValuesAs(JsonString.class);
+        List<JsonString> identifiers = actualImport.getJsonArray("identifiers")
+            .getValuesAs(JsonString.class);
         assertThat(identifiers).hasSize(1);
-        String actualId = identifiers.get(0).getString();
+        String actualId = identifiers.get(0)
+            .getString();
         assertThat(actualId).isEqualTo(identifier);
     }
 
     protected void assertProperty(String memberName, String typeName) {
         memberNames.remove(memberName);
 
-        JsonObject type = members.stream().filter(m -> m.getString("name").equals(memberName)).findFirst()
-                .map(m -> m.getJsonObject("type"))
-                .orElseThrow(() -> memberNotFound(memberName));
+        JsonObject type = members.stream()
+            .filter(m -> m.getString("name")
+                .equals(memberName))
+            .findFirst()
+            .map(m -> m.getJsonObject("type"))
+            .orElseThrow(() -> memberNotFound(memberName));
         assertType(type, typeName);
     }
 
@@ -240,14 +256,16 @@ public abstract class AbstractGeneratorTest {
         parseTypeScriptModule(baseName);
         String json = listener.getJson();
 
-        module = Json.createReader(new StringReader(json)).readObject();
+        module = Json.createReader(new StringReader(json))
+            .readObject();
         JsonArray exports = module.getJsonArray("exports");
         assertThat(exports).hasSize(1);
 
         JsonObject export = exports.getJsonObject(0);
         assertThat(export.getString("discriminator")).isEqualTo("enum");
         assertThat(export.getString("name")).isEqualTo(enumName);
-        enumMembers = export.getJsonArray("members").getValuesAs(JsonObject.class);
+        enumMembers = export.getJsonArray("members")
+            .getValuesAs(JsonObject.class);
         enumMemberIter = enumMembers.iterator();
     }
 
@@ -267,7 +285,8 @@ public abstract class AbstractGeneratorTest {
         parseTypeScriptModule(baseName);
         String json = listener.getJson();
 
-        module = Json.createReader(new StringReader(json)).readObject();
+        module = Json.createReader(new StringReader(json))
+            .readObject();
         JsonArray exports = module.getJsonArray("exports");
         assertThat(exports).hasSize(1);
 
@@ -277,7 +296,8 @@ public abstract class AbstractGeneratorTest {
 
         if (types.length == 0) {
             assertType(export.getJsonObject("type"), type);
-        } else {
+        }
+        else {
             JsonObject union = export.getJsonObject("type");
             assertThat(union.getString("discriminator")).isEqualTo("union");
             JsonArray variants = union.getJsonArray("variants");

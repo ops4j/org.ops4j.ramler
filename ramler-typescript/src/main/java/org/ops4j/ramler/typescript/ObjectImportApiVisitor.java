@@ -54,8 +54,12 @@ public class ObjectImportApiVisitor implements ApiVisitor {
 
     @Override
     public void visitObjectTypeStart(ObjectTypeDeclaration type) {
-        type.parentTypes().stream().map(TypeDeclaration::name).forEach(this::addTypeToImports);
-        Annotations.getStringAnnotations(type, TYPE_ARGS).forEach(this::addTypeToImports);
+        type.parentTypes()
+            .stream()
+            .map(TypeDeclaration::name)
+            .forEach(this::addTypeToImports);
+        Annotations.getStringAnnotations(type, TYPE_ARGS)
+            .forEach(this::addTypeToImports);
     }
 
     @Override
@@ -85,9 +89,11 @@ public class ObjectImportApiVisitor implements ApiVisitor {
     }
 
     private void generateImport(String type, String module) {
-        MustacheEngine engine = context.getTemplateEngine().getEngine();
+        MustacheEngine engine = context.getTemplateEngine()
+            .getEngine();
         Map<String, String> contextObject = ImmutableMap.of("tsType", type, "tsFile", module);
-        engine.getMustache("import").render(context.getOutput(), contextObject);
+        engine.getMustache("import")
+            .render(context.getOutput(), contextObject);
     }
 
 }

@@ -45,8 +45,10 @@ public class UnionTest {
         Favourite deserialized = mapper.readValue(json, Favourite.class);
         assertThat(deserialized.isCity()).isTrue();
         assertThat(deserialized.isDog()).isFalse();
-        assertThat(deserialized.getCity().getName()).isEqualTo("Hamburg");
-        assertThat(deserialized.getCity().getPopulation()).isEqualTo(1_800_000);
+        assertThat(deserialized.getCity()
+            .getName()).isEqualTo("Hamburg");
+        assertThat(deserialized.getCity()
+            .getPopulation()).isEqualTo(1_800_000);
     }
 
     @Test
@@ -64,7 +66,9 @@ public class UnionTest {
         Favourite deserialized = mapper.readValue(json, Favourite.class);
         assertThat(deserialized.isCity()).isFalse();
         assertThat(deserialized.isDog()).isTrue();
-        assertThat(deserialized.getDog().getName()).isEqualTo("Watson");
-        assertThat(deserialized.getDog().getFurColour()).isEqualTo("black");
+        assertThat(deserialized.getDog()
+            .getName()).isEqualTo("Watson");
+        assertThat(deserialized.getDog()
+            .getFurColour()).isEqualTo("black");
     }
 }
