@@ -34,6 +34,11 @@ https://github.com/FasterXML/jackson-databind[Jackson data binding].
 
 Ramler also generates a link:registry/[static HTML 5 website] with hyperlinked and searchable documentation directly from a RAML specification. 
 
+You can generate TypeScript interfaces from RAML type definitions (beta).
+
+In addition, Ramler converts RAML 1.0 specifications to OpenAPI 3.0 specifications, for the benefit of 
+other tools which are based on OpenAPI.
+
 == Prerequisites
 
 Ramler requires Java 8 and is best used with Maven 3.3.1 or higher. 
@@ -67,7 +72,7 @@ Using Ramler, a RESTful API can be implemented in the following steps:
 https://atom.io/[Atom] editor with the 
 http://apiworkbench.com/[API Workbench] plugin for this step. 
 
-* Generate Java entity and API classes from the RAML model, either programmatically, or using the `ramler-maven-plugin`.
+* Generate Java entity classes and JAX-RS resource interfaces from the RAML model, either programmatically, or using the `ramler-maven-plugin`.
 
 * Build a library from the generated classes and include this library in your Java application.
 
@@ -82,49 +87,49 @@ Here is an example of using the `raml-maven-plugin` to generate Java code and a 
 
 [source,xml]
 ----
-    <dependencies>
-        <dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-api</artifactId>
-            <version>7.0</version>
-            <scope>provided</scope>
-        </dependency>
-    </dependencies>
-    
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.ops4j.ramler</groupId>
-                <artifactId>ramler-maven-plugin</artifactId>
-                <version>${project.version}</version>
-                <configuration>
-                    <package>org.ops4j.ramler.samples.registry</package>
-                    <model>${basedir}/src/test/resources/raml/registry.raml</model>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>generate</id>
-                        <goals>
-                            <goal>java</goal>
-                            <goal>html</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <configuration>
-                    <doclet>ch.raffael.doclets.pegdown.PegdownDoclet</doclet>
-                    <docletArtifact>
-                        <groupId>ch.raffael.pegdown-doclet</groupId>
-                        <artifactId>pegdown-doclet</artifactId>
-                        <version>1.3</version>
-                    </docletArtifact>
-                    <useStandardDocletOptions>true</useStandardDocletOptions>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+<dependencies>
+    <dependency>
+        <groupId>javax</groupId>
+        <artifactId>javaee-api</artifactId>
+        <version>7.0</version>
+        <scope>provided</scope>
+    </dependency>
+</dependencies>
+
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.ops4j.ramler</groupId>
+            <artifactId>ramler-maven-plugin</artifactId>
+            <version>${project.version}</version>
+            <configuration>
+                <package>org.ops4j.ramler.samples.registry</package>
+                <model>src/test/resources/raml/registry.raml</model>
+            </configuration>
+            <executions>
+                <execution>
+                    <id>generate</id>
+                    <goals>
+                        <goal>java</goal>
+                        <goal>html</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
+        <plugin>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <configuration>
+                <doclet>ch.raffael.doclets.pegdown.PegdownDoclet</doclet>
+                <docletArtifact>
+                    <groupId>ch.raffael.pegdown-doclet</groupId>
+                    <artifactId>pegdown-doclet</artifactId>
+                    <version>1.3</version>
+                </docletArtifact>
+                <useStandardDocletOptions>true</useStandardDocletOptions>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
 ----
 
 == Limitations
@@ -154,10 +159,12 @@ Example:
 
 This RAML type
 
-    Person:
-      firstName: string
-      lastName: string
-
+[source,yaml]
+----
+Person:
+  firstName: string
+  lastName: string
+----
     
 will generate the following Java class:
 
@@ -225,6 +232,8 @@ according to the following table:
 
 == Structured Property Mapping
 
+=== Overview
+
 Properties of an object type with a structured RAML type are mapped to fields with Java types 
 according to the following table:
 
@@ -234,28 +243,92 @@ according to the following table:
 | `any`             | `java.lang.Object`
 | `array`           | `java.util.List<I>`
 | `object`          | POJO or `Map<String, Object>`
-| `union`           | not supported
+| `union`           | wrapper class
 |===
 
 
+=== Array Types
+
 For array types, the type argument `I` of the Java `List` type will be the Java type of the array item type.
+
+=== Object Types
 
 For object types, the referenced type will be the generated Java class if the type has any properties. A RAML `object`
 type without any specified properties will be mapped to `Map<String, Object>`, to allow for any JSON properties
 at run-time that are unknown at modelling time.
 
-Union types are currently not supported. 
+=== Union Types
 
+Properties of union types are only supported as a reference to a user-defined union type, where all alternatives
+are user-defined object types.
+
+Example:
+
+[source,yaml]
+----
+Favourite:
+  type: City | Dog
+  
+User:
+  properties:
+    login: string
+    favourite: Favourite
+----
+        
+The `Favourite` union type will be mapped to a Java wrapper class, optionally with a custom Jackson (de)serializer, 
+when the configuration property `jacksonUnion` is set to `true`.
+
+[source,java]
+----
+@JsonSerialize(using = FavouriteSerializer.class)
+@JsonDeserialize(using = FavouriteDeserializer.class)
+public class Favourite {
+
+    private Object value;
+
+    public Object value() {
+        return value;
+    }
+
+    public boolean isCity() {
+        return (value instanceof City);
+    }
+
+    public City getCity() {
+        return ((City) value);
+    }
+
+    public void setCity(City city) {
+        this.value = city;
+    }
+
+    public boolean isDog() {
+        return (value instanceof Dog);
+    }
+
+    public Dog getDog() {
+        return ((Dog) value);
+    }
+
+    public void setDog(Dog dog) {
+        this.value = dog;
+    }
+}
+----
+        
 == Enumeration Types
 
 A user-defined RAML type with base type `string` and an `enum` facet will be mapped to a Java `enum` class 
 with constants corresponding to the value list of the `enum` facet.
 
-    Colour:
-      type: string
-      enum:
-      - lightBlue
-      - red
+[source,yaml]
+----
+Colour:
+  type: string
+  enum:
+  - lightBlue
+  - red
+----
  
 [source,java]
 ----
@@ -287,14 +360,17 @@ public enum Colour {
 Since RAML 1.0 does not allow for any facets or annotations on `enum` values, Ramler provides an `(enum)`
 annotation as an alternative.
 
-    Colour:
-      type: string
-      (r.enum):
-        values:
-          - name: lightBlue
-            description: Colour of the sky.
-          - name: red
-            description: Colour of tomatoes.
+[source,yaml]
+----
+Colour:
+  type: string
+  (r.enum):
+    values:
+      - name: lightBlue
+        description: Colour of the sky.
+      - name: red
+        description: Colour of tomatoes.
+----
 
 [source,java]
 ----
@@ -314,7 +390,8 @@ public enum Colour {
 }    
 ----
 
-When the Ramler configuration property `jacksonPropertyName` is set, Ramler will add a `JsonProperty` annotation to each enum constant, so Jackson will map the Java constant to the correct JSON string.
+When the Ramler configuration property `jacksonPropertyName` is set, Ramler will add a `JsonProperty` annotation 
+to each enum constant, so Jackson will map the Java constant to the correct JSON string.
 
 == Inheritance
 
@@ -324,18 +401,21 @@ additional base types directly to the Java class.
 
 Example:
 
-   A:
-     properties:
-       a1: string
-       a2: string
-   B:
-     properties:   
-       b1: int
-       b2: int
-   C:
-     type: [A, B]
-     properties
-       c1: string    
+[source,yaml]
+----
+A:
+  properties:
+    a1: string
+    a2: string
+B:
+  properties:   
+    b1: int
+    b2: int
+C:
+  type: [A, B]
+  properties
+    c1: string    
+----
 
 [source,java]
 ----
@@ -359,18 +439,21 @@ discriminator properties. This feature can be enabled by setting the Ramler conf
 
 Example:
 
-    Person:
-      discriminator: objectType
-      discriminatorValue: p
-      properties:
-        firstName: string
-        lastName: string
-        objectType: string
-    Employee:
-      discriminatorValue: e
-      type: Person
-      properties:
-        department: string
+[source,yaml]
+----         
+Person:
+  discriminator: objectType
+  discriminatorValue: p
+  properties:
+    firstName: string
+    lastName: string
+    objectType: string
+Employee:
+  discriminatorValue: e
+  type: Person
+  properties:
+    department: string
+----
 
 [source,java]
 ----
@@ -505,15 +588,18 @@ public class Person {
 
 In RAML, derived types can specialize a base type property with a narrower type, e.g.
 
-    Result:
-      properties:
-        result: any
-        message?: string
-    PersonResult:
-      type: Result
-      properties:
-        result: Person
-        message?: string
+[source,yaml]
+----
+Result:
+  properties:
+    result: any
+    message?: string
+PersonResult:
+  type: Result
+  properties:
+    result: Person
+    message?: string
+----
 
 This does not map very well to Java, because `PersonResult.setResult(Person)` does not override 
 `Result.setResult(Object)`.
@@ -529,16 +615,19 @@ of the argument list must match the size of the parameter list of the underlying
 
 Using these annotations, the given example can be rewritten as
 
-    Result:
-      (typeVars): [T]
-      properties:
-        result: 
-          (typeVar): T
-          type: any
-        message?: string
-    PersonResult:
-      type: Result
-      (typeArgs): [Person] 
+[source,yaml]
+----
+Result:
+  (typeVars): [T]
+  properties:
+    result: 
+      (typeVar): T
+      type: any
+    message?: string
+PersonResult:
+  type: Result
+  (typeArgs): [Person] 
+----
 
 and the generated Java classes will look like this:
 
@@ -588,20 +677,23 @@ the Ramler configuration property `interfaceNameSuffix`.
 The Java method name is the camel-case display name of the corresponding RAML method, if present, or the
 HTTP method name otherwise.
 
-    /person:
-      get:
-        displayName: Find persons
-        responses:
-          200:
-            body:
-              type: Person[]
-      /address:
-        get:        
-          displayName: Get address
-          responses:
-            200:
-              body:
-                type: Address
+[source,yaml]
+----
+/person:
+  get:
+    displayName: Find persons
+    responses:
+      200:
+        body:
+          type: Person[]
+  /address:
+    get:        
+      displayName: Get address
+      responses:
+        200:
+          body:
+            type: Address
+----
       
 [source,java]
 ----
@@ -654,16 +746,19 @@ Ramler will simply add a numerical suffix to the RAML method name.
 
 Example:
 
-  /anything:
-    get:
-      responses:
-        200:
-          body:
-            application/json:
-              type: object
-            text/csv:
-              (r.codeName): getCsv
-              type: string
+[source,yaml]
+----
+/anything:
+  get:
+    responses:
+      200:
+        body:
+          application/json:
+            type: object
+          text/csv:
+            (r.codeName): getCsv
+            type: string
+----
 
 [source,java]
 ----
@@ -699,7 +794,7 @@ To do so, set the configuration properties `webResourceDir` or `templateDir`, re
 |===
 | Parameter     | Type          | Meaning
 
-| `model`         | `String`        | RAML specification file
+| `model`         | `String`        | RAML specification file, relative to `${project.basedir}`
 
 | `outputDir`     | `File`          | Output directory for generated code. 
 Default: `${project.build.directory}/generated-sources/ramler`
@@ -717,7 +812,7 @@ The entry template is named `api.trimou.html`.
 |===
 | Parameter     | Type          | Meaning
 
-| `model`         | `String`        | RAML specification file
+| `model`         | `String`        | RAML specification file, relative to `${project.basedir}`
 
 | `packageName`   | `String`        | Fully qualified package name for generated Java sources. 
 The generated classes will be located in subpackages `model` and `api`
@@ -741,6 +836,10 @@ Default: `false`
 | `jacksonTypeInfo` | `boolean` |  Should Java classes include `JsonTypeInfo` annotations for type hierarchies?
 Default: `false`
 
+| `jacksonUnion` | `boolean` |  Should Java classes include `JsonSerialize` and `@JsonDeserialize` 
+annotations for union type wrappers?
+Default: `false`
+
 |===
 
 
@@ -749,7 +848,7 @@ Default: `false`
 |===
 | Parameter     | Type          | Meaning
 
-| `model`         | `String`        | RAML specification file
+| `model`         | `String`        | RAML specification file, relative to `${project.basedir}`
 | `packageName`   | `String`        | Fully qualified package name for generated Java sources. 
 The generated classes will be located in subpackages `model` and `api`
 
@@ -771,6 +870,42 @@ Default: `false`
 
 | `jacksonTypeInfo` | `boolean` |  Should Java classes include `JsonTypeInfo` annotations for type hierarchies?
 Default: `false`
+
+| `jacksonUnion` | `boolean` |  Should Java classes include `JsonSerialize` and `@JsonDeserialize` 
+annotations for union type wrappers?
+Default: `false`
+
+|===
+
+== openapi Goal
+
+|===
+| Parameter     | Type          | Meaning
+
+| `model`         | `String`        | RAML specification file, relative to `${project.basedir}`
+
+| `outputDir`     | `File`          | Output directory for generated OpenAPI specifications. 
+Default: `${project.build.directory}/ramler/openapi`
+
+| `yaml` | `boolean` |  If true, the plugin creates an output file `<BASENAME>.yaml`, where `<BASENAME>` is
+the base name of the RAML input model. E.g. `foo.raml -> foo.yaml`.
+Default: `true`
+
+| `json` | `boolean` |  If true, the plugin creates an output file `<BASENAME>.json`, where `<BASENAME>` is
+the base name of the RAML input model. E.g. `foo.raml -> foo.json`.
+Default: `false`
+
+|===
+
+== typescript Goal
+
+|===
+| Parameter     | Type          | Meaning
+
+| `model`         | `String`        | RAML specification file, relative to `${project.basedir}`
+
+| `outputDir`     | `File`          | Output directory for generated TypeScript sources. 
+Default: `${project.build.directory}/ramler/ts`
 
 |===
 
