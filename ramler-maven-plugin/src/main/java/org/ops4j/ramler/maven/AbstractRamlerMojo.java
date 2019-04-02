@@ -47,6 +47,7 @@ public abstract class AbstractRamlerMojo extends AbstractMojo {
 
     @Override
     public void execute() throws MojoFailureException {
+        validateModelPath();
         extendProject();
         if (buildContext.hasDelta(model)) {
             generateOutput();
@@ -54,6 +55,13 @@ public abstract class AbstractRamlerMojo extends AbstractMojo {
         }
         else {
             getLog().info("Skipping execution, RAML model is unchanged");
+        }
+    }
+
+    private void validateModelPath() throws MojoFailureException {
+        if (new File(model).isAbsolute()) {
+            throw new MojoFailureException(
+                "<model> must be a relative path with respect to ${project.basedir}");
         }
     }
 
