@@ -31,4 +31,40 @@ public class SimpleObjectTest extends AbstractOpenApiTest {
         assertSchemas("Address", "Age", "Colour", "FunnyNames", "Integers",
             "Name", "Numbers", "Reference", "Temporals", "User", "UserGroup");
     }
+
+    @Test
+    public void shouldFindAddressProperties() {
+        expectSchema("Address");
+        assertProperties("city", "street");
+        assertRequiredProperties("city", "street");
+    }
+
+    @Test
+    public void shouldFindIntegersProperties() {
+        expectSchema("Integers");
+        assertProperties("i8", "i16", "i32", "i64", "i", "l", "i8o", "i16o", "i32o", "i64o", "io",
+            "lo");
+        assertRequiredProperties("i8", "i16", "i32", "i64", "i", "l");
+    }
+
+    @Test
+    public void shouldFindUserGroupProperties() {
+        expectSchema("UserGroup");
+        assertProperties("name", "users");
+        assertRequiredProperties("name", "users");
+        assertStringProperty("name");
+        assertArrayPropertyRef("users", "User");
+    }
+
+    @Test
+    public void shouldFindNumbersProperties() {
+        expectSchema("Numbers");
+        assertProperties("f", "fo", "d", "dbl");
+        assertRequiredProperties("f", "d");
+    }
+
+    @Test
+    public void shouldFindColourValues() {
+        assertEnumValues("Colour", "lightBlue", "red", "yellow", "green");
+    }
 }

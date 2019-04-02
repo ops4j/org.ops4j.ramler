@@ -30,4 +30,12 @@ public class AnyTest extends AbstractOpenApiTest {
     public void shouldFindSchemas() {
         assertSchemas("Any", "AnyWrapper");
     }
+
+    @Test
+    public void shouldFindAnyWrapperProperties() {
+        expectSchema("AnyWrapper");
+        assertRequiredProperties("kind", "value");
+        assertStringProperty("kind");
+        assertRefProperty("value", "Any");
+    }
 }

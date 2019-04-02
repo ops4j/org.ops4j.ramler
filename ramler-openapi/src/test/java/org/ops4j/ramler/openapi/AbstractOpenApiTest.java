@@ -30,7 +30,10 @@ import java.util.Set;
 
 import javax.json.JsonReader;
 
+import org.eclipse.microprofile.openapi.models.media.Schema;
+import org.eclipse.microprofile.openapi.models.media.Schema.SchemaType;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.leadpony.justify.api.JsonSchema;
@@ -46,6 +49,8 @@ import io.smallrye.openapi.runtime.io.OpenApiParser;
 @TestInstance(Lifecycle.PER_CLASS)
 public abstract class AbstractOpenApiTest {
 
+    private static final String SCHEMAS_PREFIX = "#/components/schemas/";
+
     protected static Logger log = LoggerFactory.getLogger(AbstractOpenApiTest.class);
 
     protected OpenApiGenerator generator;
@@ -58,11 +63,18 @@ public abstract class AbstractOpenApiTest {
 
     private OpenAPIImpl openApi;
 
+    private Schema schema;
+
     @BeforeAll
     public void setUp() throws IOException, ParseException {
         generateOpenApi();
         validateJson();
         parseYaml();
+    }
+
+    @BeforeEach
+    public void reset() {
+        schema = null;
     }
 
     private void generateOpenApi() throws IOException {
@@ -111,6 +123,103 @@ public abstract class AbstractOpenApiTest {
         assertThat(openApi.getComponents()
             .getSchemas()
             .keySet()).containsExactlyInAnyOrder(names);
+    }
+
+    protected void assertProperties(String... properties) {
+        assertThat(schema)
+            .as("expectSchema() must be called before assertProperties()")
+            .isNotNull();
+        assertThat(schema.getProperties()
+            .keySet()).containsExactlyInAnyOrder(properties);
+    }
+
+    protected void assertRequiredProperties(String... properties) {
+        assertThat(schema)
+            .as("expectSchema() must be called before assertRequiredProperties()")
+            .isNotNull();
+        assertThat(schema.getRequired()).containsExactlyInAnyOrder(properties);
+    }
+
+    private Schema findSchema(String schemaName) {
+        Schema schema = openApi.getComponents()
+            .getSchemas()
+            .get(schemaName);
+        assertThat(schema)
+            .as("schema '%s' not found", schemaName)
+            .isNotNull();
+        return schema;
+    }
+
+    protected void assertEnumValues(String schemaName, Object... enumValues) {
+        Schema schema = findSchema(schemaName);
+        assertThat(schema.getEnumeration()).containsExactly(enumValues);
+    }
+
+    protected void assertUnion(String schemaName, String... variants) {
+        Schema schema = findSchema(schemaName);
+        assertThat(schema.getOneOf()).isNotNull();
+        assertThat(schema.getOneOf()).extracting(s -> {
+            return s.getRef()
+                .replaceAll(SCHEMAS_PREFIX, "");
+        })
+            .containsExactly(variants);
+    }
+
+    protected void assertStringProperty(String propertyName) {
+        assertThat(schema)
+            .as("expectSchema() must be called before assertStringProperty()")
+            .isNotNull();
+        Schema propertySchema = schema.getProperties()
+            .get(propertyName);
+        assertThat(propertySchema).isNotNull();
+        assertThat(propertySchema.getType()).isEqualTo(SchemaType.STRING);
+
+    }
+
+    protected void assertIntegerProperty(String propertyName) {
+        assertThat(schema)
+            .as("expectSchema() must be called before assertIntegerProperty()")
+            .isNotNull();
+        Schema propertySchema = schema.getProperties()
+            .get(propertyName);
+        assertThat(propertySchema).isNotNull();
+        assertThat(propertySchema.getType()).isEqualTo(SchemaType.INTEGER);
+
+    }
+
+    protected void assertRefProperty(String propertyName, String type) {
+        assertThat(schema)
+            .as("expectSchema() must be called before assertRefProperty()")
+            .isNotNull();
+        Schema propertySchema = schema.getProperties()
+            .get(propertyName);
+        assertThat(propertySchema).isNotNull();
+        assertThat(propertySchema.getRef()).isEqualTo(SCHEMAS_PREFIX + type);
+    }
+
+    protected void assertArrayPropertyRef(String propertyName, String itemType) {
+        Schema itemSchema = findItemSchema(propertyName);
+        assertThat(itemSchema.getRef())
+            .isEqualTo(SCHEMAS_PREFIX + itemType);
+    }
+
+    private Schema findItemSchema(String propertyName) {
+        assertThat(schema)
+            .as("expectSchema() must be called before assertArrayProperty()")
+            .isNotNull();
+        Schema propertySchema = schema.getProperties()
+            .get(propertyName);
+        assertThat(propertySchema).isNotNull();
+        assertThat(propertySchema.getType()).isEqualTo(SchemaType.ARRAY);
+        return propertySchema.getItems();
+    }
+
+    protected void expectSchema(String schemaName) {
+        assertThat(schema)
+            .as("expectSchema() must not be called more than once per test")
+            .isNull();
+        schema = findSchema(schemaName);
+
     }
 
     public abstract String getBasename();

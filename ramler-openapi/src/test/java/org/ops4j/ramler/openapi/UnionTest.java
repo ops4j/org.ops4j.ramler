@@ -30,4 +30,25 @@ public class UnionTest extends AbstractOpenApiTest {
     public void shouldFindSchemas() {
         assertSchemas("City", "Dog", "Favourite");
     }
+
+    @Test
+    public void shouldFindCityProperties() {
+        expectSchema("City");
+        assertProperties("name", "population");
+        assertStringProperty("name");
+        assertIntegerProperty("population");
+    }
+
+    @Test
+    public void shouldFindDogProperties() {
+        expectSchema("Dog");
+        assertProperties("name", "furColour");
+        assertStringProperty("name");
+        assertStringProperty("furColour");
+    }
+
+    @Test
+    public void shouldFindFavouriteVariants() {
+        assertUnion("Favourite", "City", "Dog");
+    }
 }
