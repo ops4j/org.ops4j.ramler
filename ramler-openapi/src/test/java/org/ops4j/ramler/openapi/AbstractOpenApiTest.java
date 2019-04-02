@@ -239,20 +239,27 @@ public abstract class AbstractOpenApiTest {
         List<Schema> allOf = schema.getAllOf();
         assertThat(allOf).hasSize(baseClasses.length + 1);
         for (int i = 0; i < baseClasses.length; i++) {
-            assertThat(allOf.get(i).getRef()).isEqualTo(SCHEMAS_PREFIX + baseClasses[i]);
+            assertThat(allOf.get(i)
+                .getRef()).isEqualTo(SCHEMAS_PREFIX + baseClasses[i]);
         }
 
         schema = allOf.get(baseClasses.length);
     }
 
     protected void assertPathItems(String... pathItems) {
-        assertThat(openApi.getPaths().getPathItems().keySet()).containsExactlyInAnyOrder(pathItems);
+        assertThat(openApi.getPaths()
+            .getPathItems()
+            .keySet()).containsExactlyInAnyOrder(pathItems);
     }
 
     protected void assertMethods(String path, String... methods) {
-        PathItem pathItem = openApi.getPaths().getPathItems().get(path);
+        PathItem pathItem = openApi.getPaths()
+            .getPathItems()
+            .get(path);
         assertThat(pathItem).isNotNull();
-        assertThat(pathItem.getOperations().keySet()).extracting(m -> m.name()).containsExactlyInAnyOrder(methods);
+        assertThat(pathItem.getOperations()
+            .keySet()).extracting(m -> m.name())
+                .containsExactlyInAnyOrder(methods);
     }
 
     public abstract String getBasename();
