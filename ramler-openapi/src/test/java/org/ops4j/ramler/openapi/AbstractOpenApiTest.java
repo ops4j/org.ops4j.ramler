@@ -30,6 +30,7 @@ import java.util.Set;
 
 import javax.json.JsonReader;
 
+import org.eclipse.microprofile.openapi.models.PathItem;
 import org.eclipse.microprofile.openapi.models.media.Discriminator;
 import org.eclipse.microprofile.openapi.models.media.Schema;
 import org.eclipse.microprofile.openapi.models.media.Schema.SchemaType;
@@ -242,6 +243,16 @@ public abstract class AbstractOpenApiTest {
         }
 
         schema = allOf.get(baseClasses.length);
+    }
+
+    protected void assertPathItems(String... pathItems) {
+        assertThat(openApi.getPaths().getPathItems().keySet()).containsExactlyInAnyOrder(pathItems);
+    }
+
+    protected void assertMethods(String path, String... methods) {
+        PathItem pathItem = openApi.getPaths().getPathItems().get(path);
+        assertThat(pathItem).isNotNull();
+        assertThat(pathItem.getOperations().keySet()).extracting(m -> m.name()).containsExactlyInAnyOrder(methods);
     }
 
     public abstract String getBasename();

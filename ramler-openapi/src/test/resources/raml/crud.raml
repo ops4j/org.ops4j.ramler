@@ -49,10 +49,21 @@ types:
         200:
           body:
             type: User
+        404:    
     delete:
       displayName: delete user by id
       responses:
         204:
+        404:
+    put:
+      displayName: put user by id
+      body:
+        type: User
+      responses:
+        200:  
+          body:
+            type: User
+        404:
     patch:
       displayName: patch user by id
       body:
@@ -62,4 +73,5 @@ types:
         200:  
           body:
             type: User
+        404:
         

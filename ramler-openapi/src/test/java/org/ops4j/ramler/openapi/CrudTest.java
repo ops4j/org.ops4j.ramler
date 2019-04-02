@@ -30,4 +30,15 @@ public class CrudTest extends AbstractOpenApiTest {
     public void shouldFindSchemas() {
         assertSchemas("User");
     }
+
+    @Test
+    public void shouldFindPathItems() {
+        assertPathItems("/user", "/user/{id}");
+    }
+
+    @Test
+    public void shouldFindMethods() {
+        assertMethods("/user", "POST", "GET");
+        assertMethods("/user/{id}", "GET", "PATCH", "DELETE", "PUT");
+    }
 }
