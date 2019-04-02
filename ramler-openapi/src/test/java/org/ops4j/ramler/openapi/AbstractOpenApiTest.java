@@ -30,6 +30,7 @@ import java.util.Set;
 
 import javax.json.JsonReader;
 
+import org.eclipse.microprofile.openapi.models.media.Discriminator;
 import org.eclipse.microprofile.openapi.models.media.Schema;
 import org.eclipse.microprofile.openapi.models.media.Schema.SchemaType;
 import org.junit.jupiter.api.BeforeAll;
@@ -203,6 +204,12 @@ public abstract class AbstractOpenApiTest {
             .isEqualTo(SCHEMAS_PREFIX + itemType);
     }
 
+    protected void assertDiscriminator(String discriminatorProperty) {
+        Discriminator discriminator = schema.getDiscriminator();
+        assertThat(discriminator).isNotNull();
+        assertThat(discriminator.getPropertyName()).isEqualTo(discriminatorProperty);
+    }
+
     private Schema findItemSchema(String propertyName) {
         assertThat(schema)
             .as("expectSchema() must be called before assertArrayProperty()")
@@ -220,6 +227,21 @@ public abstract class AbstractOpenApiTest {
             .isNull();
         schema = findSchema(schemaName);
 
+    }
+
+    protected void expectSchemaWithAllOf(String schemaName, String... baseClasses) {
+        assertThat(schema)
+            .as("expectSchema() must not be called more than once per test")
+            .isNull();
+        schema = findSchema(schemaName);
+
+        List<Schema> allOf = schema.getAllOf();
+        assertThat(allOf).hasSize(baseClasses.length + 1);
+        for (int i = 0; i < baseClasses.length; i++) {
+            assertThat(allOf.get(i).getRef()).isEqualTo(SCHEMAS_PREFIX + baseClasses[i]);
+        }
+
+        schema = allOf.get(baseClasses.length);
     }
 
     public abstract String getBasename();

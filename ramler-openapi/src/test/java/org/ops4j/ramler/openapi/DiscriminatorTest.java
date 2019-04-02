@@ -30,4 +30,23 @@ public class DiscriminatorTest extends AbstractOpenApiTest {
     public void shouldFindSchemas() {
         assertSchemas("Employee", "Manager", "Person");
     }
+
+    @Test
+    public void shouldFindPersonProperties() {
+        expectSchema("Person");
+        assertProperties("firstname", "lastname", "objectType");
+        assertDiscriminator("objectType");
+    }
+
+    @Test
+    public void shouldFindEmployeeProperties() {
+        expectSchemaWithAllOf("Employee", "Person");
+        assertProperties("department");
+    }
+
+    @Test
+    public void shouldFindManagerProperties() {
+        expectSchemaWithAllOf("Manager", "Employee");
+        assertProperties("numEmployees");
+    }
 }
