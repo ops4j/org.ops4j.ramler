@@ -94,10 +94,10 @@ public class OpenApiResourceVisitor implements ApiVisitor {
         operation.addTag(outerResource.resourcePath()
             .substring(1));
 
-        pathItem.setSummary(method.displayName()
+        operation.setSummary(method.displayName()
             .value());
         if (method.description() != null) {
-            pathItem.setDescription(method.description()
+            operation.setDescription(method.description()
                 .value());
         }
 
