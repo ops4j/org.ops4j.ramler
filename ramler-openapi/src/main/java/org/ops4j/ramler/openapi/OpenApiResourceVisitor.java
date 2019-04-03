@@ -9,6 +9,7 @@ import org.eclipse.microprofile.openapi.models.parameters.Parameter.In;
 import org.eclipse.microprofile.openapi.models.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.models.responses.APIResponse;
 import org.eclipse.microprofile.openapi.models.responses.APIResponses;
+import org.eclipse.microprofile.openapi.models.tags.Tag;
 import org.ops4j.ramler.common.exc.GeneratorException;
 import org.ops4j.ramler.common.model.ApiModel;
 import org.ops4j.ramler.common.model.ApiVisitor;
@@ -26,6 +27,7 @@ import io.smallrye.openapi.api.models.parameters.ParameterImpl;
 import io.smallrye.openapi.api.models.parameters.RequestBodyImpl;
 import io.smallrye.openapi.api.models.responses.APIResponseImpl;
 import io.smallrye.openapi.api.models.responses.APIResponsesImpl;
+import io.smallrye.openapi.api.models.tags.TagImpl;
 
 /**
  * Visits a RAML API model and generates OpenAPI path items for resource declarations.
@@ -64,14 +66,29 @@ public class OpenApiResourceVisitor implements ApiVisitor {
 
     private void addPathItem(Resource resource) {
         pathItem = new PathItemImpl();
-        if (resource.description() != null) {
-            pathItem.setDescription(resource.description()
-                .value());
+
+        if (innerResource == null) {
+            String tagName = findTagName(resource);
+            Tag tag = new TagImpl();
+            tag.setName(tagName);
+            openApi.addTag(tag);
+            MarkdownString description = resource.description();
+            if (description != null) {
+                tag.setDescription(description.value());
+            }
         }
-        pathItem.setSummary(resource.displayName()
-            .value());
+
         openApi.getPaths()
             .addPathItem(resource.resourcePath(), pathItem);
+    }
+
+    private String findTagName(Resource resource) {
+        String tagName = resource.displayName()
+            .value();
+        if (tagName.startsWith("/")) {
+            tagName = tagName.substring(1, 2).toUpperCase() + tagName.substring(2);
+        }
+        return tagName;
     }
 
     private void trackResourceNesting(Resource resource) {
@@ -162,8 +179,7 @@ public class OpenApiResourceVisitor implements ApiVisitor {
 
     private Operation addOperation(Method method) {
         Operation operation = buildOperation(method);
-        operation.addTag(outerResource.resourcePath()
-            .substring(1));
+        operation.addTag(findTagName(outerResource));
 
         operation.setSummary(method.displayName()
             .value());
