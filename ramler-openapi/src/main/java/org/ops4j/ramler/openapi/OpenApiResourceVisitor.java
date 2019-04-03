@@ -86,7 +86,8 @@ public class OpenApiResourceVisitor implements ApiVisitor {
         String tagName = resource.displayName()
             .value();
         if (tagName.startsWith("/")) {
-            tagName = tagName.substring(1, 2).toUpperCase() + tagName.substring(2);
+            String firstChar = tagName.substring(1, 2);
+            tagName = firstChar.toUpperCase() + tagName.substring(2);
         }
         return tagName;
     }
