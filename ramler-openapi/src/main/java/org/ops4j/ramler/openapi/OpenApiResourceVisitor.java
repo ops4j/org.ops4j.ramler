@@ -16,6 +16,7 @@ import org.raml.v2.api.model.v10.bodies.Response;
 import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
 import org.raml.v2.api.model.v10.methods.Method;
 import org.raml.v2.api.model.v10.resources.Resource;
+import org.raml.v2.api.model.v10.system.types.MarkdownString;
 
 import io.smallrye.openapi.api.models.OperationImpl;
 import io.smallrye.openapi.api.models.PathItemImpl;
@@ -57,16 +58,11 @@ public class OpenApiResourceVisitor implements ApiVisitor {
 
     @Override
     public void visitResourceStart(Resource resource) {
-        if (outerResource == null) {
-            outerResource = resource;
-        }
-        else if (innerResource == null) {
-            innerResource = resource;
-        }
-        else {
-            throw new GeneratorException("cannot handle resources nested more than two levels");
-        }
+        trackResourceNesting(resource);
+        addPathItem(resource);
+    }
 
+    private void addPathItem(Resource resource) {
         pathItem = new PathItemImpl();
         if (resource.description() != null) {
             pathItem.setDescription(resource.description()
@@ -76,6 +72,18 @@ public class OpenApiResourceVisitor implements ApiVisitor {
             .value());
         openApi.getPaths()
             .addPathItem(resource.resourcePath(), pathItem);
+    }
+
+    private void trackResourceNesting(Resource resource) {
+        if (outerResource == null) {
+            outerResource = resource;
+        }
+        else if (innerResource == null) {
+            innerResource = resource;
+        }
+        else {
+            throw new GeneratorException("cannot handle resources nested more than two levels");
+        }
     }
 
     @Override
@@ -90,43 +98,23 @@ public class OpenApiResourceVisitor implements ApiVisitor {
 
     @Override
     public void visitMethodStart(Method method) {
-        Operation operation = buildOperation(method);
-        operation.addTag(outerResource.resourcePath()
-            .substring(1));
+        Operation operation = addOperation(method);
+        addPathParameters(operation, method);
+        addQueryParameters(operation, method);
+        addBody(operation, method);
+        addResponses(operation, method);
+    }
 
-        operation.setSummary(method.displayName()
-            .value());
-        if (method.description() != null) {
-            operation.setDescription(method.description()
-                .value());
+    private void addResponses(Operation operation, Method method) {
+        APIResponses responses = new APIResponsesImpl();
+        operation.setResponses(responses);
+        for (Response response : method.responses()) {
+            responses.addAPIResponse(response.code()
+                .value(), convertResponse(response));
         }
+    }
 
-        for (TypeDeclaration pathParam : apiModel.findAllUriParameters(method)) {
-            Parameter parameter = new ParameterImpl();
-            parameter.setName(pathParam.name());
-            if (pathParam.description() != null) {
-                parameter.setDescription(pathParam.description()
-                    .value());
-            }
-            parameter.setIn(In.PATH);
-            parameter.setRequired(true);
-            parameter.setSchema(schemaBuilder.toSchema(pathParam));
-            operation.addParameter(parameter);
-        }
-
-        for (TypeDeclaration queryParam : method.queryParameters()) {
-            Parameter parameter = new ParameterImpl();
-            parameter.setName(queryParam.name());
-            if (queryParam.description() != null) {
-                parameter.setDescription(queryParam.description()
-                    .value());
-            }
-            parameter.setIn(In.QUERY);
-            parameter.setRequired(queryParam.required());
-            parameter.setSchema(schemaBuilder.toSchema(queryParam));
-            operation.addParameter(parameter);
-        }
-
+    private void addBody(Operation operation, Method method) {
         if (!method.body()
             .isEmpty()) {
             TypeDeclaration body = method.body()
@@ -140,13 +128,50 @@ public class OpenApiResourceVisitor implements ApiVisitor {
             requestBody.setContent(content);
             operation.setRequestBody(requestBody);
         }
+    }
 
-        APIResponses responses = new APIResponsesImpl();
-        operation.setResponses(responses);
-        for (Response response : method.responses()) {
-            responses.addAPIResponse(response.code()
-                .value(), convertResponse(response));
+    private void addQueryParameters(Operation operation, Method method) {
+        for (TypeDeclaration queryParam : method.queryParameters()) {
+            Parameter parameter = new ParameterImpl();
+            parameter.setName(queryParam.name());
+            if (queryParam.description() != null) {
+                parameter.setDescription(queryParam.description()
+                    .value());
+            }
+            parameter.setIn(In.QUERY);
+            parameter.setRequired(queryParam.required());
+            parameter.setSchema(schemaBuilder.toSchema(queryParam));
+            operation.addParameter(parameter);
         }
+    }
+
+    private void addPathParameters(Operation operation, Method method) {
+        for (TypeDeclaration pathParam : apiModel.findAllUriParameters(method)) {
+            Parameter parameter = new ParameterImpl();
+            parameter.setName(pathParam.name());
+            if (pathParam.description() != null) {
+                parameter.setDescription(pathParam.description()
+                    .value());
+            }
+            parameter.setIn(In.PATH);
+            parameter.setRequired(true);
+            parameter.setSchema(schemaBuilder.toSchema(pathParam));
+            operation.addParameter(parameter);
+        }
+    }
+
+    private Operation addOperation(Method method) {
+        Operation operation = buildOperation(method);
+        operation.addTag(outerResource.resourcePath()
+            .substring(1));
+
+        operation.setSummary(method.displayName()
+            .value());
+        MarkdownString description = method.description();
+        if (description != null) {
+            operation.setDescription(description.value());
+        }
+        return operation;
     }
 
     private Operation buildOperation(Method method) {
@@ -184,20 +209,17 @@ public class OpenApiResourceVisitor implements ApiVisitor {
 
     private APIResponse convertResponse(Response response) {
         APIResponse apiResponse = new APIResponseImpl();
-        if (response.description() == null) {
+        MarkdownString description = response.description();
+        if (description == null) {
             apiResponse.setDescription("No description");
         }
         else {
-            apiResponse.setDescription(response.description()
-                .value());
+            apiResponse.setDescription(description.value());
         }
 
-        if (!response.body()
-            .isEmpty()) {
+        for (TypeDeclaration body : response.body()) {
             Content content = new ContentImpl();
             MediaTypeImpl mediaType = new MediaTypeImpl();
-            TypeDeclaration body = response.body()
-                .get(0);
             mediaType.setSchema(schemaBuilder.toSchema(body));
             content.addMediaType(body.name(), mediaType);
             apiResponse.setContent(content);
