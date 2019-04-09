@@ -21,6 +21,7 @@ import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 import static java.time.temporal.ChronoUnit.SECONDS;
 import static org.ops4j.ramler.typescript.TypeScriptConstants.ANY;
 import static org.ops4j.ramler.typescript.TypeScriptConstants.BOOLEAN;
+import static org.ops4j.ramler.typescript.TypeScriptConstants.NULL;
 import static org.ops4j.ramler.typescript.TypeScriptConstants.NUMBER;
 import static org.ops4j.ramler.typescript.TypeScriptConstants.STRING;
 
@@ -40,6 +41,7 @@ import org.raml.v2.api.model.v10.datamodel.BooleanTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.DateTimeOnlyTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.DateTimeTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.DateTypeDeclaration;
+import org.raml.v2.api.model.v10.datamodel.NullTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.NumberTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.StringTypeDeclaration;
@@ -241,6 +243,12 @@ public class TypeScriptGeneratorContext {
         }
         if (type instanceof TimeOnlyTypeDeclaration) {
             return getDeclaredName(typeName, STRING);
+        }
+        if (type instanceof NullTypeDeclaration) {
+            return getDeclaredName(typeName, NULL);
+        }
+        if (type instanceof AnyTypeDeclaration) {
+            return getDeclaredName(typeName, ANY);
         }
         if (type instanceof ObjectTypeDeclaration) {
             return typeName;

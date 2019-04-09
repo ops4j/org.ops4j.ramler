@@ -787,6 +787,158 @@ http://www.trimou.org[Trimou] templates used to generate output from the parsed 
 
 To do so, set the configuration properties `webResourceDir` or `templateDir`, respectively.
 
+= TypeScript Code Generator
+
+== Overview
+
+The TypeScript code generator generates interfaces or type aliases for each user-defined RAML type. It does not yet generate
+any code for RAML resources or methods.
+
+Example: 
+
+This RAML type
+
+[source,yaml]
+----
+Person:
+  firstName: string
+  lastName: string
+----
+    
+will generate the following TypeScript interface:
+
+[source,typescript]
+----
+export interface Person {
+    firstName: string;
+    lastName: string;
+}
+----    
+
+
+== Scalar Property Mapping
+
+Properties of an object type with a scalar RAML type are mapped to fields with TypeScript types 
+according to the following table:
+
+|===
+| RAML type         | TypeScript type
+
+| `boolean`         | `boolean`
+| `date-only`       | `string`
+| `datetime`        | `string`
+| `datetime-only`   | `string`
+| `file`            | not supported
+| `integer`         | `number`
+| `null`            | `null`
+| `number`          | `number`
+| `string`          | `string` or `enum` type
+| `time-only`       | `string`
+|===
+
+== Structured Property Mapping
+
+=== Overview
+
+Properties of an object type with a structured RAML type are mapped to fields with TypeScript types 
+according to the following table:
+
+|===
+| RAML type         | TypeScript type
+
+| `any`             | `any`
+| `array`           | `Array<I>`
+| `object`          | interface or `object`
+| `union`           | type alias
+|===
+
+
+=== Array Types
+
+For array types, the type argument `I` of the TypeScript `Array` type will be the TypeScript type of the array item type.
+
+=== Object Types
+
+For object types, the referenced type will be the generated Java class if the type has any properties. A RAML `object`
+type without any specified properties will be mapped to `object`, to allow for any JSON properties
+at run-time that are unknown at modelling time.
+
+=== Union Types
+
+RAML Union types are mapped to an alias for a corresponding TypeScript union type.
+
+Example:
+
+[source,yaml]
+----
+Favourite:
+  type: City | Dog
+----
+        
+[source,typescript]
+----
+export type Favourite = City | Dog;
+----
+        
+== Enumeration Types
+
+A user-defined RAML type with base type `string` and an `enum` facet will be mapped to a TypeScript `enum` type 
+with members corresponding to the upper-cased values list of the `enum` facet, each initialized with the
+respective literal value.
+
+[source,yaml]
+----
+Colour:
+  type: string
+  enum:
+  - lightBlue
+  - red  
+----
+ 
+[source,typescript]
+----
+export enum Colour {
+    LIGHT_BLUE = 'lightBlue',
+    RED = 'red'
+}
+----
+
+== Specialization and Generics
+
+Ramler defines a number of annotation to model the equivalent of generic types in RAML. See <<_specialization_and_generics>>
+for more details.
+
+Example:
+
+The following RAML definitions 
+
+[source,yaml]
+----
+Result:
+  (typeVars): [T]
+  properties:
+    result: 
+      (typeVar): T
+      type: any
+    message?: string
+PersonResult:
+  type: Result
+  (typeArgs): [Person] 
+----
+
+will be mapped to
+
+[source,typescript]
+----
+export interface Result<T> {
+    result: T;
+    message: string;
+}
+
+export interface PersonResult extends Result<Person> {
+}
+----
+
 = Maven Plugin
 
 == html Goal

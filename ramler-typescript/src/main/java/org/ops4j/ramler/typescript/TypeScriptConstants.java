@@ -29,6 +29,7 @@ public class TypeScriptConstants {
     public static final String BOOLEAN = "boolean";
     public static final String STRING = "string";
     public static final String ANY = "any";
+    public static final String NULL = "null";
 
     private TypeScriptConstants() {
         // hidden utility class constructor
