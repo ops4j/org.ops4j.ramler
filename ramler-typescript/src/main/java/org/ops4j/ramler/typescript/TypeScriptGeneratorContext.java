@@ -47,6 +47,7 @@ import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.StringTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.TimeOnlyTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
+import org.trimou.Mustache;
 import org.trimou.util.ImmutableMap;
 
 /**
@@ -133,6 +134,18 @@ public class TypeScriptGeneratorContext {
     }
 
     /**
+     * Gets the Mustache template with the given name
+     *
+     * @param name
+     *            template name
+     * @return Mustache template
+     */
+    public Mustache getMustache(String name) {
+        return templateEngine.getEngine()
+            .getMustache(name);
+    }
+
+    /**
      * Get the current output to which the template engine will write.
      *
      * @return the output
@@ -164,9 +177,7 @@ public class TypeScriptGeneratorContext {
             "date", ZonedDateTime.now()
                 .truncatedTo(SECONDS)
                 .format(ISO_OFFSET_DATE_TIME));
-        getTemplateEngine().getEngine()
-            .getMustache("generated")
-            .render(output, contextObject);
+        getMustache("generated").render(output, contextObject);
         return builder;
     }
 

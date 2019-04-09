@@ -25,7 +25,6 @@ import org.ops4j.ramler.common.model.ApiVisitor;
 import org.ops4j.ramler.common.model.EnumValue;
 import org.ops4j.ramler.java.Names;
 import org.raml.v2.api.model.v10.datamodel.StringTypeDeclaration;
-import org.trimou.engine.MustacheEngine;
 import org.trimou.util.ImmutableMap;
 
 /**
@@ -102,9 +101,7 @@ public class EnumTypeApiVisitor implements ApiVisitor {
         Map<String, Object> contextObject = ImmutableMap.of("name", name, "enumValues",
             enumSymbols);
 
-        MustacheEngine engine = context.getTemplateEngine()
-            .getEngine();
-        engine.getMustache("enum")
+        context.getMustache("enum")
             .render(output, contextObject);
 
         context.writeToFile(output.toString(), type.name());

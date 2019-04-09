@@ -32,7 +32,6 @@ import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.StringTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.UnionTypeDeclaration;
-import org.trimou.engine.MustacheEngine;
 import org.trimou.util.ImmutableMap;
 
 /**
@@ -136,35 +135,30 @@ public class ModelCreatingApiVisitor implements ApiVisitor {
      */
     private void createTypeAlias(TypeDeclaration type, String targetType,
         Map<String, String> imports) {
-        MustacheEngine engine = context.getTemplateEngine()
-            .getEngine();
         StringBuilder output = context.startOutput();
 
-        renderImports(engine, imports, output);
+        renderImports(imports, output);
 
-        engine.getMustache("typeAlias")
+        context.getMustache("typeAlias")
             .render(output, ImmutableMap.of("name", type.name(), "tsType", targetType));
 
         context.writeToFile(output.toString(), type.name());
     }
 
     private void createUnionType(UnionTypeDeclaration type, Map<String, String> imports) {
-        MustacheEngine engine = context.getTemplateEngine()
-            .getEngine();
         StringBuilder output = context.startOutput();
 
-        renderImports(engine, imports, output);
+        renderImports(imports, output);
 
-        engine.getMustache("union")
+        context.getMustache("union")
             .render(output, ImmutableMap.of("name", type.name(), "type", type));
 
         context.writeToFile(output.toString(), type.name());
     }
 
-    private void renderImports(MustacheEngine engine, Map<String, String> imports,
-        StringBuilder output) {
+    private void renderImports(Map<String, String> imports, StringBuilder output) {
         if (!imports.isEmpty()) {
-            imports.forEach((k, v) -> engine.getMustache("import")
+            imports.forEach((k, v) -> context.getMustache("import")
                 .render(output, ImmutableMap.of("tsType", k, "tsFile", v)));
             output.append("\n");
         }

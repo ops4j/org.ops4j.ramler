@@ -33,7 +33,6 @@ import org.ops4j.ramler.java.Names;
 import org.raml.v2.api.model.v10.datamodel.ArrayTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
-import org.trimou.engine.MustacheEngine;
 import org.trimou.util.ImmutableMap;
 
 /**
@@ -71,17 +70,13 @@ public class ObjectBodyApiVisitor implements ApiVisitor {
         Map<String, Object> contextObject = ImmutableMap.of("name", type.name(), "baseClasses",
             baseClasses, "typeVars", typeVars);
 
-        MustacheEngine engine = context.getTemplateEngine()
-            .getEngine();
-        engine.getMustache("objectStart")
+        context.getMustache("objectStart")
             .render(context.getOutput(), contextObject);
     }
 
     @Override
     public void visitObjectTypeEnd(ObjectTypeDeclaration type) {
-        MustacheEngine engine = context.getTemplateEngine()
-            .getEngine();
-        engine.getMustache("objectEnd")
+        context.getMustache("objectEnd")
             .render(context.getOutput(), Collections.emptyMap());
     }
 
@@ -111,11 +106,9 @@ public class ObjectBodyApiVisitor implements ApiVisitor {
         else {
             tsItemType = itemTypeName;
         }
-        MustacheEngine engine = context.getTemplateEngine()
-            .getEngine();
         Map<String, Object> contextObject = ImmutableMap.of("name", fieldName, "tsPropType",
             tsItemType + "[]", "optional", !property.required());
-        engine.getMustache("property")
+        context.getMustache("property")
             .render(context.getOutput(), contextObject);
     }
 
@@ -133,11 +126,9 @@ public class ObjectBodyApiVisitor implements ApiVisitor {
         else {
             tsPropType = propertyTypeWithArgs(property);
         }
-        MustacheEngine engine = context.getTemplateEngine()
-            .getEngine();
         Map<String, Object> contextObject = ImmutableMap.of("name", fieldName, "tsPropType",
             tsPropType, "optional", !property.required());
-        engine.getMustache("property")
+        context.getMustache("property")
             .render(context.getOutput(), contextObject);
     }
 

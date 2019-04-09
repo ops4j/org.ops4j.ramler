@@ -28,7 +28,6 @@ import org.ops4j.ramler.common.model.Metatype;
 import org.ops4j.ramler.java.Names;
 import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
-import org.trimou.engine.MustacheEngine;
 import org.trimou.util.ImmutableMap;
 
 /**
@@ -89,10 +88,8 @@ public class ObjectImportApiVisitor implements ApiVisitor {
     }
 
     private void generateImport(String type, String module) {
-        MustacheEngine engine = context.getTemplateEngine()
-            .getEngine();
         Map<String, String> contextObject = ImmutableMap.of("tsType", type, "tsFile", module);
-        engine.getMustache("import")
+        context.getMustache("import")
             .render(context.getOutput(), contextObject);
     }
 
