@@ -21,8 +21,8 @@
         <org.antlr.version>4.7</org.antlr.version>
         <org.apache.maven.version>3.6.0</org.apache.maven.version>
         <org.glassfish.jersey.version>2.26</org.glassfish.jersey.version>
-        <org.junit.jupiter.version>5.4.1</org.junit.jupiter.version>
-        <org.junit.platform.version>1.4.1</org.junit.platform.version>
+        <org.junit.jupiter.version>5.4.2</org.junit.jupiter.version>
+        <org.junit.platform.version>1.4.2</org.junit.platform.version>
         <org.ow2.asm.version>7.1</org.ow2.asm.version>
         <maven.surefire.plugin.version>3.0.0-M3</maven.surefire.plugin.version>
         <sonar.skip>true</sonar.skip>
