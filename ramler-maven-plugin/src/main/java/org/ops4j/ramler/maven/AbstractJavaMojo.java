@@ -82,9 +82,6 @@ public abstract class AbstractJavaMojo extends AbstractRamlerMojo {
     @Parameter(defaultValue = "delegate")
     private String delegateFieldName;
 
-    /**
-     * @throws MojoFailureException
-     */
     @Override
     protected void generateOutput() throws MojoFailureException {
         getLog().info("Generating Java model from " + model);

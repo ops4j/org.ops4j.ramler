@@ -45,7 +45,7 @@ public class EnumValue {
     /**
      * Gets the name of this value.
      *
-     * @return name
+     * @return name value name
      */
     public String getName() {
         return name;
@@ -54,7 +54,7 @@ public class EnumValue {
     /**
      * Gets the description of this value.
      *
-     * @return
+     * @return value description
      */
     public String getDescription() {
         return description;

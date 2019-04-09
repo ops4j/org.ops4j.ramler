@@ -70,8 +70,20 @@ public abstract class AbstractRamlerMojo extends AbstractMojo {
         buildContext.refresh(getOutputDir());
     }
 
+    /**
+     * Generates output from the given RAML model.
+     *
+     * @throws MojoFailureException
+     *             on misconfiguration
+     */
     protected abstract void generateOutput() throws MojoFailureException;
 
+    /**
+     * Gets the output directories for generated files. The directory and its parent directories
+     * will be created, if necessary.
+     *
+     * @return output directory
+     */
     protected abstract File getOutputDir();
 
     /**

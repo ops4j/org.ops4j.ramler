@@ -67,6 +67,8 @@ public class TypeScriptTemplateEngine {
     /**
      * Constructs a template engine with some additional helpers and lambdas for TypeScript
      * generation.
+     *
+     * @return template engine
      */
     public MustacheEngine getEngine() {
         if (engine == null) {

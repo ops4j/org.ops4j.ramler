@@ -90,6 +90,8 @@ public class TemplateEngine {
 
     /**
      * Constructs a template engine with some additional helpers and lambdas for HTML generation.
+     *
+     * @return template engine
      */
     public MustacheEngine getEngine() {
         if (engine == null) {

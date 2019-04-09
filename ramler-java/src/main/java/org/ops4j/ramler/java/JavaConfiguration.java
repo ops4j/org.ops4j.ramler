@@ -214,7 +214,7 @@ public class JavaConfiguration {
 
     /**
      * Should discriminator properties be mutable?
-     * 
+     *
      * @return true if discriminators are mutable
      */
     public boolean isDiscriminatorMutable() {
@@ -223,7 +223,7 @@ public class JavaConfiguration {
 
     /**
      * Should discriminator properties be mutable?
-     * 
+     *
      * @param discriminatorMutable
      *            desired setting
      */
@@ -233,7 +233,7 @@ public class JavaConfiguration {
 
     /**
      * Should Jackson annotation {@code @JsonTypeInfo} be used where appropriate?
-     * 
+     *
      * @return true if type info is added to generated code
      */
     public boolean isJacksonTypeInfo() {
@@ -242,7 +242,7 @@ public class JavaConfiguration {
 
     /**
      * Should Jackson annotation {@code @JsonTypeInfo} be used where appropriate?
-     * 
+     *
      * @param jacksonTypeInfo
      *            desired setting
      */
@@ -252,7 +252,7 @@ public class JavaConfiguration {
 
     /**
      * Should Jackson annotation {@code @JsonProperty} be used where necessary?
-     * 
+     *
      * @return true if differing JSON property name is added to generated code
      */
     public boolean isJacksonPropertyName() {
@@ -261,7 +261,7 @@ public class JavaConfiguration {
 
     /**
      * Should Jackson annotation {@code @JsonProperty} be used where necessary?
-     * 
+     *
      * @param jacksonPropertyName
      *            desired setting
      */
@@ -318,7 +318,7 @@ public class JavaConfiguration {
 
     /**
      * Should Jackson annotations {@code @JsonSerializer} etc. be used for union types?
-     * 
+     *
      * @return true annotations should be added to generated code
      */
     public boolean isJacksonUnion() {
@@ -327,8 +327,8 @@ public class JavaConfiguration {
 
     /**
      * Should Jackson annotations {@code @JsonSerializer} etc. be used for union types?
-     * 
-     * @param jacksonPropertyName
+     *
+     * @param jacksonUnion
      *            desired setting
      */
     public void setJacksonUnion(boolean jacksonUnion) {
