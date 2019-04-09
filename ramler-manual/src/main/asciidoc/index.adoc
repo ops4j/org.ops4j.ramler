@@ -903,7 +903,7 @@ export enum Colour {
 }
 ----
 
-== Specialization and Generics
+== Generics
 
 Ramler defines a number of annotation to model the equivalent of generic types in RAML. See <<_specialization_and_generics>>
 for more details.
@@ -938,6 +938,16 @@ export interface Result<T> {
 export interface PersonResult extends Result<Person> {
 }
 ----
+
+= OpenAPI Generator
+
+== Overview
+
+The OpenAPI generator converts a given RAML specification into a largely equivalent OpenAPI 3.0 specification, including descriptions.
+
+== Limitations
+
+At the moment, there is no support for generic type variables and arguments modelled by Ramler's custom annotations. 
 
 = Maven Plugin
 
