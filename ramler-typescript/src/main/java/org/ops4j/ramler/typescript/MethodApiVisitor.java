@@ -17,15 +17,11 @@
  */
 package org.ops4j.ramler.typescript;
 
-import static java.util.stream.Collectors.joining;
-import static org.ops4j.ramler.java.JavaConstants.TYPE_ARGS;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.ops4j.ramler.common.helper.NameFactory;
-import org.ops4j.ramler.common.model.Annotations;
 import org.ops4j.ramler.common.model.ApiVisitor;
 import org.raml.v2.api.model.v10.bodies.Response;
 import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
@@ -94,7 +90,7 @@ public class MethodApiVisitor implements ApiVisitor {
         String returnType = "void";
         List<TypeDeclaration> responseBody = response.body();
         if (!responseBody.isEmpty()) {
-            returnType = typeWithArgs(responseBody.get(0));
+            returnType = context.typeWithArgs(responseBody.get(0));
         }
         List<Parameter> parameters = new ArrayList<>();
         addBodyParameters(body, parameters);
@@ -110,7 +106,7 @@ public class MethodApiVisitor implements ApiVisitor {
 
     private void addBodyParameters(TypeDeclaration body, List<Parameter> parameters) {
         if (body != null) {
-            parameters.add(new Parameter("body", typeWithArgs(body)));
+            parameters.add(new Parameter("body", context.typeWithArgs(body)));
         }
     }
 
@@ -118,29 +114,15 @@ public class MethodApiVisitor implements ApiVisitor {
         context.getApiModel()
             .findAllUriParameters(method)
             .stream()
-            .map(p -> new Parameter(p.name(), typeWithArgs(p)))
+            .map(p -> new Parameter(p.name(), context.typeWithArgs(p)))
             .forEach(parameters::add);
     }
 
     private void addQueryParameters(Method method, List<Parameter> parameters) {
         method.queryParameters()
             .stream()
-            .map(p -> new Parameter(p.name(), typeWithArgs(p)))
+            .map(p -> new Parameter(p.name(), context.typeWithArgs(p)))
             .forEach(parameters::add);
     }
 
-    private String typeWithArgs(TypeDeclaration property) {
-        String tsPropType;
-        tsPropType = context.getTypeScriptPropertyType(property);
-        List<String> typeArgs = Annotations.getStringAnnotations(property, TYPE_ARGS);
-        if (!typeArgs.isEmpty()) {
-            StringBuilder builder = new StringBuilder(tsPropType);
-            builder.append("<");
-            builder.append(typeArgs.stream()
-                .collect(joining(", ")));
-            builder.append(">");
-            tsPropType = builder.toString();
-        }
-        return tsPropType;
-    }
 }

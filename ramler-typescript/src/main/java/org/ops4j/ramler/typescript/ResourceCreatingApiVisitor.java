@@ -19,13 +19,11 @@ package org.ops4j.ramler.typescript;
 
 import static org.apache.commons.lang.StringUtils.defaultIfBlank;
 import static org.apache.commons.lang.StringUtils.isBlank;
-import static org.apache.commons.lang.StringUtils.left;
-import static org.apache.commons.lang.WordUtils.capitalize;
-import static org.apache.commons.lang.math.NumberUtils.isDigits;
 
 import java.util.Collections;
 
 import org.ops4j.ramler.common.exc.GeneratorException;
+import org.ops4j.ramler.common.helper.NameFactory;
 import org.ops4j.ramler.common.model.Annotations;
 import org.ops4j.ramler.common.model.ApiTraverser;
 import org.ops4j.ramler.common.model.ApiVisitor;
@@ -117,23 +115,11 @@ public class ResourceCreatingApiVisitor implements ApiVisitor {
         String rawName = defaultIfBlank(Annotations.findCodeName(resource),
             resource.relativeUri()
                 .value());
-        String resourceInterfaceName = buildJavaFriendlyName(rawName);
+        String resourceInterfaceName = NameFactory.buildJavaFriendlyName(rawName);
 
         if (isBlank(resourceInterfaceName)) {
             resourceInterfaceName = "Root";
         }
         return resourceInterfaceName.concat("Resource");
-    }
-
-    public static String buildJavaFriendlyName(final String source) {
-        final String baseName = source.replaceAll("[\\W_]", " ");
-
-        String friendlyName = capitalize(baseName).replaceAll("[\\W_]", "");
-
-        if (isDigits(left(friendlyName, 1))) {
-            friendlyName = "_" + friendlyName;
-        }
-
-        return friendlyName;
     }
 }

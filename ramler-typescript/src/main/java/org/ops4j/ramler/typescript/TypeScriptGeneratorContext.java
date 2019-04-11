@@ -19,6 +19,8 @@ package org.ops4j.ramler.typescript;
 
 import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 import static java.time.temporal.ChronoUnit.SECONDS;
+import static java.util.stream.Collectors.joining;
+import static org.ops4j.ramler.java.JavaConstants.TYPE_ARGS;
 import static org.ops4j.ramler.typescript.TypeScriptConstants.ANY;
 import static org.ops4j.ramler.typescript.TypeScriptConstants.BOOLEAN;
 import static org.ops4j.ramler.typescript.TypeScriptConstants.NULL;
@@ -27,11 +29,13 @@ import static org.ops4j.ramler.typescript.TypeScriptConstants.STRING;
 
 import java.io.File;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Map;
 
 import org.ops4j.ramler.common.exc.GeneratorException;
 import org.ops4j.ramler.common.helper.FileHelper;
 import org.ops4j.ramler.common.helper.Version;
+import org.ops4j.ramler.common.model.Annotations;
 import org.ops4j.ramler.common.model.ApiModel;
 import org.ops4j.ramler.java.JavaNameFactory;
 import org.ops4j.ramler.typescript.trimou.TypeScriptTemplateEngine;
@@ -295,4 +299,20 @@ public class TypeScriptGeneratorContext {
         File tsFile = new File(config.getTargetDir(), tsFileName);
         FileHelper.writeToFile(content, tsFile);
     }
+
+    public String typeWithArgs(TypeDeclaration property) {
+        String tsPropType;
+        tsPropType = getTypeScriptPropertyType(property);
+        List<String> typeArgs = Annotations.getStringAnnotations(property, TYPE_ARGS);
+        if (!typeArgs.isEmpty()) {
+            StringBuilder builder = new StringBuilder(tsPropType);
+            builder.append("<");
+            builder.append(typeArgs.stream()
+                .collect(joining(", ")));
+            builder.append(">");
+            tsPropType = builder.toString();
+        }
+        return tsPropType;
+    }
+
 }
