@@ -203,6 +203,14 @@ public class ApiTraverser {
                 .equals(name));
     }
 
+    /**
+     * Lets the given visitor traverse the model tree of the given resource.
+     *
+     * @param resource
+     *            resource
+     * @param visitor
+     *            concrete visitor
+     */
     public void traverse(Resource resource, ApiVisitor visitor) {
         visitor.visitResourceStart(resource);
         resource.methods()
@@ -212,6 +220,14 @@ public class ApiTraverser {
         visitor.visitResourceEnd(resource);
     }
 
+    /**
+     * Lets the given visitor traverse the model tree of the given method.
+     *
+     * @param method
+     *            method
+     * @param visitor
+     *            concrete visitor
+     */
     public void traverse(Method method, ApiVisitor visitor) {
         visitor.visitMethodStart(method);
         method.headers()
