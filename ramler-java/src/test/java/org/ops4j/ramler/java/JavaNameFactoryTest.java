@@ -25,13 +25,16 @@ import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.ops4j.ramler.common.helper.NameFactory;
 
-public class NamesTest {
+public class JavaNameFactoryTest {
+
+    private NameFactory nameFactory = new JavaNameFactory();
 
     @ParameterizedTest
     @MethodSource
     public void shouldBuildConstantName(String ramlName, String javaName) {
-        assertThat(Names.buildConstantName(ramlName)).isEqualTo(javaName);
+        assertThat(JavaNameFactory.buildConstantName(ramlName)).isEqualTo(javaName);
     }
 
     static Stream<Arguments> shouldBuildConstantName() {
@@ -45,7 +48,7 @@ public class NamesTest {
     @ParameterizedTest
     @MethodSource
     public void shouldBuildVariableNameForJavaKeyword(String ramlName, String javaName) {
-        assertThat(Names.buildVariableName(ramlName)).isEqualTo(javaName);
+        assertThat(nameFactory.buildVariableName(ramlName)).isEqualTo(javaName);
     }
 
     static Stream<Arguments> shouldBuildVariableNameForJavaKeyword() {
@@ -59,7 +62,7 @@ public class NamesTest {
     @ParameterizedTest
     @MethodSource
     public void shouldBuildVariableNameForDottedProperty(String ramlName, String javaName) {
-        assertThat(Names.buildVariableName(ramlName)).isEqualTo(javaName);
+        assertThat(nameFactory.buildVariableName(ramlName)).isEqualTo(javaName);
     }
 
     static Stream<Arguments> shouldBuildVariableNameForDottedProperty() {

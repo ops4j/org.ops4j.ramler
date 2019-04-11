@@ -1,19 +1,21 @@
 /*
- * Copyright 2013-2015 (c) MuleSoft, Inc.
+ * Copyright 2019 OPS4J Contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
- * either express or implied. See the License for the specific
- * language governing permissions and limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied.
+ *
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
-package org.ops4j.ramler.java;
+package org.ops4j.ramler.common.helper;
 
 import static org.apache.commons.lang.StringUtils.defaultIfBlank;
 import static org.apache.commons.lang.StringUtils.isBlank;
@@ -22,37 +24,20 @@ import static org.apache.commons.lang.StringUtils.uncapitalize;
 import static org.apache.commons.lang.WordUtils.capitalize;
 import static org.apache.commons.lang.math.NumberUtils.isDigits;
 
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.ops4j.ramler.common.model.Annotations;
 import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
+import org.raml.v2.api.model.v10.methods.Method;
 import org.raml.v2.api.model.v10.resources.Resource;
 
-/**
- * <p>
- * Names class.
- * </p>
- *
- * @author kor
- * @version $Id: $Id
- */
-public class Names {
-
-    /** Constant <code>GENERIC_PAYLOAD_ARGUMENT_NAME="entity"</code> */
-    public static final String GENERIC_PAYLOAD_ARGUMENT_NAME = "entity";
-
-    /** Constant <code>MULTIPLE_RESPONSE_HEADERS_ARGUMENT_NAME="headers"</code> */
-    public static final String MULTIPLE_RESPONSE_HEADERS_ARGUMENT_NAME = "headers";
-
-    /** Constant <code>EXAMPLE_PREFIX=" e.g. "</code> */
-    public static final String EXAMPLE_PREFIX = " e.g. ";
+public abstract class NameFactory {
 
     private static final Pattern CAMEL_CASE_PATTERN = Pattern.compile("(?<=[a-z])[A-Z]");
 
-    private Names() {
-        // hidden utility class constructor
-    }
+    public abstract Set<String> getReservedWords();
 
     /**
      * <p>
@@ -61,12 +46,11 @@ public class Names {
      *
      * @param resource
      *            a RAML resource
-     * @param config
-     *            Ramler configuration
+     * @param suffix
+     *            Name suffix
      * @return a {@link java.lang.String} object.
      */
-    public static String buildResourceInterfaceName(final Resource resource,
-        JavaConfiguration config) {
+    public String buildResourceInterfaceName(final Resource resource, String suffix) {
         String rawName = defaultIfBlank(Annotations.findCodeName(resource),
             resource.relativeUri()
                 .value());
@@ -75,7 +59,7 @@ public class Names {
         if (isBlank(resourceInterfaceName)) {
             resourceInterfaceName = "Root";
         }
-        return resourceInterfaceName.concat(config.getInterfaceNameSuffix());
+        return resourceInterfaceName.concat(suffix);
     }
 
     /**
@@ -87,10 +71,10 @@ public class Names {
      *            a {@link java.lang.String} object.
      * @return a {@link java.lang.String} object.
      */
-    public static String buildVariableName(final String source) {
+    public String buildVariableName(final String source) {
         final String name = uncapitalize(buildJavaFriendlyName(source));
 
-        return JavaConstants.JAVA_KEYWORDS.contains(name) ? ("$" + name) : name;
+        return getReservedWords().contains(name) ? ("$" + name) : name;
     }
 
     /**
@@ -102,7 +86,7 @@ public class Names {
      *            RAML property
      * @return legal Java identifier.
      */
-    public static String buildVariableName(TypeDeclaration property) {
+    public String buildVariableName(TypeDeclaration property) {
         return defaultIfBlank(Annotations.findCodeName(property),
             buildVariableName(property.name()));
     }
@@ -186,7 +170,7 @@ public class Names {
     /**
      * Gets the name of the checker method for a given boolean field. Example:
      * {@code fooBar -> isFooBar}
-     * 
+     *
      * @param fieldName
      *            field name
      * @return checker method name
@@ -197,7 +181,7 @@ public class Names {
 
     /**
      * Gets the name of the getter method for a given field. Example: {@code fooBar -> getFooBar}
-     * 
+     *
      * @param fieldName
      *            field name
      * @return getter method name
@@ -208,7 +192,7 @@ public class Names {
 
     /**
      * Gets the name of the setter method for a given field. Example: {@code fooBar -> setFooBar}
-     * 
+     *
      * @param fieldName
      *            field name
      * @return setter method name
@@ -220,7 +204,7 @@ public class Names {
     /**
      * Generates an accessor method name in with the given prefix and the given field name. Any
      * leading "$" is stripped from the field name, and its first character is capitalized.
-     * 
+     *
      * @param prefix
      *            name prefix
      * @param fieldName
@@ -238,4 +222,35 @@ public class Names {
         buffer.append(fieldName.substring(start + 1));
         return buffer.toString();
     }
+
+    public String buildMethodName(Method method, int bodyIndex) {
+        String methodName = buildMethodName(method);
+        if (bodyIndex > 0) {
+            TypeDeclaration responseType = method.responses()
+                .get(0)
+                .body()
+                .get(bodyIndex);
+            String codeName = Annotations.findCodeName(responseType);
+            if (codeName == null) {
+                methodName += Integer.toString(bodyIndex);
+            }
+            else {
+                methodName = codeName;
+            }
+        }
+        return methodName;
+    }
+
+    public String buildMethodName(Method method) {
+        String name = Annotations.findCodeName(method);
+        if (name == null) {
+            name = method.displayName()
+                .value();
+        }
+        if (name == null) {
+            name = method.method();
+        }
+        return buildVariableName(name);
+    }
+
 }

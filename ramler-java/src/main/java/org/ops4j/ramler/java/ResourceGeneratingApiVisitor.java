@@ -40,6 +40,7 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.ops4j.ramler.common.exc.Exceptions;
 import org.ops4j.ramler.common.exc.GeneratorException;
+import org.ops4j.ramler.common.helper.NameFactory;
 import org.ops4j.ramler.common.model.Annotations;
 import org.ops4j.ramler.common.model.ApiVisitor;
 import org.raml.v2.api.model.v10.api.Api;
@@ -91,6 +92,8 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
 
     private List<String> mediaTypes = Collections.emptyList();
 
+    private NameFactory nameFactory;
+
     /**
      * Creates a visitor for the given generator context.
      *
@@ -101,6 +104,7 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
         this.context = context;
         this.codeModel = context.getCodeModel();
         this.pkg = context.getApiPackage();
+        this.nameFactory = new JavaNameFactory();
         httpMethodAnnotations = JavaConstants.JAXRS_HTTP_METHODS.stream()
             .collect(toMap(Class::getSimpleName, Function.identity()));
     }
@@ -135,7 +139,8 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
     }
 
     private void createResourceInterface(Resource resource) throws JClassAlreadyExistsException {
-        klass = pkg._interface(Names.buildResourceInterfaceName(resource, context.getConfig()));
+        klass = pkg._interface(nameFactory.buildResourceInterfaceName(resource, context.getConfig()
+            .getInterfaceNameSuffix()));
         context.annotateAsGenerated(klass);
         klass.annotate(Path.class)
             .param(VALUE, resource.resourcePath());
@@ -196,7 +201,7 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
     }
 
     private void buildVoidMethod(Method method) {
-        String methodName = buildMethodName(method, -1);
+        String methodName = nameFactory.buildMethodName(method, -1);
         JMethod codeMethod = klass.method(JMod.NONE, klass, methodName);
 
         addJavadoc(method, codeMethod);
@@ -214,7 +219,7 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
                 .get(0)
                 .body()
                 .get(bodyIndex);
-            String methodName = buildMethodName(method, bodyIndex);
+            String methodName = nameFactory.buildMethodName(method, bodyIndex);
             JMethod codeMethod = klass.method(JMod.NONE, klass, methodName);
 
             addJavadoc(method, codeMethod);
@@ -249,36 +254,6 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
             codeMethod.annotate(Produces.class)
                 .param(VALUE, mediaType);
         }
-    }
-
-    private String buildMethodName(Method method, int bodyIndex) {
-        String methodName = buildMethodName(method);
-        if (bodyIndex > 0) {
-            TypeDeclaration responseType = method.responses()
-                .get(0)
-                .body()
-                .get(bodyIndex);
-            String codeName = Annotations.findCodeName(responseType);
-            if (codeName == null) {
-                methodName += Integer.toString(bodyIndex);
-            }
-            else {
-                methodName = codeName;
-            }
-        }
-        return methodName;
-    }
-
-    private String buildMethodName(Method method) {
-        String name = Annotations.findCodeName(method);
-        if (name == null) {
-            name = method.displayName()
-                .value();
-        }
-        if (name == null) {
-            name = method.method();
-        }
-        return Names.buildVariableName(name);
     }
 
     private void addSubresourcePath(JMethod codeMethod) {
@@ -335,7 +310,7 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
     private void addQueryParameters(Method method, JMethod codeMethod) {
         for (TypeDeclaration queryParam : method.queryParameters()) {
             JVar param = codeMethod.param(context.getJavaType(queryParam),
-                Names.buildVariableName(queryParam.name()));
+                nameFactory.buildVariableName(queryParam.name()));
             param.annotate(QueryParam.class)
                 .param(VALUE, queryParam.name());
             if (queryParam.defaultValue() != null) {
@@ -349,7 +324,7 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
         for (TypeDeclaration pathParam : context.getApiModel()
             .findAllUriParameters(method)) {
             JVar param = codeMethod.param(context.getJavaType(pathParam),
-                Names.buildVariableName(pathParam.name()));
+                nameFactory.buildVariableName(pathParam.name()));
             param.annotate(PathParam.class)
                 .param(VALUE, pathParam.name());
         }
@@ -365,7 +340,8 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
                 addFormParameters(codeMethod, body);
             }
             else {
-                codeMethod.param(context.getJavaType(body), Names.buildVariableName(body.type()));
+                codeMethod.param(context.getJavaType(body),
+                    nameFactory.buildVariableName(body.type()));
             }
         }
     }
@@ -379,13 +355,13 @@ public class ResourceGeneratingApiVisitor implements ApiVisitor {
 
     private void addFormParameter(JMethod codeMethod, TypeDeclaration formParam) {
         JVar param = codeMethod.param(context.getJavaType(formParam),
-            Names.buildVariableName(formParam.name()));
+            nameFactory.buildVariableName(formParam.name()));
         param.annotate(FormDataParam.class)
             .param(VALUE, formParam.name());
 
         if (formParam instanceof FileTypeDeclaration) {
             JVar detail = codeMethod.param(codeModel._ref(FormDataContentDisposition.class),
-                Names.buildVariableName(formParam.name()) + "Detail");
+                nameFactory.buildVariableName(formParam.name()) + "Detail");
             detail.annotate(FormDataParam.class)
                 .param(VALUE, formParam.name());
         }

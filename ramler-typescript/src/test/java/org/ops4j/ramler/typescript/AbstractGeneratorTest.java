@@ -50,7 +50,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.ops4j.ramler.common.exc.Exceptions;
-import org.ops4j.ramler.java.Names;
+import org.ops4j.ramler.java.JavaNameFactory;
 import org.ops4j.ramler.typescript.parser.JsonGeneratingListener;
 import org.ops4j.ramler.typescript.parser.TypeScriptLexer;
 import org.ops4j.ramler.typescript.parser.TypeScriptParser;
@@ -137,7 +137,7 @@ public abstract class AbstractGeneratorTest {
     }
 
     protected void expectInterface(String interfaceName, String... baseClasses) {
-        String baseName = Names.buildLowerKebabCaseName(interfaceName);
+        String baseName = JavaNameFactory.buildLowerKebabCaseName(interfaceName);
         parseTypeScriptModule(baseName);
         String json = listener.getJson();
 
@@ -252,7 +252,7 @@ public abstract class AbstractGeneratorTest {
     }
 
     protected void expectEnum(String enumName) {
-        String baseName = Names.buildLowerKebabCaseName(enumName);
+        String baseName = JavaNameFactory.buildLowerKebabCaseName(enumName);
         parseTypeScriptModule(baseName);
         String json = listener.getJson();
 
@@ -281,7 +281,7 @@ public abstract class AbstractGeneratorTest {
     }
 
     protected void expectTypeAlias(String aliasName, String type, String... types) {
-        String baseName = Names.buildLowerKebabCaseName(aliasName);
+        String baseName = JavaNameFactory.buildLowerKebabCaseName(aliasName);
         parseTypeScriptModule(baseName);
         String json = listener.getJson();
 

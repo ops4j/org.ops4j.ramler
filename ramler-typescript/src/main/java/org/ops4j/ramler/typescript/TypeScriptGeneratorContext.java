@@ -33,7 +33,7 @@ import org.ops4j.ramler.common.exc.GeneratorException;
 import org.ops4j.ramler.common.helper.FileHelper;
 import org.ops4j.ramler.common.helper.Version;
 import org.ops4j.ramler.common.model.ApiModel;
-import org.ops4j.ramler.java.Names;
+import org.ops4j.ramler.java.JavaNameFactory;
 import org.ops4j.ramler.typescript.trimou.TypeScriptTemplateEngine;
 import org.raml.v2.api.model.v10.datamodel.AnyTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.ArrayTypeDeclaration;
@@ -290,7 +290,7 @@ public class TypeScriptGeneratorContext {
      *            file name
      */
     public void writeToFile(String content, String typeName) {
-        String moduleName = Names.buildLowerKebabCaseName(typeName);
+        String moduleName = JavaNameFactory.buildLowerKebabCaseName(typeName);
         String tsFileName = moduleName + ".ts";
         File tsFile = new File(config.getTargetDir(), tsFileName);
         FileHelper.writeToFile(content, tsFile);

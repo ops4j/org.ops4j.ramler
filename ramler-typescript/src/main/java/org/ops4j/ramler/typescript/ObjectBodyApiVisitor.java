@@ -27,9 +27,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.ops4j.ramler.common.helper.NameFactory;
 import org.ops4j.ramler.common.model.Annotations;
 import org.ops4j.ramler.common.model.ApiVisitor;
-import org.ops4j.ramler.java.Names;
 import org.raml.v2.api.model.v10.datamodel.ArrayTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
@@ -45,6 +45,7 @@ import org.trimou.util.ImmutableMap;
 public class ObjectBodyApiVisitor implements ApiVisitor {
 
     private TypeScriptGeneratorContext context;
+    private NameFactory nameFactory;
 
     /**
      * Creates a visitor with the given generator context.
@@ -54,6 +55,7 @@ public class ObjectBodyApiVisitor implements ApiVisitor {
      */
     public ObjectBodyApiVisitor(TypeScriptGeneratorContext context) {
         this.context = context;
+        this.nameFactory = new TypeScriptNameFactory();
     }
 
     @Override
@@ -95,7 +97,7 @@ public class ObjectBodyApiVisitor implements ApiVisitor {
      * @param property
      */
     private void generateArrayProperty(ArrayTypeDeclaration property) {
-        String fieldName = Names.buildVariableName(property);
+        String fieldName = nameFactory.buildVariableName(property);
         String itemTypeName = context.getApiModel()
             .getItemType(property);
         String typeVar = Annotations.findTypeVar(property);
@@ -117,7 +119,7 @@ public class ObjectBodyApiVisitor implements ApiVisitor {
      * @param property
      */
     private void generateProperty(TypeDeclaration property) {
-        String fieldName = Names.buildVariableName(property);
+        String fieldName = nameFactory.buildVariableName(property);
         String tsPropType;
         String typeVar = Annotations.findTypeVar(property);
         if (typeVar != null) {

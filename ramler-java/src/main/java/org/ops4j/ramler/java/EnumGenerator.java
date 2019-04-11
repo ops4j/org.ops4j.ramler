@@ -67,7 +67,7 @@ public class EnumGenerator {
 
     /**
      * Selects the enum class for the given type.
-     * 
+     *
      * @param type
      *            enumeration type declaration
      */
@@ -89,7 +89,7 @@ public class EnumGenerator {
 
     /**
      * Creates an empty enum class for the given type.
-     * 
+     *
      * @param type
      *            enumeration type declaration
      * @return enum class
@@ -108,12 +108,13 @@ public class EnumGenerator {
 
     /**
      * Generates an enum constant for the given value.
-     * 
+     *
      * @param enumValue
      *            enum value
      */
     public void generateEnumConstant(EnumValue enumValue) {
-        JEnumConstant constant = klass.enumConstant(Names.buildConstantName(enumValue.getName()))
+        JEnumConstant constant = klass
+            .enumConstant(JavaNameFactory.buildConstantName(enumValue.getName()))
             .arg(JExpr.lit(enumValue.getName()));
 
         if (context.getConfig()

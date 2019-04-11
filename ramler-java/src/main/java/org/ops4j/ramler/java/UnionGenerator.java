@@ -22,6 +22,7 @@ import static org.ops4j.ramler.java.JavaConstants.VALUE;
 import java.io.IOException;
 
 import org.ops4j.ramler.common.exc.Exceptions;
+import org.ops4j.ramler.common.helper.NameFactory;
 import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.UnionTypeDeclaration;
@@ -62,6 +63,7 @@ public class UnionGenerator {
     private JPackage pkg;
     private JCodeModel codeModel;
     private boolean jacksonEnabled;
+    private NameFactory nameFactory;
 
     /**
      * Creates a union generator with the given context.
@@ -75,11 +77,12 @@ public class UnionGenerator {
         this.pkg = context.getModelPackage();
         this.jacksonEnabled = context.getConfig()
             .isJacksonUnion();
+        this.nameFactory = new JavaNameFactory();
     }
 
     /**
      * Generates a Java class for the given union type.
-     * 
+     *
      * @param type
      *            union type
      */
@@ -262,7 +265,7 @@ public class UnionGenerator {
     }
 
     private void addVariantChecker(JDefinedClass klass, TypeDeclaration variant) {
-        String methodName = Names.getCheckerName(variant.name());
+        String methodName = JavaNameFactory.getCheckerName(variant.name());
         JDefinedClass variantClass = pkg._getClass(variant.name());
         JMethod checker = klass.method(JMod.PUBLIC, codeModel.BOOLEAN, methodName);
         checker.body()
@@ -272,7 +275,7 @@ public class UnionGenerator {
     }
 
     private void addVariantGetter(JDefinedClass klass, TypeDeclaration variant) {
-        String methodName = Names.getGetterName(variant.name());
+        String methodName = JavaNameFactory.getGetterName(variant.name());
         JDefinedClass variantClass = pkg._getClass(variant.name());
         JMethod getter = klass.method(JMod.PUBLIC, variantClass, methodName);
         getter.body()
@@ -281,8 +284,8 @@ public class UnionGenerator {
     }
 
     private void addVariantSetter(JDefinedClass klass, TypeDeclaration variant) {
-        String methodName = Names.getSetterName(variant.name());
-        String paramName = Names.buildVariableName(variant.name());
+        String methodName = NameFactory.getSetterName(variant.name());
+        String paramName = nameFactory.buildVariableName(variant.name());
         JDefinedClass variantClass = pkg._getClass(variant.name());
         JMethod setter = klass.method(JMod.PUBLIC, codeModel.VOID, methodName);
         JVar param = setter.param(variantClass, paramName);

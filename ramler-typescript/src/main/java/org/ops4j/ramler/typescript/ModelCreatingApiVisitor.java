@@ -25,7 +25,7 @@ import org.ops4j.ramler.common.model.ApiTraverser;
 import org.ops4j.ramler.common.model.ApiVisitor;
 import org.ops4j.ramler.common.model.EnumValue;
 import org.ops4j.ramler.common.model.Metatype;
-import org.ops4j.ramler.java.Names;
+import org.ops4j.ramler.java.JavaNameFactory;
 import org.raml.v2.api.model.v10.datamodel.ArrayTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.NumberTypeDeclaration;
 import org.raml.v2.api.model.v10.datamodel.ObjectTypeDeclaration;
@@ -121,7 +121,7 @@ public class ModelCreatingApiVisitor implements ApiVisitor {
             tsType = tsType.substring(0, tsType.length() - 2);
         }
         if (!Metatype.isBuiltIn(tsType)) {
-            String tsFile = Names.buildLowerKebabCaseName(tsType);
+            String tsFile = JavaNameFactory.buildLowerKebabCaseName(tsType);
             imports.put(tsType, tsFile);
         }
     }

@@ -23,7 +23,7 @@ import java.util.Map;
 
 import org.ops4j.ramler.common.model.ApiVisitor;
 import org.ops4j.ramler.common.model.EnumValue;
-import org.ops4j.ramler.java.Names;
+import org.ops4j.ramler.java.JavaNameFactory;
 import org.raml.v2.api.model.v10.datamodel.StringTypeDeclaration;
 import org.trimou.util.ImmutableMap;
 
@@ -110,7 +110,8 @@ public class EnumTypeApiVisitor implements ApiVisitor {
 
     @Override
     public void visitEnumValue(StringTypeDeclaration type, EnumValue enumValue) {
-        EnumSymbol enumSymbol = new EnumSymbol(Names.buildConstantName(enumValue.getName()),
+        EnumSymbol enumSymbol = new EnumSymbol(
+            JavaNameFactory.buildConstantName(enumValue.getName()),
             enumValue.getName());
         enumSymbols.add(enumSymbol);
     }

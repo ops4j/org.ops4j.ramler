@@ -24,9 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.ops4j.ramler.common.helper.NameFactory;
 import org.ops4j.ramler.common.model.Annotations;
 import org.ops4j.ramler.common.model.ApiVisitor;
-import org.ops4j.ramler.java.Names;
 import org.raml.v2.api.model.v10.bodies.Response;
 import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
 import org.raml.v2.api.model.v10.methods.Method;
@@ -41,6 +41,7 @@ import org.trimou.util.ImmutableMap;
 public class MethodApiVisitor implements ApiVisitor {
 
     private TypeScriptGeneratorContext context;
+    private NameFactory nameFactory;
 
     static class Parameter {
 
@@ -80,13 +81,14 @@ public class MethodApiVisitor implements ApiVisitor {
      */
     public MethodApiVisitor(TypeScriptGeneratorContext context) {
         this.context = context;
+        this.nameFactory = new TypeScriptNameFactory();
     }
 
     @Override
     public void visitMethodStart(Method method) {
         List<TypeDeclaration> bodies = method.body();
         TypeDeclaration body = bodies.isEmpty() ? null : bodies.get(0);
-        String name = buildMethodName(method, -1);
+        String name = nameFactory.buildMethodName(method, -1);
         Response response = method.responses()
             .get(0);
         String returnType = "void";
@@ -141,35 +143,4 @@ public class MethodApiVisitor implements ApiVisitor {
         }
         return tsPropType;
     }
-
-    private String buildMethodName(Method method, int bodyIndex) {
-        String methodName = buildMethodName(method);
-        if (bodyIndex > 0) {
-            TypeDeclaration responseType = method.responses()
-                .get(0)
-                .body()
-                .get(bodyIndex);
-            String codeName = Annotations.findCodeName(responseType);
-            if (codeName == null) {
-                methodName += Integer.toString(bodyIndex);
-            }
-            else {
-                methodName = codeName;
-            }
-        }
-        return methodName;
-    }
-
-    private String buildMethodName(Method method) {
-        String name = Annotations.findCodeName(method);
-        if (name == null) {
-            name = method.displayName()
-                .value();
-        }
-        if (name == null) {
-            name = method.method();
-        }
-        return Names.buildVariableName(name);
-    }
-
 }

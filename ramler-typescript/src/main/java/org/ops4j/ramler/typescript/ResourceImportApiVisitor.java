@@ -25,7 +25,7 @@ import java.util.TreeMap;
 import org.ops4j.ramler.common.model.Annotations;
 import org.ops4j.ramler.common.model.ApiVisitor;
 import org.ops4j.ramler.common.model.Metatype;
-import org.ops4j.ramler.java.Names;
+import org.ops4j.ramler.java.JavaNameFactory;
 import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
 import org.raml.v2.api.model.v10.methods.Method;
 import org.raml.v2.api.model.v10.resources.Resource;
@@ -88,7 +88,7 @@ public class ResourceImportApiVisitor implements ApiVisitor {
             tsType = tsType.substring(0, tsType.length() - 2);
         }
         if (!Metatype.isBuiltIn(tsType)) {
-            String tsFile = Names.buildLowerKebabCaseName(tsType);
+            String tsFile = JavaNameFactory.buildLowerKebabCaseName(tsType);
             typeToModuleMap.put(tsType, tsFile);
         }
     }
