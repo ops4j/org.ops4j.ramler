@@ -23,6 +23,7 @@ import org.ops4j.ramler.common.helper.FileHelper;
 import org.ops4j.ramler.common.model.ApiModel;
 import org.ops4j.ramler.common.model.ApiModelBuilder;
 import org.ops4j.ramler.common.model.ApiTraverser;
+import org.ops4j.ramler.common.model.ApiVisitor;
 import org.ops4j.ramler.typescript.trimou.TypeScriptTemplateEngine;
 
 /**
@@ -52,7 +53,7 @@ public class TypeScriptGenerator {
 
     /**
      * Generates TypeScript code.
-     * 
+     *
      * @throws IOException
      *             if the target directory cannot be created
      */
@@ -63,9 +64,10 @@ public class TypeScriptGenerator {
         context.setTemplateEngine(engine);
         FileHelper.createDirectoryIfNeeded(config.getTargetDir());
 
-        ModelCreatingApiVisitor modelVisitor = new ModelCreatingApiVisitor(context);
-        ApiTraverser traverser = new ApiTraverser(context.getApiModel());
-        traverser.traverse(context.getApiModel()
-            .getApi(), modelVisitor);
+        ApiVisitor modelVisitor = new ModelCreatingApiVisitor(context);
+        ApiVisitor resourceVisitor = new ResourceCreatingApiVisitor(context);
+        ApiTraverser traverser = new ApiTraverser(apiModel);
+        traverser.traverse(apiModel.getApi(), modelVisitor);
+        traverser.traverse(apiModel.getApi(), resourceVisitor);
     }
 }

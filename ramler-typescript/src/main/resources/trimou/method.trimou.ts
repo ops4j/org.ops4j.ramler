@@ -1,0 +1,1 @@
+    {{name}}({{>parameters}}): RestResponse<{{returnType}}>;

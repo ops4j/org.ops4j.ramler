@@ -133,7 +133,7 @@ public abstract class AbstractGeneratorTest {
             .sorted()
             .map(m -> m.replace(".ts", ""))
             .collect(toList());
-        assertThat(actual).containsExactly(modules);
+        assertThat(actual).containsExactlyInAnyOrder(modules);
     }
 
     protected void expectInterface(String interfaceName, String... baseClasses) {

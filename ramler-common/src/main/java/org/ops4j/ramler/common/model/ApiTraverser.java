@@ -203,7 +203,7 @@ public class ApiTraverser {
                 .equals(name));
     }
 
-    private void traverse(Resource resource, ApiVisitor visitor) {
+    public void traverse(Resource resource, ApiVisitor visitor) {
         visitor.visitResourceStart(resource);
         resource.methods()
             .forEach(method -> traverse(method, visitor));
@@ -212,7 +212,7 @@ public class ApiTraverser {
         visitor.visitResourceEnd(resource);
     }
 
-    private void traverse(Method method, ApiVisitor visitor) {
+    public void traverse(Method method, ApiVisitor visitor) {
         visitor.visitMethodStart(method);
         method.headers()
             .forEach(visitor::visitHeader);
