@@ -26,6 +26,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HEAD;
 import javax.ws.rs.OPTIONS;
+import javax.ws.rs.PATCH;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 
@@ -51,8 +52,9 @@ public class JavaConstants {
 
     /** Constant <code>JAXRS_HTTP_METHODS</code> */
     public static final List<Class<? extends Annotation>> JAXRS_HTTP_METHODS = Collections
-        .unmodifiableList(Arrays.asList(DELETE.class, GET.class, HEAD.class, OPTIONS.class,
-            POST.class, PUT.class));
+        .unmodifiableList(
+            Arrays.asList(DELETE.class, GET.class, HEAD.class, OPTIONS.class, PATCH.class,
+                POST.class, PUT.class));
 
     /**
      * Name of value property of annotation types.
