@@ -12,4 +12,6 @@ test-output
 *.iml
 node_modules/
 maven-wrapper.jar
+ramler-itest/client/src/app/gen/
+dist/
 

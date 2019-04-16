@@ -1,0 +1,79 @@
+#%RAML 1.0
+title: API with resources
+mediaType: application/json
+types:
+  User:
+    properties:
+      id:
+        type: integer
+        description: User identity
+      firstname:
+        type: string
+        description: First name
+      lastname:
+        type: string
+        description: Last name
+/user:
+  displayName: User
+  description: Operations on users
+  get:
+    displayName: find all users
+    description: Finds all users and returns full list.
+    queryParameters:
+      q :
+        type: string
+        default: ""
+        description: Query pattern
+      sort:
+        type: string
+        required: false
+        description: Is the result sorted?
+    responses:
+      200:
+        description: List of users
+        body:
+          type: User[]
+  post:
+    displayName: create user
+    body:
+      type : User
+    responses:
+      200:
+        body:
+          type: User
+  /{id}:
+    uriParameters:
+      id:
+        type : integer
+    get:
+      displayName: find user by id
+      responses:
+        200:
+          body:
+            type: User
+        404:    
+    delete:
+      displayName: delete user by id
+      responses:
+        204:
+        404:
+    put:
+      displayName: put user by id
+      body:
+        type: User
+      responses:
+        200:  
+          body:
+            type: User
+        404:
+    patch:
+      displayName: patch user by id
+      body:
+        application/csv:
+          type: string
+      responses:
+        200:  
+          body:
+            type: User
+        404:
+        
