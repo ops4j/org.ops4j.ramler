@@ -26,6 +26,8 @@
         <org.junit.platform.version>1.4.2</org.junit.platform.version>
         <org.ow2.asm.version>7.1</org.ow2.asm.version>
         <maven.surefire.plugin.version>3.0.0-M3</maven.surefire.plugin.version>
+        <nodeVersion>v8.10.0</nodeVersion>
+        <npmVersion>6.9.0</npmVersion>
         <sonar.skip>true</sonar.skip>
     </properties>
 
