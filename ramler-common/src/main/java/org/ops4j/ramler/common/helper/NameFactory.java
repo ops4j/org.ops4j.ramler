@@ -230,6 +230,8 @@ public abstract class NameFactory {
      *
      * @param method
      *            RAML method
+     * @param bodyIndex
+     *            index of current response type per method
      * @return method name
      */
     public String buildMethodName(Method method, int bodyIndex) {

@@ -17,13 +17,27 @@
  */
 package org.ops4j.ramler.typescript;
 
+/**
+ * Parameter name and type for a method signature.
+ *
+ * @author Harald Wellmann
+ *
+ */
 public class Parameter {
 
     private String name;
 
     private String type;
 
-    Parameter(String name, String type) {
+    /**
+     * Creates a parameter with the given name and type.
+     *
+     * @param name
+     *            parameter name
+     * @param type
+     *            parameter type
+     */
+    public Parameter(String name, String type) {
         this.name = name;
         this.type = type;
     }

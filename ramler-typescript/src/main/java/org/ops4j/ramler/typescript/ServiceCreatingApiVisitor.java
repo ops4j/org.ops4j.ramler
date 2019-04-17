@@ -103,6 +103,15 @@ public class ServiceCreatingApiVisitor implements ApiVisitor {
             buildServiceName(resource, context.getConfig()), "service");
     }
 
+    /**
+     * Builds the name of the Angular service client for the given RAML resource.
+     *
+     * @param resource
+     *            RAML resource
+     * @param config
+     *            generator configuration
+     * @return interface name
+     */
     public static String buildServiceName(final Resource resource,
         TypeScriptConfiguration config) {
         String rawName = defaultIfBlank(Annotations.findCodeName(resource),

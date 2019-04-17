@@ -82,6 +82,12 @@ public class ResourceImportApiVisitor implements ApiVisitor {
         }
     }
 
+    /**
+     * Adds the given type to the list of imports. The module name is derived automatically.
+     *
+     * @param typeName
+     *            type name
+     */
     public void addTypeToImports(String typeName) {
         String tsType = typeName;
         while (tsType.endsWith("[]")) {

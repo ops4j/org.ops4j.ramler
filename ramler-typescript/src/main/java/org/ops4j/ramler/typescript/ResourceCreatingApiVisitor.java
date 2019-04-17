@@ -110,6 +110,15 @@ public class ResourceCreatingApiVisitor implements ApiVisitor {
             buildResourceInterfaceName(resource, context.getConfig()));
     }
 
+    /**
+     * Builds the name of the TypeScript interface corresponding to the given RAML resource.
+     *
+     * @param resource
+     *            RAML resource
+     * @param config
+     *            generator configuration
+     * @return interface name
+     */
     public static String buildResourceInterfaceName(final Resource resource,
         TypeScriptConfiguration config) {
         String rawName = defaultIfBlank(Annotations.findCodeName(resource),

@@ -300,6 +300,17 @@ public class TypeScriptGeneratorContext {
         FileHelper.writeToFile(content, tsFile);
     }
 
+    /**
+     * Writes the given content to a file in the target directory. The file name is derived from the
+     * type name and the suffix, e.g. {@code FooBar -> foo-bar.service.ts}.
+     *
+     * @param content
+     *            string content
+     * @param typeName
+     *            file name
+     * @param suffix
+     *            suffix to be appended to the type name, separated by a period
+     */
     public void writeToFile(String content, String typeName, String suffix) {
         String moduleName = JavaNameFactory.buildLowerKebabCaseName(typeName);
         String tsFileName = moduleName + "." + suffix + ".ts";
@@ -307,10 +318,18 @@ public class TypeScriptGeneratorContext {
         FileHelper.writeToFile(content, tsFile);
     }
 
-    public String typeWithArgs(TypeDeclaration property) {
+    /**
+     * Builds the TypeScript name (including type arguments for generic types) corresponding to the
+     * given RAML type.
+     *
+     * @param type
+     *            RAML type
+     * @return TypeScript type reference
+     */
+    public String typeWithArgs(TypeDeclaration type) {
         String tsPropType;
-        tsPropType = getTypeScriptPropertyType(property);
-        List<String> typeArgs = Annotations.getStringAnnotations(property, TYPE_ARGS);
+        tsPropType = getTypeScriptPropertyType(type);
+        List<String> typeArgs = Annotations.getStringAnnotations(type, TYPE_ARGS);
         if (!typeArgs.isEmpty()) {
             StringBuilder builder = new StringBuilder(tsPropType);
             builder.append("<");
@@ -321,5 +340,4 @@ public class TypeScriptGeneratorContext {
         }
         return tsPropType;
     }
-
 }
