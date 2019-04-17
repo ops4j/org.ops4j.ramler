@@ -1,5 +1,5 @@
 import { TestBed, async } from '@angular/core/testing';
-import { UserService } from './user.service';
+import { UserService } from './gen/user.service';
 import { HttpClientModule } from '@angular/common/http';
 import { CRUD_URL } from './app.module';
 

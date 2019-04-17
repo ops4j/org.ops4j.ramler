@@ -1,9 +1,9 @@
-import { User } from './gen/user';
-import { UserResource } from './gen/user-resource';
+import { User } from './user';
+import { UserResource } from './user-resource';
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { RestResponse } from './gen/rest-response';
-import { CRUD_URL } from './app.module';
+import { RestResponse } from './rest-response';
+import { CRUD_URL } from '../app.module';
 
 @Injectable()
 export class UserService implements UserResource {

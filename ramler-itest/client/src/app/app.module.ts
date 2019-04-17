@@ -4,7 +4,7 @@ import { HttpClientModule } from '@angular/common/http';
 
 
 import { AppComponent } from './app.component';
-import { UserService } from './user.service';
+import { UserService } from './gen/user.service';
 
 export const CRUD_URL = new InjectionToken<string>('crud.url');
 
