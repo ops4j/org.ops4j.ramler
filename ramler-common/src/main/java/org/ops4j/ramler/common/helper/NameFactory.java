@@ -33,6 +33,12 @@ import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
 import org.raml.v2.api.model.v10.methods.Method;
 import org.raml.v2.api.model.v10.resources.Resource;
 
+/**
+ * Factory for names in generated code.
+ *
+ * @author Harald Wellmann
+ *
+ */
 public abstract class NameFactory {
 
     private static final Pattern CAMEL_CASE_PATTERN = Pattern.compile("(?<=[a-z])[A-Z]");
@@ -40,9 +46,7 @@ public abstract class NameFactory {
     public abstract Set<String> getReservedWords();
 
     /**
-     * <p>
-     * buildResourceInterfaceName.
-     * </p>
+     * Builds a resource interface name.
      *
      * @param resource
      *            a RAML resource
@@ -54,7 +58,7 @@ public abstract class NameFactory {
         String rawName = defaultIfBlank(Annotations.findCodeName(resource),
             resource.relativeUri()
                 .value());
-        String resourceInterfaceName = buildJavaFriendlyName(rawName);
+        String resourceInterfaceName = buildCodeFriendlyName(rawName);
 
         if (isBlank(resourceInterfaceName)) {
             resourceInterfaceName = "Root";
@@ -63,16 +67,15 @@ public abstract class NameFactory {
     }
 
     /**
-     * <p>
-     * buildVariableName.
-     * </p>
+     * Builds a variable name. The name may be prefixed with {@code $} to avoid conflicts with
+     * reserved words.
      *
      * @param source
      *            a {@link java.lang.String} object.
      * @return a {@link java.lang.String} object.
      */
     public String buildVariableName(final String source) {
-        final String name = uncapitalize(buildJavaFriendlyName(source));
+        final String name = uncapitalize(buildCodeFriendlyName(source));
 
         return getReservedWords().contains(name) ? ("$" + name) : name;
     }
@@ -92,15 +95,13 @@ public abstract class NameFactory {
     }
 
     /**
-     * <p>
-     * buildJavaFriendlyName.
-     * </p>
+     * Builds a code-friendly name, replacing any non-alphanumeric characters.
      *
      * @param source
      *            a {@link java.lang.String} object.
      * @return a {@link java.lang.String} object.
      */
-    public static String buildJavaFriendlyName(final String source) {
+    public static String buildCodeFriendlyName(final String source) {
         final String baseName = source.replaceAll("[\\W_]", " ");
 
         String friendlyName = capitalize(baseName).replaceAll("[\\W_]", "");
@@ -121,7 +122,7 @@ public abstract class NameFactory {
      * @return upper case string with underscores as word separators
      */
     public static String buildConstantName(String source) {
-        String friendlyName = buildJavaFriendlyName(source);
+        String friendlyName = buildCodeFriendlyName(source);
         Matcher m = CAMEL_CASE_PATTERN.matcher(friendlyName);
 
         StringBuffer sb = new StringBuffer();
@@ -223,6 +224,14 @@ public abstract class NameFactory {
         return buffer.toString();
     }
 
+    /**
+     * Builds a code-level method name for the given RAML method and the response body with the
+     * given indey, considering the { @code codeName} annotation on the response type, if present.
+     *
+     * @param method
+     *            RAML method
+     * @return method name
+     */
     public String buildMethodName(Method method, int bodyIndex) {
         String methodName = buildMethodName(method);
         if (bodyIndex > 0) {
@@ -241,6 +250,14 @@ public abstract class NameFactory {
         return methodName;
     }
 
+    /**
+     * Builds a code-level method name for the given RAML method, considering the { @code codeName}
+     * annotation, if present.
+     *
+     * @param method
+     *            RAML method
+     * @return method name
+     */
     public String buildMethodName(Method method) {
         String name = Annotations.findCodeName(method);
         if (name == null) {
@@ -252,5 +269,4 @@ public abstract class NameFactory {
         }
         return buildVariableName(name);
     }
-
 }

@@ -71,8 +71,10 @@ public class ServiceCreatingApiVisitor implements ApiVisitor {
             output.append("\n");
 
             context.getMustache("serviceStart")
-                .render(context.getOutput(), ImmutableMap.of("serviceName", serviceName,
-                    "resourceName", resourceName, "baseUrlToken", "CRUD_BASE_URL"));
+                .render(context.getOutput(), ImmutableMap.of(
+                    "serviceName", serviceName,
+                    "resourceName", resourceName,
+                    "baseUrlToken", "CRUD_BASE_URL"));
 
         }
         else if (innerResource == null) {
@@ -106,7 +108,7 @@ public class ServiceCreatingApiVisitor implements ApiVisitor {
         String rawName = defaultIfBlank(Annotations.findCodeName(resource),
             resource.relativeUri()
                 .value());
-        String resourceInterfaceName = NameFactory.buildJavaFriendlyName(rawName);
+        String resourceInterfaceName = NameFactory.buildCodeFriendlyName(rawName);
 
         if (isBlank(resourceInterfaceName)) {
             resourceInterfaceName = "Root";

@@ -115,7 +115,7 @@ public class ResourceCreatingApiVisitor implements ApiVisitor {
         String rawName = defaultIfBlank(Annotations.findCodeName(resource),
             resource.relativeUri()
                 .value());
-        String resourceInterfaceName = NameFactory.buildJavaFriendlyName(rawName);
+        String resourceInterfaceName = NameFactory.buildCodeFriendlyName(rawName);
 
         if (isBlank(resourceInterfaceName)) {
             resourceInterfaceName = "Root";

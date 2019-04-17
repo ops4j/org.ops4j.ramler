@@ -36,7 +36,7 @@ import org.trimou.util.ImmutableMap;
  */
 public class ResourceMethodApiVisitor implements ApiVisitor {
 
-    private TypeScriptGeneratorContext context;
+    protected TypeScriptGeneratorContext context;
     private NameFactory nameFactory;
 
     /**
@@ -74,13 +74,13 @@ public class ResourceMethodApiVisitor implements ApiVisitor {
             .render(context.getOutput(), contextObject);
     }
 
-    private void addBodyParameters(TypeDeclaration body, List<Parameter> parameters) {
+    protected void addBodyParameters(TypeDeclaration body, List<Parameter> parameters) {
         if (body != null) {
             parameters.add(new Parameter("body", context.typeWithArgs(body)));
         }
     }
 
-    private void addPathParameters(Method method, List<Parameter> parameters) {
+    protected void addPathParameters(Method method, List<Parameter> parameters) {
         context.getApiModel()
             .findAllUriParameters(method)
             .stream()
@@ -88,7 +88,7 @@ public class ResourceMethodApiVisitor implements ApiVisitor {
             .forEach(parameters::add);
     }
 
-    private void addQueryParameters(Method method, List<Parameter> parameters) {
+    protected void addQueryParameters(Method method, List<Parameter> parameters) {
         method.queryParameters()
             .stream()
             .map(p -> new Parameter(p.name(), context.typeWithArgs(p)))

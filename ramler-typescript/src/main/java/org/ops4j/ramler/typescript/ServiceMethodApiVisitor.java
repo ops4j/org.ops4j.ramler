@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.ops4j.ramler.common.helper.NameFactory;
-import org.ops4j.ramler.common.model.ApiVisitor;
 import org.raml.v2.api.model.v10.bodies.Response;
 import org.raml.v2.api.model.v10.datamodel.TypeDeclaration;
 import org.raml.v2.api.model.v10.methods.Method;
@@ -34,9 +33,8 @@ import org.trimou.util.ImmutableMap;
  * @author Harald Wellmann
  *
  */
-public class ServiceMethodApiVisitor implements ApiVisitor {
+public class ServiceMethodApiVisitor extends ResourceMethodApiVisitor {
 
-    private TypeScriptGeneratorContext context;
     private NameFactory nameFactory;
 
     /**
@@ -46,7 +44,7 @@ public class ServiceMethodApiVisitor implements ApiVisitor {
      *            generator context
      */
     public ServiceMethodApiVisitor(TypeScriptGeneratorContext context) {
-        this.context = context;
+        super(context);
         this.nameFactory = new TypeScriptNameFactory();
     }
 
@@ -76,21 +74,21 @@ public class ServiceMethodApiVisitor implements ApiVisitor {
             url = "this.baseUrl";
         }
 
-        String options = "";
+        StringBuilder options = new StringBuilder();
         if (!method.queryParameters()
             .isEmpty()) {
-            options = ", { params: {";
+            options.append(", { params: {");
             boolean first = true;
             for (TypeDeclaration param : method.queryParameters()) {
                 if (first) {
                     first = false;
                 }
                 else {
-                    options += ", ";
+                    options.append(", ");
                 }
-                options += param.name();
+                options.append(param.name());
             }
-            options += "} }";
+            options.append("} }");
         }
 
         Map<String, Object> contextObject = ImmutableMap.<String, Object> builder()
@@ -104,26 +102,5 @@ public class ServiceMethodApiVisitor implements ApiVisitor {
             .build();
         context.getMustache("serviceMethod")
             .render(context.getOutput(), contextObject);
-    }
-
-    private void addBodyParameters(TypeDeclaration body, List<Parameter> parameters) {
-        if (body != null) {
-            parameters.add(new Parameter("body", context.typeWithArgs(body)));
-        }
-    }
-
-    private void addPathParameters(Method method, List<Parameter> parameters) {
-        context.getApiModel()
-            .findAllUriParameters(method)
-            .stream()
-            .map(p -> new Parameter(p.name(), context.typeWithArgs(p)))
-            .forEach(parameters::add);
-    }
-
-    private void addQueryParameters(Method method, List<Parameter> parameters) {
-        method.queryParameters()
-            .stream()
-            .map(p -> new Parameter(p.name(), context.typeWithArgs(p)))
-            .forEach(parameters::add);
     }
 }
