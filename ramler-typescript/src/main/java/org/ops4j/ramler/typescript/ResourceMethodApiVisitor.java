@@ -34,40 +34,10 @@ import org.trimou.util.ImmutableMap;
  * @author Harald Wellmann
  *
  */
-public class MethodApiVisitor implements ApiVisitor {
+public class ResourceMethodApiVisitor implements ApiVisitor {
 
     private TypeScriptGeneratorContext context;
     private NameFactory nameFactory;
-
-    static class Parameter {
-
-        private String name;
-
-        private String type;
-
-        Parameter(String name, String type) {
-            this.name = name;
-            this.type = type;
-        }
-
-        /**
-         * Gets the name.
-         *
-         * @return the name
-         */
-        public String getName() {
-            return name;
-        }
-
-        /**
-         * Gets the type.
-         *
-         * @return the type
-         */
-        public String getType() {
-            return type;
-        }
-    }
 
     /**
      * Creates a visitor with the given generator context.
@@ -75,7 +45,7 @@ public class MethodApiVisitor implements ApiVisitor {
      * @param context
      *            generator context
      */
-    public MethodApiVisitor(TypeScriptGeneratorContext context) {
+    public ResourceMethodApiVisitor(TypeScriptGeneratorContext context) {
         this.context = context;
         this.nameFactory = new TypeScriptNameFactory();
     }
@@ -124,5 +94,4 @@ public class MethodApiVisitor implements ApiVisitor {
             .map(p -> new Parameter(p.name(), context.typeWithArgs(p)))
             .forEach(parameters::add);
     }
-
 }

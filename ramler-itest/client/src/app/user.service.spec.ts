@@ -1,7 +1,7 @@
 import { TestBed, async } from '@angular/core/testing';
 import { UserService } from './gen/user.service';
 import { HttpClientModule } from '@angular/common/http';
-import { CRUD_URL } from './app.module';
+import { CRUD_BASE_URL } from './app.module';
 
 let userService: UserService;
 
@@ -13,7 +13,7 @@ describe('UserService', () => {
                 HttpClientModule
             ],
             providers: [
-                { provide: CRUD_URL, useValue: '/api/user' },
+                { provide: CRUD_BASE_URL, useValue: '/api' },
                 UserService
             ],
         }).compileComponents();

@@ -6,7 +6,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { UserService } from './gen/user.service';
 
-export const CRUD_URL = new InjectionToken<string>('crud.url');
+export const CRUD_BASE_URL = new InjectionToken<string>('crud.url');
 
 @NgModule({
   declarations: [
@@ -18,7 +18,7 @@ export const CRUD_URL = new InjectionToken<string>('crud.url');
   ],
   providers: [
     UserService,
-    { provide: CRUD_URL, useValue: 'http://localhost:8081' }
+    { provide: CRUD_BASE_URL, useValue: 'http://localhost:8081' }
   ],
   bootstrap: [AppComponent]
 })

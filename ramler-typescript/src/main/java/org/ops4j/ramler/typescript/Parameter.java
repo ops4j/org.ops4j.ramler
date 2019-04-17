@@ -17,18 +17,32 @@
  */
 package org.ops4j.ramler.typescript;
 
-import org.junit.jupiter.api.Test;
+public class Parameter {
 
-public class CrudTest extends AbstractGeneratorTest {
+    private String name;
 
-    @Override
-    public String getBasename() {
-        return "crud";
+    private String type;
+
+    Parameter(String name, String type) {
+        this.name = name;
+        this.type = type;
     }
 
-    @Test
-    public void shouldFindModules() {
-        assertModules("rest-response", "user", "user-resource", "user.service");
+    /**
+     * Gets the name.
+     *
+     * @return the name
+     */
+    public String getName() {
+        return name;
     }
 
+    /**
+     * Gets the type.
+     *
+     * @return the type
+     */
+    public String getType() {
+        return type;
+    }
 }

@@ -82,7 +82,7 @@ public class ResourceImportApiVisitor implements ApiVisitor {
         }
     }
 
-    private void addTypeToImports(String typeName) {
+    public void addTypeToImports(String typeName) {
         String tsType = typeName;
         while (tsType.endsWith("[]")) {
             tsType = tsType.substring(0, tsType.length() - 2);

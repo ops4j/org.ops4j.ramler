@@ -66,8 +66,10 @@ public class TypeScriptGenerator {
 
         ApiVisitor modelVisitor = new ModelCreatingApiVisitor(context);
         ApiVisitor resourceVisitor = new ResourceCreatingApiVisitor(context);
+        ApiVisitor serviceVisitor = new ServiceCreatingApiVisitor(context);
         ApiTraverser traverser = new ApiTraverser(apiModel);
         traverser.traverse(apiModel.getApi(), modelVisitor);
         traverser.traverse(apiModel.getApi(), resourceVisitor);
+        traverser.traverse(apiModel.getApi(), serviceVisitor);
     }
 }

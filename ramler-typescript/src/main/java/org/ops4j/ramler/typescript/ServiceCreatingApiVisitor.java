@@ -27,24 +27,22 @@ import org.ops4j.ramler.common.helper.NameFactory;
 import org.ops4j.ramler.common.model.Annotations;
 import org.ops4j.ramler.common.model.ApiTraverser;
 import org.ops4j.ramler.common.model.ApiVisitor;
-import org.raml.v2.api.model.v10.api.Api;
 import org.raml.v2.api.model.v10.methods.Method;
 import org.raml.v2.api.model.v10.resources.Resource;
 import org.trimou.util.ImmutableMap;
 
 /**
- * Generates a TypeScript interface for a given RAML resource.
+ * Generates a TypeScript client service for a given RAML resource.
  *
  * @author Harald Wellmann
  *
  */
-public class ResourceCreatingApiVisitor implements ApiVisitor {
+public class ServiceCreatingApiVisitor implements ApiVisitor {
 
     private TypeScriptGeneratorContext context;
     private StringBuilder output;
     private Resource outerResource;
     private Resource innerResource;
-    private int numResources;
 
     /**
      * Creates a visitor with the given generator context.
@@ -52,36 +50,29 @@ public class ResourceCreatingApiVisitor implements ApiVisitor {
      * @param context
      *            generator context
      */
-    public ResourceCreatingApiVisitor(TypeScriptGeneratorContext context) {
+    public ServiceCreatingApiVisitor(TypeScriptGeneratorContext context) {
         this.context = context;
     }
 
     @Override
-    public void visitApiEnd(Api api) {
-        if (numResources > 0) {
-            context.startOutput();
-            context.getMustache("restResponse")
-                .render(context.getOutput(), Collections.emptyMap());
-            context.writeToFile(context.getOutput()
-                .toString(), "RestResponse");
-        }
-    }
-
-    @Override
     public void visitResourceStart(Resource resource) {
-        numResources++;
         ApiTraverser traverser = new ApiTraverser(context.getApiModel());
         if (outerResource == null) {
             outerResource = resource;
             this.output = context.startOutput();
 
+            String serviceName = buildServiceName(resource, context.getConfig()) + "Service";
+            String resourceName = ResourceCreatingApiVisitor.buildResourceInterfaceName(resource,
+                context.getConfig());
+
             ResourceImportApiVisitor importVisitor = new ResourceImportApiVisitor(context);
+            importVisitor.addTypeToImports(resourceName);
             traverser.traverse(resource, importVisitor);
             output.append("\n");
 
-            String interfaceName = buildResourceInterfaceName(resource, context.getConfig());
-            context.getMustache("resourceStart")
-                .render(context.getOutput(), ImmutableMap.of("name", interfaceName));
+            context.getMustache("serviceStart")
+                .render(context.getOutput(), ImmutableMap.of("serviceName", serviceName,
+                    "resourceName", resourceName, "baseUrlToken", "CRUD_BASE_URL"));
 
         }
         else if (innerResource == null) {
@@ -92,7 +83,7 @@ public class ResourceCreatingApiVisitor implements ApiVisitor {
         }
 
         for (Method method : resource.methods()) {
-            ResourceMethodApiVisitor bodyVisitor = new ResourceMethodApiVisitor(context);
+            ServiceMethodApiVisitor bodyVisitor = new ServiceMethodApiVisitor(context);
             traverser.traverse(method, bodyVisitor);
         }
     }
@@ -107,10 +98,10 @@ public class ResourceCreatingApiVisitor implements ApiVisitor {
         context.getMustache("objectEnd")
             .render(context.getOutput(), Collections.emptyMap());
         context.writeToFile(output.toString(),
-            buildResourceInterfaceName(resource, context.getConfig()));
+            buildServiceName(resource, context.getConfig()), "service");
     }
 
-    public static String buildResourceInterfaceName(final Resource resource,
+    public static String buildServiceName(final Resource resource,
         TypeScriptConfiguration config) {
         String rawName = defaultIfBlank(Annotations.findCodeName(resource),
             resource.relativeUri()
@@ -120,6 +111,6 @@ public class ResourceCreatingApiVisitor implements ApiVisitor {
         if (isBlank(resourceInterfaceName)) {
             resourceInterfaceName = "Root";
         }
-        return resourceInterfaceName.concat("Resource");
+        return resourceInterfaceName;
     }
 }

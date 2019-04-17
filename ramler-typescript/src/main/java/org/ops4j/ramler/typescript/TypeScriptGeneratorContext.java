@@ -300,6 +300,13 @@ public class TypeScriptGeneratorContext {
         FileHelper.writeToFile(content, tsFile);
     }
 
+    public void writeToFile(String content, String typeName, String suffix) {
+        String moduleName = JavaNameFactory.buildLowerKebabCaseName(typeName);
+        String tsFileName = moduleName + "." + suffix + ".ts";
+        File tsFile = new File(config.getTargetDir(), tsFileName);
+        FileHelper.writeToFile(content, tsFile);
+    }
+
     public String typeWithArgs(TypeDeclaration property) {
         String tsPropType;
         tsPropType = getTypeScriptPropertyType(property);
