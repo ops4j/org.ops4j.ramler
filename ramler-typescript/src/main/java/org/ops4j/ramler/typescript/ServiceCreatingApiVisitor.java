@@ -98,8 +98,8 @@ public class ServiceCreatingApiVisitor implements ApiVisitor {
         outerResource = null;
         context.getMustache("objectEnd")
             .render(context.getOutput(), Collections.emptyMap());
-        context.writeToFile(output.toString(),
-            buildServiceName(resource, config), config.getServiceNameSuffix()
+        context.writeToFile(output.toString(), buildServiceName(resource),
+            config.getServiceNameSuffix()
                 .toLowerCase());
     }
 }

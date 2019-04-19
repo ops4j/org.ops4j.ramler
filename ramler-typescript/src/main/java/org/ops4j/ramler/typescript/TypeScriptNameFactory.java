@@ -144,12 +144,9 @@ public class TypeScriptNameFactory extends NameFactory {
      *
      * @param resource
      *            RAML resource
-     * @param config
-     *            generator configuration
      * @return interface name
      */
-    public static String buildServiceName(final Resource resource,
-        TypeScriptConfiguration config) {
+    public static String buildServiceName(final Resource resource) {
         String rawName = defaultIfBlank(Annotations.findCodeName(resource),
             resource.relativeUri()
                 .value());
