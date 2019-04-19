@@ -61,7 +61,7 @@ public class ServiceCreatingApiVisitor implements ApiVisitor {
             outerResource = resource;
             this.output = context.startOutput();
 
-            String serviceName = buildServiceName(resource, config) + config.getServiceNameSuffix();
+            String serviceName = buildServiceName(resource) + config.getServiceNameSuffix();
             String resourceName = buildResourceInterfaceName(resource, config);
 
             ResourceImportApiVisitor importVisitor = new ResourceImportApiVisitor(context);
