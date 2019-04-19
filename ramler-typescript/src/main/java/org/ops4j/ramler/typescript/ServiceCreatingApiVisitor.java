@@ -17,6 +17,9 @@
  */
 package org.ops4j.ramler.typescript;
 
+import static org.ops4j.ramler.typescript.TypeScriptNameFactory.buildResourceInterfaceName;
+import static org.ops4j.ramler.typescript.TypeScriptNameFactory.buildServiceName;
+
 import java.util.Collections;
 
 import org.ops4j.ramler.common.exc.GeneratorException;
@@ -38,6 +41,7 @@ public class ServiceCreatingApiVisitor implements ApiVisitor {
     private StringBuilder output;
     private Resource outerResource;
     private Resource innerResource;
+    private TypeScriptConfiguration config;
 
     /**
      * Creates a visitor with the given generator context.
@@ -47,6 +51,7 @@ public class ServiceCreatingApiVisitor implements ApiVisitor {
      */
     public ServiceCreatingApiVisitor(TypeScriptGeneratorContext context) {
         this.context = context;
+        this.config = context.getConfig();
     }
 
     @Override
@@ -56,10 +61,8 @@ public class ServiceCreatingApiVisitor implements ApiVisitor {
             outerResource = resource;
             this.output = context.startOutput();
 
-            String serviceName = TypeScriptNameFactory.buildServiceName(resource,
-                context.getConfig()) + "Service";
-            String resourceName = TypeScriptNameFactory.buildResourceInterfaceName(resource,
-                context.getConfig());
+            String serviceName = buildServiceName(resource, config) + config.getServiceNameSuffix();
+            String resourceName = buildResourceInterfaceName(resource, config);
 
             ResourceImportApiVisitor importVisitor = new ResourceImportApiVisitor(context);
             importVisitor.addTypeToImports(resourceName);
@@ -70,7 +73,7 @@ public class ServiceCreatingApiVisitor implements ApiVisitor {
                 .render(context.getOutput(), ImmutableMap.of(
                     "serviceName", serviceName,
                     "resourceName", resourceName,
-                    "baseUrlToken", "CRUD_BASE_URL"));
+                    "baseUrlToken", config.getAngularBaseUrlToken()));
 
         }
         else if (innerResource == null) {
@@ -96,6 +99,7 @@ public class ServiceCreatingApiVisitor implements ApiVisitor {
         context.getMustache("objectEnd")
             .render(context.getOutput(), Collections.emptyMap());
         context.writeToFile(output.toString(),
-            TypeScriptNameFactory.buildServiceName(resource, context.getConfig()), "service");
+            buildServiceName(resource, config), config.getServiceNameSuffix()
+                .toLowerCase());
     }
 }

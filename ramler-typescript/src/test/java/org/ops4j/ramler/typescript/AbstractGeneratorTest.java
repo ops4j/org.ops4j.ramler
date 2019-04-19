@@ -88,6 +88,9 @@ public abstract class AbstractGeneratorTest {
         config = new TypeScriptConfiguration();
         config.setSourceFile(String.format("raml/%s.raml", getBasename()));
         config.setTargetDir(new File("target/generated/ts/" + getBasename()));
+        config.setInterfaceNameSuffix("Resource");
+        config.setServiceNameSuffix("Service");
+        config.setAngularService(true);
 
         generator = new TypeScriptGenerator(config);
         generator.generate();

@@ -43,6 +43,18 @@ public class TypeScriptMojo extends AbstractRamlerMojo {
     @Parameter(defaultValue = "${project.build.directory}/ramler/ts")
     private File outputDir;
 
+    @Parameter(defaultValue = "false")
+    private boolean angularService;
+
+    @Parameter
+    private String angularBaseUrlToken;
+
+    @Parameter(defaultValue = "Resource")
+    private String interfaceNameSuffix;
+
+    @Parameter(defaultValue = "Service")
+    private String serviceNameSuffix;
+
     @Override
     protected void generateOutput() throws MojoFailureException {
         getLog().info("Generating TypeScript sources from " + model);
@@ -51,6 +63,10 @@ public class TypeScriptMojo extends AbstractRamlerMojo {
         TypeScriptConfiguration config = new TypeScriptConfiguration();
         config.setSourceFile(sourceFile);
         config.setTargetDir(getOutputDir());
+        config.setAngularBaseUrlToken(angularBaseUrlToken);
+        config.setAngularService(angularService);
+        config.setInterfaceNameSuffix(interfaceNameSuffix);
+        config.setServiceNameSuffix(serviceNameSuffix);
 
         TypeScriptGenerator generator = new TypeScriptGenerator(config);
         try {

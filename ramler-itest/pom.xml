@@ -101,6 +101,8 @@
                         <configuration>
                             <model>src/main/resources/raml/crud.raml</model>
                             <outputDir>${basedir}/client/src/app/gen</outputDir>
+                            <angularService>true</angularService>
+                            <angularBaseUrlToken>CRUD_BASE_URL</angularBaseUrlToken>
                         </configuration>
                     </execution>
                 </executions>

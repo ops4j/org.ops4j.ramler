@@ -18,6 +18,8 @@
 package org.ops4j.ramler.typescript;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.ops4j.ramler.common.helper.FileHelper;
 import org.ops4j.ramler.common.model.ApiModel;
@@ -64,12 +66,15 @@ public class TypeScriptGenerator {
         context.setTemplateEngine(engine);
         FileHelper.createDirectoryIfNeeded(config.getTargetDir());
 
-        ApiVisitor modelVisitor = new ModelCreatingApiVisitor(context);
-        ApiVisitor resourceVisitor = new ResourceCreatingApiVisitor(context);
-        ApiVisitor serviceVisitor = new ServiceCreatingApiVisitor(context);
+        List<ApiVisitor> visitors = new ArrayList<>();
+        visitors.add(new ModelCreatingApiVisitor(context));
+        visitors.add(new ResourceCreatingApiVisitor(context));
+
+        if (config.isAngularService()) {
+            visitors.add(new ServiceCreatingApiVisitor(context));
+        }
+
         ApiTraverser traverser = new ApiTraverser(apiModel);
-        traverser.traverse(apiModel.getApi(), modelVisitor);
-        traverser.traverse(apiModel.getApi(), resourceVisitor);
-        traverser.traverse(apiModel.getApi(), serviceVisitor);
+        visitors.forEach(v -> traverser.traverse(apiModel.getApi(), v));
     }
 }

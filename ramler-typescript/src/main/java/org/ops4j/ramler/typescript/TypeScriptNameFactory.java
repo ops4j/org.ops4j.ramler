@@ -136,7 +136,7 @@ public class TypeScriptNameFactory extends NameFactory {
         if (isBlank(resourceInterfaceName)) {
             resourceInterfaceName = UNNAMED_RESOURCE;
         }
-        return resourceInterfaceName.concat("Resource");
+        return resourceInterfaceName.concat(config.getInterfaceNameSuffix());
     }
 
     /**

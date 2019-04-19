@@ -31,6 +31,14 @@ public class TypeScriptConfiguration {
 
     private File targetDir;
 
+    private boolean angularService;
+
+    private String angularBaseUrlToken;
+
+    private String interfaceNameSuffix;
+
+    private String serviceNameSuffix;
+
     /**
      * Gets the RAML source file name.
      *
@@ -67,5 +75,81 @@ public class TypeScriptConfiguration {
      */
     public void setTargetDir(File targetDir) {
         this.targetDir = targetDir;
+    }
+
+    /**
+     * Gets the angularService.
+     *
+     * @return the angularService
+     */
+    public boolean isAngularService() {
+        return angularService;
+    }
+
+    /**
+     * Sets the angularService.
+     *
+     * @param angularService
+     *            the angularService to set
+     */
+    public void setAngularService(boolean angularService) {
+        this.angularService = angularService;
+    }
+
+    /**
+     * Gets the angularBaseUrlToken.
+     *
+     * @return the angularBaseUrlToken
+     */
+    public String getAngularBaseUrlToken() {
+        return angularBaseUrlToken;
+    }
+
+    /**
+     * Sets the angularBaseUrlToken.
+     *
+     * @param angularBaseUrlToken
+     *            the angularBaseUrlToken to set
+     */
+    public void setAngularBaseUrlToken(String angularBaseUrlToken) {
+        this.angularBaseUrlToken = angularBaseUrlToken;
+    }
+
+    /**
+     * Gets the interfaceNameSuffix.
+     *
+     * @return the interfaceNameSuffix
+     */
+    public String getInterfaceNameSuffix() {
+        return interfaceNameSuffix;
+    }
+
+    /**
+     * Sets the interfaceNameSuffix.
+     *
+     * @param interfaceNameSuffix
+     *            the interfaceNameSuffix to set
+     */
+    public void setInterfaceNameSuffix(String interfaceNameSuffix) {
+        this.interfaceNameSuffix = interfaceNameSuffix;
+    }
+
+    /**
+     * Gets the serviceNameSuffix.
+     *
+     * @return the serviceNameSuffix
+     */
+    public String getServiceNameSuffix() {
+        return serviceNameSuffix;
+    }
+
+    /**
+     * Sets the serviceNameSuffix.
+     *
+     * @param serviceNameSuffix
+     *            the serviceNameSuffix to set
+     */
+    public void setServiceNameSuffix(String serviceNameSuffix) {
+        this.serviceNameSuffix = serviceNameSuffix;
     }
 }
