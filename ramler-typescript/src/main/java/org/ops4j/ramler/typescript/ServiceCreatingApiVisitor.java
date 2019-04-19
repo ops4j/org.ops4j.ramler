@@ -17,14 +17,9 @@
  */
 package org.ops4j.ramler.typescript;
 
-import static org.apache.commons.lang.StringUtils.defaultIfBlank;
-import static org.apache.commons.lang.StringUtils.isBlank;
-
 import java.util.Collections;
 
 import org.ops4j.ramler.common.exc.GeneratorException;
-import org.ops4j.ramler.common.helper.NameFactory;
-import org.ops4j.ramler.common.model.Annotations;
 import org.ops4j.ramler.common.model.ApiTraverser;
 import org.ops4j.ramler.common.model.ApiVisitor;
 import org.raml.v2.api.model.v10.methods.Method;
@@ -61,8 +56,9 @@ public class ServiceCreatingApiVisitor implements ApiVisitor {
             outerResource = resource;
             this.output = context.startOutput();
 
-            String serviceName = buildServiceName(resource, context.getConfig()) + "Service";
-            String resourceName = ResourceCreatingApiVisitor.buildResourceInterfaceName(resource,
+            String serviceName = TypeScriptNameFactory.buildServiceName(resource,
+                context.getConfig()) + "Service";
+            String resourceName = TypeScriptNameFactory.buildResourceInterfaceName(resource,
                 context.getConfig());
 
             ResourceImportApiVisitor importVisitor = new ResourceImportApiVisitor(context);
@@ -81,7 +77,7 @@ public class ServiceCreatingApiVisitor implements ApiVisitor {
             innerResource = resource;
         }
         else {
-            throw new GeneratorException("cannot handle resources nested more than two levels");
+            throw new GeneratorException("Cannot handle resources nested more than two levels");
         }
 
         for (Method method : resource.methods()) {
@@ -100,28 +96,6 @@ public class ServiceCreatingApiVisitor implements ApiVisitor {
         context.getMustache("objectEnd")
             .render(context.getOutput(), Collections.emptyMap());
         context.writeToFile(output.toString(),
-            buildServiceName(resource, context.getConfig()), "service");
-    }
-
-    /**
-     * Builds the name of the Angular service client for the given RAML resource.
-     *
-     * @param resource
-     *            RAML resource
-     * @param config
-     *            generator configuration
-     * @return interface name
-     */
-    public static String buildServiceName(final Resource resource,
-        TypeScriptConfiguration config) {
-        String rawName = defaultIfBlank(Annotations.findCodeName(resource),
-            resource.relativeUri()
-                .value());
-        String resourceInterfaceName = NameFactory.buildCodeFriendlyName(rawName);
-
-        if (isBlank(resourceInterfaceName)) {
-            resourceInterfaceName = "Root";
-        }
-        return resourceInterfaceName;
+            TypeScriptNameFactory.buildServiceName(resource, context.getConfig()), "service");
     }
 }

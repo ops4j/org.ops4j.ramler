@@ -17,12 +17,17 @@
  */
 package org.ops4j.ramler.typescript;
 
+import static org.apache.commons.lang.StringUtils.defaultIfBlank;
+import static org.apache.commons.lang.StringUtils.isBlank;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.ops4j.ramler.common.helper.NameFactory;
+import org.ops4j.ramler.common.model.Annotations;
+import org.raml.v2.api.model.v10.resources.Resource;
 
 /**
  * A name factory which respects TypeScript reserved words.
@@ -41,8 +46,54 @@ public class TypeScriptNameFactory extends NameFactory {
             "static", "strictfp", "super", "switch", "synchronized", "this", "throw", "throws",
             "transient", "true", "try", "void", "volatile", "while")));
 
+    private static final String UNNAMED_RESOURCE = "Root";
+
     @Override
     public Set<String> getReservedWords() {
         return TYPESCRIPT_KEYWORDS;
+    }
+
+    /**
+     * Builds the name of the TypeScript interface corresponding to the given RAML resource.
+     *
+     * @param resource
+     *            RAML resource
+     * @param config
+     *            generator configuration
+     * @return interface name
+     */
+    public static String buildResourceInterfaceName(final Resource resource,
+        TypeScriptConfiguration config) {
+        String rawName = defaultIfBlank(Annotations.findCodeName(resource),
+            resource.relativeUri()
+                .value());
+        String resourceInterfaceName = NameFactory.buildCodeFriendlyName(rawName);
+
+        if (isBlank(resourceInterfaceName)) {
+            resourceInterfaceName = UNNAMED_RESOURCE;
+        }
+        return resourceInterfaceName.concat("Resource");
+    }
+
+    /**
+     * Builds the name of the Angular service client for the given RAML resource.
+     *
+     * @param resource
+     *            RAML resource
+     * @param config
+     *            generator configuration
+     * @return interface name
+     */
+    public static String buildServiceName(final Resource resource,
+        TypeScriptConfiguration config) {
+        String rawName = defaultIfBlank(Annotations.findCodeName(resource),
+            resource.relativeUri()
+                .value());
+        String resourceInterfaceName = NameFactory.buildCodeFriendlyName(rawName);
+
+        if (isBlank(resourceInterfaceName)) {
+            resourceInterfaceName = UNNAMED_RESOURCE;
+        }
+        return resourceInterfaceName;
     }
 }

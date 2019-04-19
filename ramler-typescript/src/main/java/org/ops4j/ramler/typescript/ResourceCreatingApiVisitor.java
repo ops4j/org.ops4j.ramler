@@ -17,14 +17,9 @@
  */
 package org.ops4j.ramler.typescript;
 
-import static org.apache.commons.lang.StringUtils.defaultIfBlank;
-import static org.apache.commons.lang.StringUtils.isBlank;
-
 import java.util.Collections;
 
 import org.ops4j.ramler.common.exc.GeneratorException;
-import org.ops4j.ramler.common.helper.NameFactory;
-import org.ops4j.ramler.common.model.Annotations;
 import org.ops4j.ramler.common.model.ApiTraverser;
 import org.ops4j.ramler.common.model.ApiVisitor;
 import org.raml.v2.api.model.v10.api.Api;
@@ -79,7 +74,8 @@ public class ResourceCreatingApiVisitor implements ApiVisitor {
             traverser.traverse(resource, importVisitor);
             output.append("\n");
 
-            String interfaceName = buildResourceInterfaceName(resource, context.getConfig());
+            String interfaceName = TypeScriptNameFactory.buildResourceInterfaceName(resource,
+                context.getConfig());
             context.getMustache("resourceStart")
                 .render(context.getOutput(), ImmutableMap.of("name", interfaceName));
 
@@ -107,28 +103,6 @@ public class ResourceCreatingApiVisitor implements ApiVisitor {
         context.getMustache("objectEnd")
             .render(context.getOutput(), Collections.emptyMap());
         context.writeToFile(output.toString(),
-            buildResourceInterfaceName(resource, context.getConfig()));
-    }
-
-    /**
-     * Builds the name of the TypeScript interface corresponding to the given RAML resource.
-     *
-     * @param resource
-     *            RAML resource
-     * @param config
-     *            generator configuration
-     * @return interface name
-     */
-    public static String buildResourceInterfaceName(final Resource resource,
-        TypeScriptConfiguration config) {
-        String rawName = defaultIfBlank(Annotations.findCodeName(resource),
-            resource.relativeUri()
-                .value());
-        String resourceInterfaceName = NameFactory.buildCodeFriendlyName(rawName);
-
-        if (isBlank(resourceInterfaceName)) {
-            resourceInterfaceName = "Root";
-        }
-        return resourceInterfaceName.concat("Resource");
+            TypeScriptNameFactory.buildResourceInterfaceName(resource, context.getConfig()));
     }
 }
