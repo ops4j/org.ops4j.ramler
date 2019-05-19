@@ -14,4 +14,8 @@ node_modules/
 maven-wrapper.jar
 ramler-itest/client/src/app/gen/
 dist/
-
+.gradle
+gradle/wrapper
+gradlew
+gradlew.bat
+build/
