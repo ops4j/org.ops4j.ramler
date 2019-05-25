@@ -1,3 +1,20 @@
+/*
+ * Copyright 2019 OPS4J Contributors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied.
+ *
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.ops4j.ramler.gradle;
 
 import java.io.File;
@@ -21,7 +38,6 @@ public class RamlerJavaGenerator extends DefaultTask {
     /**
      * Output directory for generated sources.
      */
-    // @Parameter(defaultValue = "${project.build.directory}/generated-sources/ramler")
     private String outputDir;
 
     /**
@@ -320,8 +336,7 @@ public class RamlerJavaGenerator extends DefaultTask {
             generator.generate();
         }
         catch (RamlerException exc) {
-            throw new GradleException("code generation failed", exc);
+            throw new GradleException("Code generation failed", exc);
         }
-
     }
 }
