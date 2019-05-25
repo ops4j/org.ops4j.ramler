@@ -162,6 +162,25 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>codes.rafael.gradlemavenplugin</groupId>
+                <artifactId>gradle-maven-plugin</artifactId>
+                <configuration>
+                    <gradleVersion>${gradleVersion}</gradleVersion>
+                    <tasks>
+                        <task>assemble</task>
+                    </tasks>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>invoke</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
+
 </project>

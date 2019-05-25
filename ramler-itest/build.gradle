@@ -4,16 +4,26 @@
 
 import org.ops4j.ramler.gradle.RamlerJavaGenerator
 
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.ops4j.ramler:ramler-gradle-plugin:0.11.0-SNAPSHOT'
+    }
+}
+
 plugins {
     id 'java'
     id 'maven-publish'
-    id 'org.ops4j.ramler' version '0.11.0-SNAPSHOT'
+    //id 'org.ops4j.ramler' version '0.11.0-SNAPSHOT'
 }
 
-//apply plugin: 'org.ops4j.ramler'
+apply plugin: 'org.ops4j.ramler'
 
 repositories {
-    mavenLocal()
+    mavenLocal()    
     maven {
         url = 'https://oss.sonatype.org/content/repositories/snapshots'
     }

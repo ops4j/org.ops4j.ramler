@@ -73,11 +73,11 @@ public class RamlerJavaGenerator extends DefaultTask {
         return model;
     }
 
-
     /**
      * Sets the model.
-
-     * @param model the model to set
+     * 
+     * @param model
+     *            the model to set
      */
     public void setModel(String model) {
         this.model = model;
@@ -303,8 +303,12 @@ public class RamlerJavaGenerator extends DefaultTask {
         config.setDelegateFieldName(delegateFieldName);
         config.setDelegatorSuffix(delegatorSuffix);
 
-        JavaPluginConvention javaPluginConvention = getProject().getConvention().getPlugin(JavaPluginConvention.class);
-        javaPluginConvention.getSourceSets().getByName("main").getJava().srcDir(getOutputDir());
+        JavaPluginConvention javaPluginConvention = getProject().getConvention()
+            .getPlugin(JavaPluginConvention.class);
+        javaPluginConvention.getSourceSets()
+            .getByName("main")
+            .getJava()
+            .srcDir(getOutputDir());
 
         try {
             JavaGenerator generator = new JavaGenerator(config);

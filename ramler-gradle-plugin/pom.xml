@@ -8,11 +8,7 @@
     </parent>
 
     <groupId>org.ops4j.ramler</groupId>
-    <artifactId>org.ops4j.ramler.gradle.plugin</artifactId>
-
-    <properties>
-        <org.gradle.version>3.4.1</org.gradle.version>
-    </properties>
+    <artifactId>ramler-gradle-plugin</artifactId>
 
     <dependencies>
         <dependency>
@@ -20,40 +16,15 @@
             <artifactId>ramler-java</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.gradle</groupId>
-            <artifactId>gradle-core</artifactId>
-            <version>${org.gradle.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.gradle</groupId>
-            <artifactId>gradle-logging</artifactId>
-            <version>${org.gradle.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.gradle</groupId>
-            <artifactId>gradle-tooling-api</artifactId>
-            <version>${org.gradle.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.gradle</groupId>
-            <artifactId>gradle-base-services</artifactId>
-            <version>${org.gradle.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.gradle</groupId>
-            <artifactId>gradle-base-services-groovy</artifactId>
-            <version>${org.gradle.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy-all</artifactId>
-            <version>2.4.10</version>
+            <groupId>name.remal.gradle-api</groupId>
+            <artifactId>gradle-api</artifactId>
+            <version>${gradleVersion}</version>
         </dependency>
     </dependencies>
     <repositories>
         <repository>
-            <id>repo.gradle.org</id>
-            <url>https://repo.gradle.org/gradle/libs-releases-local/</url>
+            <id>jcenter</id>
+            <url>https://jcenter.bintray.com/</url>
         </repository>
     </repositories>
 </project>

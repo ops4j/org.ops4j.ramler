@@ -26,6 +26,7 @@
         <org.junit.platform.version>1.4.2</org.junit.platform.version>
         <org.ow2.asm.version>7.1</org.ow2.asm.version>
         <maven.surefire.plugin.version>3.0.0-M3</maven.surefire.plugin.version>
+        <gradleVersion>3.4.1</gradleVersion>
         <nodeVersion>v8.10.0</nodeVersion>
         <npmVersion>6.9.0</npmVersion>
         <sonar.skip>true</sonar.skip>
@@ -47,6 +48,7 @@
         <module>ramler-typescript</module>
         <module>ramler-itest</module>
         <module>ramler-manual</module>
+        <module>ramler-gradle-plugin</module>
         <module>samples</module>
     </modules>
 
@@ -252,6 +254,11 @@
     <build>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>codes.rafael.gradlemavenplugin</groupId>
+                    <artifactId>gradle-maven-plugin</artifactId>
+                    <version>1.0.10</version>
+                </plugin>
                 <plugin>
                     <groupId>com.github.eirslett</groupId>
                     <artifactId>frontend-maven-plugin</artifactId>
