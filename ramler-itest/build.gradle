@@ -62,5 +62,5 @@ tasks.withType(JavaCompile) {
 task crudGenerateJava(type: RamlerJavaGenerator) {
     model = "src/main/resources/raml/crud.raml"
     packageName = "org.ops4j.ramler.itest.crud"
-    outputDir = "build/generated-sources/ramler"
+    outputDir = "${project.buildDir}/generated-sources/ramler"
 }

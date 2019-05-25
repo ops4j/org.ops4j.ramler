@@ -170,9 +170,6 @@
                     <tasks>
                         <task>assemble</task>
                     </tasks>
-                    <args>
-                        <arg>--debug</arg>
-                    </args>
                 </configuration>
                 <executions>
                     <execution>
