@@ -105,6 +105,11 @@
                 <version>2.1</version>
             </dependency>
             <dependency>
+                <groupId>name.remal.gradle-api</groupId>
+                <artifactId>gradle-api</artifactId>
+                <version>${gradleVersion}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.antlr</groupId>
                 <artifactId>antlr4-runtime</artifactId>
                 <version>${org.antlr.version}</version>
