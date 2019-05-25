@@ -7,6 +7,7 @@ import org.gradle.api.GradleException;
 import org.gradle.api.plugins.JavaPluginConvention;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.Optional;
+import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.TaskAction;
 import org.ops4j.ramler.common.exc.RamlerException;
 import org.ops4j.ramler.java.JavaConfiguration;
@@ -75,7 +76,7 @@ public class RamlerJavaGenerator extends DefaultTask {
 
     /**
      * Sets the model.
-     * 
+     *
      * @param model
      *            the model to set
      */
@@ -89,6 +90,8 @@ public class RamlerJavaGenerator extends DefaultTask {
      * @return the outputDir
      */
     @Input
+    @OutputDirectory
+    @Optional
     public String getOutputDir() {
         return outputDir;
     }
@@ -290,10 +293,12 @@ public class RamlerJavaGenerator extends DefaultTask {
     public void generate() {
         getLogger().info("Generating Java model from {}", model);
         String sourceFile = new File(getProject().getProjectDir(), model).getPath();
+        String outputDir = java.util.Optional.ofNullable(getOutputDir())
+            .orElse(new File(getProject().getBuildDir(), "generated-sources").getPath());
         JavaConfiguration config = new JavaConfiguration();
         config.setSourceFile(sourceFile);
         config.setBasePackage(packageName);
-        config.setTargetDir(new File(getOutputDir()));
+        config.setTargetDir(new File(outputDir));
         config.setDiscriminatorMutable(discriminatorMutable);
         config.setInterfaceNameSuffix(interfaceNameSuffix);
         config.setJacksonTypeInfo(jacksonTypeInfo);
@@ -308,7 +313,7 @@ public class RamlerJavaGenerator extends DefaultTask {
         javaPluginConvention.getSourceSets()
             .getByName("main")
             .getJava()
-            .srcDir(getOutputDir());
+            .srcDir(outputDir);
 
         try {
             JavaGenerator generator = new JavaGenerator(config);

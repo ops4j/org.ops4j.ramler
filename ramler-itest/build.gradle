@@ -14,12 +14,7 @@ buildscript {
     }
 }
 
-plugins {
-    id 'java'
-    id 'maven-publish'
-    //id 'org.ops4j.ramler' version '0.11.0-SNAPSHOT'
-}
-
+apply plugin: 'java'
 apply plugin: 'org.ops4j.ramler'
 
 repositories {
@@ -48,14 +43,6 @@ version = '0.11.0-SNAPSHOT'
 description = 'OPS4J Ramler Integration Tests'
 sourceCompatibility = '1.8'
 
-publishing {
-    publications {
-        maven(MavenPublication) {
-            from(components.java)
-        }
-    }
-}
-
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
@@ -63,5 +50,4 @@ tasks.withType(JavaCompile) {
 task crudGenerateJava(type: RamlerJavaGenerator) {
     model = "src/main/resources/raml/crud.raml"
     packageName = "org.ops4j.ramler.itest.crud"
-    outputDir = "${project.buildDir}/generated-sources/ramler"
 }
