@@ -20,25 +20,15 @@ package org.ops4j.ramler.gradle;
 import java.io.File;
 import java.io.IOException;
 
-import org.gradle.api.DefaultTask;
 import org.gradle.api.GradleException;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.Optional;
-import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.TaskAction;
 import org.ops4j.ramler.common.exc.RamlerException;
 import org.ops4j.ramler.html.HtmlConfiguration;
 import org.ops4j.ramler.html.HtmlGenerator;
 
-public class RamlerHtmlGenerator extends DefaultTask {
-
-    /** RAML specification file, relative to <code>${project.basedir}</code>. */
-    private String model;
-
-    /**
-     * Output directory for generated sources.
-     */
-    private String outputDir;
+public class RamlerHtmlGenerator extends AbstractRamlerTask {
 
     /**
      * Directory with web resources to be used instead of the built-in resources.
@@ -50,48 +40,6 @@ public class RamlerHtmlGenerator extends DefaultTask {
      * template is named {@code api.trimou.html}.
      */
     private String templateDir;
-
-    /**
-     * Gets the model.
-     *
-     * @return the model
-     */
-    @Input
-    public String getModel() {
-        return model;
-    }
-
-    /**
-     * Sets the model.
-     *
-     * @param model
-     *            the model to set
-     */
-    public void setModel(String model) {
-        this.model = model;
-    }
-
-    /**
-     * Gets the outputDir.
-     *
-     * @return the outputDir
-     */
-    @Input
-    @OutputDirectory
-    @Optional
-    public String getOutputDir() {
-        return outputDir;
-    }
-
-    /**
-     * Sets the outputDir.
-     *
-     * @param outputDir
-     *            the outputDir to set
-     */
-    public void setOutputDir(String outputDir) {
-        this.outputDir = outputDir;
-    }
 
     /**
      * Gets the webResourceDir.
@@ -137,8 +85,8 @@ public class RamlerHtmlGenerator extends DefaultTask {
 
     @TaskAction
     public void generate() {
-        getLogger().info("Generating TypeScript sources from {}", model);
-        String sourceFile = new File(getProject().getProjectDir(), model).getPath();
+        getLogger().info("Generating TypeScript sources from {}", getModel());
+        String sourceFile = new File(getProject().getProjectDir(), getModel()).getPath();
         String outputDir = java.util.Optional.ofNullable(getOutputDir())
             .orElse(new File(getProject().getBuildDir(), "ramler/html").getPath());
         HtmlConfiguration config = new HtmlConfiguration();

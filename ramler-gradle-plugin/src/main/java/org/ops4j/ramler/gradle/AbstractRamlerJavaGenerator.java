@@ -19,26 +19,16 @@ package org.ops4j.ramler.gradle;
 
 import java.io.File;
 
-import org.gradle.api.DefaultTask;
 import org.gradle.api.GradleException;
 import org.gradle.api.plugins.JavaPluginConvention;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.Optional;
-import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.TaskAction;
 import org.ops4j.ramler.common.exc.RamlerException;
 import org.ops4j.ramler.java.JavaConfiguration;
 import org.ops4j.ramler.java.JavaGenerator;
 
-public abstract class AbstractRamlerJavaGenerator extends DefaultTask {
-
-    /** RAML specification file, relative to <code>${project.basedir}</code>. */
-    private String model;
-
-    /**
-     * Output directory for generated sources.
-     */
-    private String outputDir;
+public abstract class AbstractRamlerJavaGenerator extends AbstractRamlerTask {
 
     /**
      * Fully qualified package name for generated Java sources. The generated classes will be
@@ -79,48 +69,6 @@ public abstract class AbstractRamlerJavaGenerator extends DefaultTask {
     private String delegatorSuffix;
 
     private String delegateFieldName;
-
-    /**
-     * Gets the model.
-     *
-     * @return the model
-     */
-    @Input
-    public String getModel() {
-        return model;
-    }
-
-    /**
-     * Sets the model.
-     *
-     * @param model
-     *            the model to set
-     */
-    public void setModel(String model) {
-        this.model = model;
-    }
-
-    /**
-     * Gets the outputDir.
-     *
-     * @return the outputDir
-     */
-    @Input
-    @OutputDirectory
-    @Optional
-    public String getOutputDir() {
-        return outputDir;
-    }
-
-    /**
-     * Sets the outputDir.
-     *
-     * @param outputDir
-     *            the outputDir to set
-     */
-    public void setOutputDir(String outputDir) {
-        this.outputDir = outputDir;
-    }
 
     /**
      * Gets the packageName.
@@ -311,8 +259,8 @@ public abstract class AbstractRamlerJavaGenerator extends DefaultTask {
 
     @TaskAction
     public void generate() {
-        getLogger().info("Generating Java model from {}", model);
-        String sourceFile = new File(getProject().getProjectDir(), model).getPath();
+        getLogger().info("Generating Java model from {}", getModel());
+        String sourceFile = new File(getProject().getProjectDir(), getModel()).getPath();
         String outputDir = java.util.Optional.ofNullable(getOutputDir())
             .orElse(new File(getProject().getBuildDir(), getDefaultOutputSubdir()).getPath());
         JavaConfiguration config = new JavaConfiguration();
