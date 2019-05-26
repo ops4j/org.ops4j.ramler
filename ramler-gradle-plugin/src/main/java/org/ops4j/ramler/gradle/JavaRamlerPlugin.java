@@ -26,18 +26,14 @@ public class JavaRamlerPlugin implements Plugin<Project> {
     @Override
     public void apply(Project project) {
         project.getTasks()
-            .withType(RamlerJavaGenerator.class, task -> {
-                project.getTasks()
-                    .getByName(JavaPlugin.COMPILE_JAVA_TASK_NAME)
-                    .dependsOn(task);
-            });
+            .withType(RamlerJavaGenerator.class, task -> project.getTasks()
+                .getByName(JavaPlugin.COMPILE_JAVA_TASK_NAME)
+                .dependsOn(task));
 
         project.getTasks()
-            .withType(RamlerJavaTestGenerator.class, task -> {
-                project.getTasks()
-                    .getByName(JavaPlugin.COMPILE_TEST_JAVA_TASK_NAME)
-                    .dependsOn(task);
-            });
+            .withType(RamlerJavaTestGenerator.class, task -> project.getTasks()
+                .getByName(JavaPlugin.COMPILE_TEST_JAVA_TASK_NAME)
+                .dependsOn(task));
 
     }
 }
