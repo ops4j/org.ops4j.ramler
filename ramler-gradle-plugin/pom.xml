@@ -15,7 +15,19 @@
     <dependencies>
         <dependency>
             <groupId>org.ops4j.ramler</groupId>
+            <artifactId>ramler-html</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.ops4j.ramler</groupId>
             <artifactId>ramler-java</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.ops4j.ramler</groupId>
+            <artifactId>ramler-openapi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.ops4j.ramler</groupId>
+            <artifactId>ramler-typescript</artifactId>
         </dependency>
         <dependency>
             <groupId>name.remal.gradle-api</groupId>

@@ -71,7 +71,7 @@ public class OpenApiMojo extends AbstractRamlerMojo {
             generator.generate();
         }
         catch (RamlerException | IOException exc) {
-            throw new MojoFailureException("HTML generation failed", exc);
+            throw new MojoFailureException("OpenAPI generation failed", exc);
         }
     }
 
