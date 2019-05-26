@@ -48,8 +48,6 @@ public class RamlerTypeScriptGenerator extends DefaultTask {
 
     private String serviceNameSuffix = "Service";
 
-
-
     /**
      * Gets the model.
      *
@@ -92,9 +90,6 @@ public class RamlerTypeScriptGenerator extends DefaultTask {
         this.outputDir = outputDir;
     }
 
-
-
-
     /**
      * Gets the angularService.
      *
@@ -106,16 +101,15 @@ public class RamlerTypeScriptGenerator extends DefaultTask {
         return angularService;
     }
 
-
     /**
      * Sets the angularService.
-
-     * @param angularService the angularService to set
+     * 
+     * @param angularService
+     *            the angularService to set
      */
     public void setAngularService(boolean angularService) {
         this.angularService = angularService;
     }
-
 
     /**
      * Gets the angularBaseUrlToken.
@@ -127,16 +121,15 @@ public class RamlerTypeScriptGenerator extends DefaultTask {
         return angularBaseUrlToken;
     }
 
-
     /**
      * Sets the angularBaseUrlToken.
-
-     * @param angularBaseUrlToken the angularBaseUrlToken to set
+     * 
+     * @param angularBaseUrlToken
+     *            the angularBaseUrlToken to set
      */
     public void setAngularBaseUrlToken(String angularBaseUrlToken) {
         this.angularBaseUrlToken = angularBaseUrlToken;
     }
-
 
     /**
      * Gets the interfaceNameSuffix.
@@ -149,16 +142,15 @@ public class RamlerTypeScriptGenerator extends DefaultTask {
         return interfaceNameSuffix;
     }
 
-
     /**
      * Sets the interfaceNameSuffix.
-
-     * @param interfaceNameSuffix the interfaceNameSuffix to set
+     * 
+     * @param interfaceNameSuffix
+     *            the interfaceNameSuffix to set
      */
     public void setInterfaceNameSuffix(String interfaceNameSuffix) {
         this.interfaceNameSuffix = interfaceNameSuffix;
     }
-
 
     /**
      * Gets the serviceNameSuffix.
@@ -171,11 +163,11 @@ public class RamlerTypeScriptGenerator extends DefaultTask {
         return serviceNameSuffix;
     }
 
-
     /**
      * Sets the serviceNameSuffix.
-
-     * @param serviceNameSuffix the serviceNameSuffix to set
+     * 
+     * @param serviceNameSuffix
+     *            the serviceNameSuffix to set
      */
     public void setServiceNameSuffix(String serviceNameSuffix) {
         this.serviceNameSuffix = serviceNameSuffix;

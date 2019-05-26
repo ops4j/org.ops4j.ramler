@@ -142,7 +142,6 @@ public class RamlerOpenApiGenerator extends DefaultTask {
         config.setGenerateJson(json);
         config.setGenerateYaml(yaml);
 
-
         try {
             OpenApiGenerator generator = new OpenApiGenerator(config);
             generator.generate();
