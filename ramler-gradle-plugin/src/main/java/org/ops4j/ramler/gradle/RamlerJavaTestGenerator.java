@@ -31,7 +31,7 @@ import org.ops4j.ramler.common.exc.RamlerException;
 import org.ops4j.ramler.java.JavaConfiguration;
 import org.ops4j.ramler.java.JavaGenerator;
 
-public class RamlerJavaGenerator extends DefaultTask {
+public class RamlerJavaTestGenerator extends DefaultTask {
 
     /** RAML specification file, relative to <code>${project.basedir}</code>. */
     protected String model;
@@ -311,7 +311,7 @@ public class RamlerJavaGenerator extends DefaultTask {
         getLogger().info("Generating Java model from {}", model);
         String sourceFile = new File(getProject().getProjectDir(), model).getPath();
         String outputDir = java.util.Optional.ofNullable(getOutputDir())
-            .orElse(new File(getProject().getBuildDir(), "generated-sources").getPath());
+            .orElse(new File(getProject().getBuildDir(), "generated-test-sources").getPath());
         JavaConfiguration config = new JavaConfiguration();
         config.setSourceFile(sourceFile);
         config.setBasePackage(packageName);
@@ -328,7 +328,7 @@ public class RamlerJavaGenerator extends DefaultTask {
         JavaPluginConvention javaPluginConvention = getProject().getConvention()
             .getPlugin(JavaPluginConvention.class);
         javaPluginConvention.getSourceSets()
-            .getByName(SourceSet.MAIN_SOURCE_SET_NAME)
+            .getByName(SourceSet.TEST_SOURCE_SET_NAME)
             .getJava()
             .srcDir(outputDir);
 

@@ -3,6 +3,7 @@
  */
 
 import org.ops4j.ramler.gradle.RamlerJavaGenerator
+import org.ops4j.ramler.gradle.RamlerJavaTestGenerator
 
 buildscript {
     repositories {
@@ -51,3 +52,17 @@ task crudGenerateJava(type: RamlerJavaGenerator) {
     model = "src/main/resources/raml/crud.raml"
     packageName = "org.ops4j.ramler.itest.crud"
 }
+
+task unionGenerateJavaTest(type: RamlerJavaTestGenerator) {
+    model = "src/test/resources/raml/union.raml"
+    packageName = "org.ops4j.ramler.itest.union"
+    jacksonUnion = true
+}
+
+task inheritanctGenerateJavaTest(type: RamlerJavaTestGenerator) {
+    model = "src/test/resources/raml/inheritance.raml"
+    packageName = "org.ops4j.ramler.itest.inheritance"
+    jacksonTypeInfo = true
+    jacksonPropertyName = true
+}
+

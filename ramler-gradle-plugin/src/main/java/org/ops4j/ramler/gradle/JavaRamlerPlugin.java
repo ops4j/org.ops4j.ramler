@@ -31,5 +31,13 @@ public class JavaRamlerPlugin implements Plugin<Project> {
                     .getByName(JavaPlugin.COMPILE_JAVA_TASK_NAME)
                     .dependsOn(task);
             });
+
+        project.getTasks()
+            .withType(RamlerJavaTestGenerator.class, task -> {
+                project.getTasks()
+                    .getByName(JavaPlugin.COMPILE_TEST_JAVA_TASK_NAME)
+                    .dependsOn(task);
+            });
+
     }
 }
