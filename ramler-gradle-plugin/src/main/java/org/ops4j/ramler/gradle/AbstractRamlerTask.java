@@ -24,16 +24,12 @@ import org.gradle.api.tasks.OutputDirectory;
 
 public abstract class AbstractRamlerTask extends DefaultTask {
 
-    /** RAML specification file, relative to <code>${project.basedir}</code>. */
     private String model;
 
-    /**
-     * Output directory for generated sources.
-     */
     private String outputDir;
 
     /**
-     * Gets the model.
+     * Gets the RAML specification file, relative to <code>${projectDir}</code>.
      *
      * @return the model
      */
@@ -53,9 +49,9 @@ public abstract class AbstractRamlerTask extends DefaultTask {
     }
 
     /**
-     * Gets the outputDir.
+     * Gets the output directory for generated files.
      *
-     * @return the outputDir
+     * @return the output directory
      */
     @Input
     @OutputDirectory

@@ -28,39 +28,25 @@ import org.ops4j.ramler.common.exc.RamlerException;
 import org.ops4j.ramler.java.JavaConfiguration;
 import org.ops4j.ramler.java.JavaGenerator;
 
+/**
+ * Base class for tasks generating Java code.
+ *
+ * @author Harald Wellmann
+ *
+ */
 public abstract class AbstractRamlerJavaGenerator extends AbstractRamlerTask {
 
-    /**
-     * Fully qualified package name for generated Java sources. The generated classes will be
-     * located in subpackages {@code model} and {@code api}.
-     */
     private String packageName;
 
-    /**
-     * Should discriminator properties be mutable?
-     */
     private boolean discriminatorMutable;
 
-    /**
-     * Suffix for interface names. This suffix is appended to the code name of a resource. The code
-     * name is either specified explicitly by the {@code (codeName)} annotation, or implicitly by
-     * the resource name, converted to camel case.
-     */
     private String interfaceNameSuffix;
 
-    /**
-     * Should Java classes include type information annotations for type hierarchies?
-     */
     private boolean jacksonTypeInfo;
 
-    /**
-     * Should Java classes include {@code JsonProperty} annotations for properties with illegal Java
-     * names?
-     */
     private boolean jacksonPropertyName;
 
     /**
-     * Should Jackson annotations {@code @JsonSerializer} etc. be used for union types?
      */
     private boolean jacksonUnion;
 
@@ -71,9 +57,10 @@ public abstract class AbstractRamlerJavaGenerator extends AbstractRamlerTask {
     private String delegateFieldName;
 
     /**
-     * Gets the packageName.
+     * Gets the fully qualified package name for generated Java sources. The generated classes will be
+     * located in subpackages {@code model} and {@code api}.
      *
-     * @return the packageName
+     * @return the package name for generated sources
      */
     @Input
     public String getPackageName() {
@@ -81,7 +68,7 @@ public abstract class AbstractRamlerJavaGenerator extends AbstractRamlerTask {
     }
 
     /**
-     * Sets the packageName.
+     * Sets the package name for generated sources.
      *
      * @param packageName
      *            the packageName to set
@@ -91,9 +78,9 @@ public abstract class AbstractRamlerJavaGenerator extends AbstractRamlerTask {
     }
 
     /**
-     * Gets the discriminatorMutable.
+     * Should discriminator properties be mutable?
      *
-     * @return the discriminatorMutable
+     * @return true if discriminator properties are mutable
      */
     @Input
     public boolean isDiscriminatorMutable() {
@@ -101,19 +88,21 @@ public abstract class AbstractRamlerJavaGenerator extends AbstractRamlerTask {
     }
 
     /**
-     * Sets the discriminatorMutable.
+     * Sets the flag for mutable discriminators.
      *
      * @param discriminatorMutable
-     *            the discriminatorMutable to set
+     *            the flag to set
      */
     public void setDiscriminatorMutable(boolean discriminatorMutable) {
         this.discriminatorMutable = discriminatorMutable;
     }
 
     /**
-     * Gets the interfaceNameSuffix.
+     * Gets the suffix for interface names. This suffix is appended to the code name of a resource. The code
+     * name is either specified explicitly by the {@code (codeName)} annotation, or implicitly by
+     * the resource name, converted to camel case. The default value is {@code Resource}.
      *
-     * @return the interfaceNameSuffix
+     * @return the interface nameSuffix
      */
     @Input
     @Optional
@@ -122,19 +111,19 @@ public abstract class AbstractRamlerJavaGenerator extends AbstractRamlerTask {
     }
 
     /**
-     * Sets the interfaceNameSuffix.
+     * Sets the interface name suffix.
      *
      * @param interfaceNameSuffix
-     *            the interfaceNameSuffix to set
+     *            the suffix to set
      */
     public void setInterfaceNameSuffix(String interfaceNameSuffix) {
         this.interfaceNameSuffix = interfaceNameSuffix;
     }
 
     /**
-     * Gets the jacksonTypeInfo.
+     * Should Java classes include Jackson type information annotations for type hierarchies?
      *
-     * @return the jacksonTypeInfo
+     * @return true if type info annotations will be generated
      */
     @Input
     public boolean isJacksonTypeInfo() {
@@ -142,19 +131,20 @@ public abstract class AbstractRamlerJavaGenerator extends AbstractRamlerTask {
     }
 
     /**
-     * Sets the jacksonTypeInfo.
+     * Sets the flag for Jackson type info annotations.
      *
      * @param jacksonTypeInfo
-     *            the jacksonTypeInfo to set
+     *            the flag to set
      */
     public void setJacksonTypeInfo(boolean jacksonTypeInfo) {
         this.jacksonTypeInfo = jacksonTypeInfo;
     }
 
     /**
-     * Gets the jacksonPropertyName.
+     * Should Java classes include Jackson {@code JsonProperty} annotations for properties with illegal Java
+     * names?
      *
-     * @return the jacksonPropertyName
+     * @return true if {@code JsonProperty} annotations shall be generated
      */
     @Input
     public boolean isJacksonPropertyName() {
@@ -162,19 +152,19 @@ public abstract class AbstractRamlerJavaGenerator extends AbstractRamlerTask {
     }
 
     /**
-     * Sets the jacksonPropertyName.
+     * Sets the flag for {@code JsonProperty} annotations.
      *
      * @param jacksonPropertyName
-     *            the jacksonPropertyName to set
+     *            the flag to set
      */
     public void setJacksonPropertyName(boolean jacksonPropertyName) {
         this.jacksonPropertyName = jacksonPropertyName;
     }
 
     /**
-     * Gets the jacksonUnion.
+     * Should Jackson annotations {@code @JsonSerializer} etc. be generated for union types?
      *
-     * @return the jacksonUnion
+     * @return true if Jackson annotations and helper classes shall be generated for union types
      */
     @Input
     public boolean isJacksonUnion() {
@@ -182,10 +172,10 @@ public abstract class AbstractRamlerJavaGenerator extends AbstractRamlerTask {
     }
 
     /**
-     * Sets the jacksonUnion.
+     * Sets the flag enabling Jackson annotations for union types.
      *
      * @param jacksonUnion
-     *            the jacksonUnion to set
+     *            the flag to set
      */
     public void setJacksonUnion(boolean jacksonUnion) {
         this.jacksonUnion = jacksonUnion;
