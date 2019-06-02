@@ -46,15 +46,7 @@ public abstract class AbstractRamlerJavaGenerator extends AbstractRamlerTask {
 
     private boolean jacksonPropertyName;
 
-    /**
-     */
     private boolean jacksonUnion;
-
-    private boolean delegators;
-
-    private String delegatorSuffix;
-
-    private String delegateFieldName;
 
     /**
      * Gets the fully qualified package name for generated Java sources. The generated classes will be
@@ -181,68 +173,6 @@ public abstract class AbstractRamlerJavaGenerator extends AbstractRamlerTask {
         this.jacksonUnion = jacksonUnion;
     }
 
-    /**
-     * Gets the delegators.
-     *
-     * @return the delegators
-     */
-    @Input
-    public boolean isDelegators() {
-        return delegators;
-    }
-
-    /**
-     * Sets the delegators.
-     *
-     * @param delegators
-     *            the delegators to set
-     */
-    public void setDelegators(boolean delegators) {
-        this.delegators = delegators;
-    }
-
-    /**
-     * Gets the delegatorSuffix.
-     *
-     * @return the delegatorSuffix
-     */
-    @Input
-    @Optional
-    public String getDelegatorSuffix() {
-        return delegatorSuffix;
-    }
-
-    /**
-     * Sets the delegatorSuffix.
-     *
-     * @param delegatorSuffix
-     *            the delegatorSuffix to set
-     */
-    public void setDelegatorSuffix(String delegatorSuffix) {
-        this.delegatorSuffix = delegatorSuffix;
-    }
-
-    /**
-     * Gets the delegateFieldName.
-     *
-     * @return the delegateFieldName
-     */
-    @Input
-    @Optional
-    public String getDelegateFieldName() {
-        return delegateFieldName;
-    }
-
-    /**
-     * Sets the delegateFieldName.
-     *
-     * @param delegateFieldName
-     *            the delegateFieldName to set
-     */
-    public void setDelegateFieldName(String delegateFieldName) {
-        this.delegateFieldName = delegateFieldName;
-    }
-
     protected abstract String getDefaultOutputSubdir();
 
     protected abstract String getSourceSet();
@@ -262,9 +192,6 @@ public abstract class AbstractRamlerJavaGenerator extends AbstractRamlerTask {
         config.setJacksonTypeInfo(jacksonTypeInfo);
         config.setJacksonPropertyName(jacksonPropertyName);
         config.setJacksonUnion(jacksonUnion);
-        config.setDelegators(delegators);
-        config.setDelegateFieldName(delegateFieldName);
-        config.setDelegatorSuffix(delegatorSuffix);
 
         JavaPluginConvention javaPluginConvention = getProject().getConvention()
             .getPlugin(JavaPluginConvention.class);

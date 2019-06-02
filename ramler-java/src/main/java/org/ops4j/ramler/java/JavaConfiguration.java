@@ -50,12 +50,6 @@ public class JavaConfiguration {
 
     private boolean jacksonUnion;
 
-    private boolean delegators;
-
-    private String delegatorSuffix;
-
-    private String delegateFieldName;
-
     /**
      * Gets the name of the base package for all subpackages created by the code generator.
      *
@@ -267,53 +261,6 @@ public class JavaConfiguration {
      */
     public void setJacksonPropertyName(boolean jacksonPropertyName) {
         this.jacksonPropertyName = jacksonPropertyName;
-    }
-
-    /**
-     * @return the delegators
-     */
-    public boolean isDelegators() {
-        return delegators;
-    }
-
-    /**
-     * @param delegators
-     *            the delegators to set
-     */
-    public void setDelegators(boolean delegators) {
-        this.delegators = delegators;
-    }
-
-    /**
-     * @return the delegatorSuffix
-     */
-    public String getDelegatorSuffix() {
-        return Optional.ofNullable(delegatorSuffix)
-            .orElse("Delegator");
-    }
-
-    /**
-     * @param delegatorSuffix
-     *            the delegatorSuffix to set
-     */
-    public void setDelegatorSuffix(String delegatorSuffix) {
-        this.delegatorSuffix = delegatorSuffix;
-    }
-
-    /**
-     * @return the delegateFieldName
-     */
-    public String getDelegateFieldName() {
-        return Optional.ofNullable(delegateFieldName)
-            .orElse("delegate");
-    }
-
-    /**
-     * @param delegateFieldName
-     *            the delegateFieldName to set
-     */
-    public void setDelegateFieldName(String delegateFieldName) {
-        this.delegateFieldName = delegateFieldName;
     }
 
     /**

@@ -96,9 +96,6 @@ public abstract class AbstractJavaMojo extends AbstractRamlerMojo {
         config.setJacksonTypeInfo(jacksonTypeInfo);
         config.setJacksonPropertyName(jacksonPropertyName);
         config.setJacksonUnion(jacksonUnion);
-        config.setDelegators(delegators);
-        config.setDelegateFieldName(delegateFieldName);
-        config.setDelegatorSuffix(delegatorSuffix);
 
         try {
             JavaGenerator generator = new JavaGenerator(config);

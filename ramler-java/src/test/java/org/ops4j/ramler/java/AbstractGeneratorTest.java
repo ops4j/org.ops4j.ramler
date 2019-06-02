@@ -30,8 +30,6 @@ import java.util.Set;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
-import org.ops4j.ramler.java.JavaConfiguration;
-import org.ops4j.ramler.java.JavaGenerator;
 
 import com.sun.codemodel.JAnnotationUse;
 import com.sun.codemodel.JAnnotationValue;
@@ -62,7 +60,6 @@ public abstract class AbstractGeneratorTest {
         config.setSourceFile(String.format("raml/%s.raml", getBasename()));
         config.setBasePackage(String.format("org.ops4j.raml.%s", getBasename()));
         config.setTargetDir(new File("target/generated/raml"));
-        config.setDelegators(true);
         config.setJacksonUnion(true);
 
         generator = new JavaGenerator(config);

@@ -80,8 +80,6 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
 
     private EnumGenerator enumGenerator;
 
-    private DelegatorGenerator delegatorGenerator;
-
     private UnionGenerator unionGenerator;
 
     private NameFactory nameFactory;
@@ -97,7 +95,6 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
         this.codeModel = context.getCodeModel();
         this.pkg = context.getModelPackage();
         this.enumGenerator = new EnumGenerator(context);
-        this.delegatorGenerator = new DelegatorGenerator(context);
         this.unionGenerator = new UnionGenerator(context);
         this.nameFactory = new JavaNameFactory();
     }
@@ -118,26 +115,8 @@ public class PojoGeneratingApiVisitor implements ApiVisitor {
     }
 
     @Override
-    public void visitObjectTypeEnd(ObjectTypeDeclaration type) {
-        if (context.getConfig()
-            .isDelegators()) {
-            JDefinedClass klass = pkg._getClass(type.name());
-            if (klass != null) {
-                generateDelegator(klass);
-            }
-        }
-    }
-
-    @Override
     public void visitUnionType(UnionTypeDeclaration type) {
         unionGenerator.generateUnionClass(type);
-    }
-
-    /**
-     * @param klass
-     */
-    private void generateDelegator(JDefinedClass klass) {
-        delegatorGenerator.generateDelegator(klass);
     }
 
     private void addBaseClass(JDefinedClass klass, ObjectTypeDeclaration type) {
