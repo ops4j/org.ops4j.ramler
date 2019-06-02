@@ -49,8 +49,8 @@ public abstract class AbstractRamlerJavaGenerator extends AbstractRamlerTask {
     private boolean jacksonUnion;
 
     /**
-     * Gets the fully qualified package name for generated Java sources. The generated classes will be
-     * located in subpackages {@code model} and {@code api}.
+     * Gets the fully qualified package name for generated Java sources. The generated classes will
+     * be located in subpackages {@code model} and {@code api}.
      *
      * @return the package name for generated sources
      */
@@ -90,9 +90,10 @@ public abstract class AbstractRamlerJavaGenerator extends AbstractRamlerTask {
     }
 
     /**
-     * Gets the suffix for interface names. This suffix is appended to the code name of a resource. The code
-     * name is either specified explicitly by the {@code (codeName)} annotation, or implicitly by
-     * the resource name, converted to camel case. The default value is {@code Resource}.
+     * Gets the suffix for interface names. This suffix is appended to the code name of a resource.
+     * The code name is either specified explicitly by the {@code (codeName)} annotation, or
+     * implicitly by the resource name, converted to camel case. The default value is
+     * {@code Resource}.
      *
      * @return the interface nameSuffix
      */
@@ -133,8 +134,8 @@ public abstract class AbstractRamlerJavaGenerator extends AbstractRamlerTask {
     }
 
     /**
-     * Should Java classes include Jackson {@code JsonProperty} annotations for properties with illegal Java
-     * names?
+     * Should Java classes include Jackson {@code JsonProperty} annotations for properties with
+     * illegal Java names?
      *
      * @return true if {@code JsonProperty} annotations shall be generated
      */
