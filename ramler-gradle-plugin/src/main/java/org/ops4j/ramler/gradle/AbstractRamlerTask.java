@@ -22,6 +22,12 @@ import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.Optional;
 import org.gradle.api.tasks.OutputDirectory;
 
+/**
+ * Base class for all Ramler tasks, containing common properties.
+ *
+ * @author Harald Wellmann
+ *
+ */
 public abstract class AbstractRamlerTask extends DefaultTask {
 
     private String model;
@@ -61,10 +67,10 @@ public abstract class AbstractRamlerTask extends DefaultTask {
     }
 
     /**
-     * Sets the outputDir.
+     * Sets the output directory.
      *
      * @param outputDir
-     *            the outputDir to set
+     *            the directory to set
      */
     public void setOutputDir(String outputDir) {
         this.outputDir = outputDir;

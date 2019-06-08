@@ -85,7 +85,7 @@ public class RamlerHtmlGenerator extends AbstractRamlerTask {
 
     @TaskAction
     public void generate() {
-        getLogger().info("Generating TypeScript sources from {}", getModel());
+        getLogger().info("Generating static HTML from {}", getModel());
         String sourceFile = new File(getProject().getProjectDir(), getModel()).getPath();
         String outputDir = java.util.Optional.ofNullable(getOutputDir())
             .orElse(new File(getProject().getBuildDir(), "ramler/html").getPath());

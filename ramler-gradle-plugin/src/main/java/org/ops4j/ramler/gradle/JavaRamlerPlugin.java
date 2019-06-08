@@ -21,6 +21,14 @@ import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.plugins.JavaPlugin;
 
+/**
+ * Ramler Gradle plugin class. Adds all tasks of type {@link RamlerJavaGenerator} and
+ * {@link RamlerJavaTestGenerator} as dependencies of the {@code compileJava} and
+ * {@code compileTestJava} tasks, respectively.
+ *
+ * @author Harald Wellmann
+ *
+ */
 public class JavaRamlerPlugin implements Plugin<Project> {
 
     @Override
@@ -34,6 +42,5 @@ public class JavaRamlerPlugin implements Plugin<Project> {
             .withType(RamlerJavaTestGenerator.class, task -> project.getTasks()
                 .getByName(JavaPlugin.COMPILE_TEST_JAVA_TASK_NAME)
                 .dependsOn(task));
-
     }
 }

@@ -19,6 +19,12 @@ package org.ops4j.ramler.gradle;
 
 import org.gradle.api.tasks.SourceSet;
 
+/**
+ * Tasks for generating Java sources to be included in the {@code main} source set for the
+ * {@code compileJava} task,
+ *
+ * @author Harald Wellmann
+ */
 public class RamlerJavaGenerator extends AbstractRamlerJavaGenerator {
 
     @Override
